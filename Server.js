@@ -211,7 +211,9 @@ var plugins = require('require-all')({
     recursive: false
 });
 var commands = {}
-
+commands.exit = function () {
+    process.exit()
+}
 Logging.log("Loading DevL0rd Plugins...")
 for (var i in plugins) {
     Logging.log("Plugin '" + i + "' loaded.")
@@ -220,7 +222,7 @@ for (var i in plugins) {
 process.stdin.on('data', function (line) {
     var message = line.toString().replace("\r\n", "").replace("\n", "")
     var messageLowercase = message.toLowerCase();
-    var arguments = messageLowercase.split("");
+    var arguments = messageLowercase.split(" ");
     arguments.shift()
     //Commands
     if (commands[messageLowercase] != null) {
