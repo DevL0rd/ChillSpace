@@ -1,0 +1,13 @@
+{
+	"IP": "0.0.0.0",
+	"PORT": 80,
+	"HTTP_TIMEOUT_MS": 5000,
+	"directoryIndex": [
+		"index.html"
+	],
+	"webRoot": "./WebRoot",
+	"blockedPaths": [],
+	"blockedFiles": [],
+	"blockedFileNames": [],
+	"blockedFileExtensions": []
+}

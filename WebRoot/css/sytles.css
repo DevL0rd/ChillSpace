@@ -1,0 +1,831 @@
+html {
+    background: url(../img/bg.jpg) no-repeat center center fixed;
+    background-size: cover;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0px;
+    font-family: "calibri";
+    background: url("/img/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+a:link {
+    color: white;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+a:active {
+    color: white;
+    text-decoration: none;
+}
+
+
+
+
+#titleBar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: calc(100% - 250px);
+    height: 40px;
+    background: rgba(50, 50, 50, 0);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    min-width: 510px;
+}
+
+#accountBar {
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 250px;
+    height: 40px;
+    background: rgba(149, 66, 244, 0);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+#accountBar:hover {
+    cursor: pointer;
+    background: rgba(161, 79, 255, 0);
+}
+
+.accountName {
+    margin-top: 8px;
+    margin-left: 30px;
+    font-size: 18px;
+    position: absolute;
+    width: 250px;
+    left: 10px;
+    color: white;
+}
+
+.userBarTemplate {
+    display: none;
+    margin-top: 5px;
+    overflow: hidden;
+    width: calc(100% - 20px);
+    height: auto;
+}
+
+.userBar {
+    margin-top: 5px;
+    overflow: hidden;
+    width: calc(100% - 20px);
+    height: 40px;
+    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6000000', endColorstr='#00000000', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+    border-top-left-radius: 25px;
+
+    border-bottom-left-radius: 25px;
+}
+
+#playlist {
+
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 100%;
+    height: calc(100% - 40px);
+    overflow-y: auto;
+}
+
+
+.playListBar {
+    margin-top: 12px;
+    margin-left: 40px;
+    border-radius: 8px;
+    width: calc(100% - 80px);
+    height: 20px;
+    color: white;
+    word-wrap: break-word;
+    background: rgba(20, 20, 20, 0.4);
+    padding: 10px;
+    font-size: 15px;
+}
+
+#playListBar0 {
+
+    display: none;
+}
+
+.playlistTitle {
+    float: left;
+    margin-left: 5px;
+    width: calc(100% - 80px);
+}
+
+.voteBox {
+    float: right;
+    border-radius: 8px;
+    font-size: 12px;
+    color: white;
+    padding-top: 5px;
+    padding: 6px;
+    background: rgba(33, 168, 114, 0.6);
+    margin-top: -2px;
+}
+
+.voteBox:hover {
+    cursor: pointer;
+    background: rgba(33, 168, 114, 0.8);
+}
+
+.voteBoxRed {
+    float: right;
+    border-radius: 8px;
+    font-size: 12px;
+    color: white;
+    padding-top: 5px;
+    padding: 6px;
+    background: #4286f4;
+    margin-top: -22px;
+}
+
+.voteBoxRed:hover {
+    cursor: pointer;
+    background: #4286f4;
+}
+
+.userBarPhotoHolder {
+    height: 100%;
+}
+
+.playListBar:hover {
+    cursor: pointer;
+}
+
+.messageImage {
+    width: 300px;
+    margin-left: 10px;
+}
+
+.userBarName {
+    margin-top: 13px;
+    margin-left: 50px;
+    color: white;
+}
+
+.userBarPhoto {
+    margin-top: 5px;
+    margin-left: 5px;
+    float: left;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.videoUserPhoto {
+    margin-top: -5px;
+    margin-left: 0px;
+    float: left;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.chatBoxPhoto {
+    margin-top: 2px;
+    margin-left: 2px;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.chatBoxPhotoHolder {
+    height: 100%;
+}
+
+#login {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 250px;
+    padding-bottom: 5px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    overflow: hidden;
+    background: rgba(50, 50, 50, 0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+
+.dropdownSelection {
+    margin-top: 5px;
+    margin-left: 15px;
+    width: calc(100% - 25px);
+    -webkit-transition-duration: 0.4s;
+    /* Safari */
+    transition-duration: 0.4s;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    background-color: rgba(149, 66, 244, 0.8);
+    padding: 5px 24px;
+    font-size: 15px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.dropdownSelection:hover {
+    background-color: rgba(160, 82, 249, 0.8);
+    /* Green */
+    color: white;
+}
+
+.dropdownMenu {
+    background: rgba(50, 50, 50, 0.2);
+    padding-bottom: 5px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding-bottom: 5px;
+}
+
+#onlineUsers {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 250px;
+    height: 40%;
+    max-height: 200px;
+    overflow-x: hidden;
+}
+
+#accountDropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 250px;
+
+}
+
+#login_pswdcheck {
+    display: none;
+}
+
+#login_username {
+    display: none;
+}
+
+#loginOutput {
+    font-size: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+}
+
+.login_inputs {
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    margin-top: 5px;
+    margin-left: 15px;
+    width: calc(100% - 25px);
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#typingNotice {
+    display: none;
+    position: absolute;
+    bottom: 75px;
+    left: 5px;
+    border-radius: 5px;
+    background: rgba(50, 50, 50, 0.5);
+    color: white;
+    padding: 5px;
+}
+
+#alwaysShowChat {
+    display: none;
+    top: 45px;
+    left: 2px;
+    position: absolute;
+}
+
+#chatBar {
+    display: none;
+    position: absolute;
+    bottom: 33px;
+    left: 0px;
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom-right-radius: 10px;
+    border: none;
+    color: white;
+    width: 375px;
+    height: 25px;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    resize: none;
+    overflow: hidden;
+}
+
+#chatArea {
+    pointer-events: none;
+    resize: none;
+    position: absolute;
+    top: 40px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#chatLog {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0px;
+    height: calc(100% - 125px);
+    width: 350px;
+    overflow-y: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 12px;
+
+}
+
+.chatBoxTemplate {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 5px;
+    color: white;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.chatBox {
+    min-width: 100px;
+    position: absolute;
+    bottom: 20px;
+    left: 5px;
+    color: white;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6000000', endColorstr='#00000000', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+}
+
+.chatBoxLogged {
+
+    margin-top: 12px;
+    color: white;
+    overflow: hidden;
+    border-top-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    max-width: 400px;
+    width: auto;
+    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6000000', endColorstr='#00000000', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+}
+
+.chatUsername {
+    padding-left: 25px;
+
+    padding-right: 5px;
+    background: -moz-linear-gradient(-45deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e65d129e', endColorstr='#00000000', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+    width: 100%;
+    height: 23px;
+}
+
+.chatMessage {
+
+    width: 100%;
+
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    word-wrap: break-word;
+    max-width: 200px;
+}
+
+#systemMessageBox {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    right: 10px;
+    color: white;
+    overflow: hidden;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+#systemMessage {
+    background: rgba(40, 40, 40, 0.6);
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 15px;
+    word-wrap: break-word;
+    max-width: 395px;
+
+    font-size: 16px;
+}
+
+#systemName {
+    padding-left: 5px;
+    padding-right: 15px;
+    font-size: 20px;
+    background: rgba(33, 168, 114, 0.6);
+    width: 100%;
+}
+
+#forgotPasswordLink {
+    margin-top: 5px;
+}
+
+#registerLink {
+    margin-top: 5px;
+}
+
+#player {
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 100%;
+    height: calc(100% - 40px);
+    margin: auto;
+}
+
+#videoUrl {
+    display: none;
+    float: left;
+    width: calc(100% - 235px);
+    margin-top: 8px;
+    background: #232323;
+}
+
+#playerArea {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+#videoLoadingCover {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    height: calc(100% - 40px);
+    background: rgba(33, 33, 33, 0.8);
+    background: -moz-linear-gradient(left, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b30f0d0d', endColorstr='#b3000000', GradientType=1);
+    /* IE6-9 */
+}
+
+#lodaingGif {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 300px;
+    height: 200px;
+    margin-left: -150px;
+    margin-top: -100px;
+}
+
+#typingGif {
+    float: left;
+    top: 0px;
+    left: 0px;
+    height: 40px;
+
+}
+
+#typingNoticeText {
+    float: left;
+    top: 5px;
+    left: 60px;
+    padding-top: 10px;
+}
+
+#controls {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+
+    height: 150px;
+}
+
+#videoTitle {
+    position: absolute;
+    top: 15px;
+    right: -15px;
+    width: 100%;
+    height: 150px;
+    font-size: 20px;
+    padding-left: 15px;
+    color: white;
+
+    /* IE6-9 */
+}
+
+#controlsBG {
+    display: none;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+
+    height: 150px;
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#cc000000', GradientType=0);
+    /* IE6-9 */
+}
+
+#videoTitleBG {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0px;
+    width: 100%;
+    height: 150px;
+    font-size: 46px;
+    padding-left: 15px;
+    color: white;
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc000000', endColorstr='#00000000', GradientType=0);
+    /* IE6-9 */
+}
+
+#videoTrack {
+    -webkit-appearance: none;
+    /* Override default CSS styles */
+    appearance: none;
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
+    width: calc(100% - 105px);
+    height: 10px;
+    border-radius: 5px;
+    /* Specified height */
+    background: #d3d3d3;
+    /* Grey background */
+    outline: none;
+    /* Remove outline */
+    opacity: 0.7;
+    /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s;
+    /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+
+}
+
+/* Mouse-over effects */
+
+#videoTrack:hover {
+    opacity: 1;
+    /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use webkit (Chrome, Opera, Safari, Edge) and moz (Firefox) to override default look) */
+
+#videoTrack::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    width: 15px;
+    /* Set a specific slider handle width */
+    height: 15px;
+    /* Slider handle height */
+    background: rgba(149, 66, 244, 1);
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+    border-radius: 50%;
+}
+
+#videoTrack::-moz-range-thumb {
+    width: 15px;
+    /* Set a specific slider handle width */
+    height: 15px;
+    /* Slider handle height */
+    background: rgba(149, 66, 244, 1);
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+    border-radius: 50%;
+}
+
+#togglePlay {
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    border: none;
+    color: rgba(149, 66, 244, 1);
+    font-size: 20px;
+    background: transparent;
+}
+
+#volume {
+    position: absolute;
+    bottom: 4px;
+    right: 10px;
+    border: none;
+    color: white;
+    font-size: 20px;
+    background: transparent;
+}
+
+#volumeDropdown {
+    display: none;
+    position: absolute;
+    bottom: 40px;
+    right: 18px;
+    width: 30px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+#volumeSlider {
+    -webkit-appearance: none;
+    /* Override default CSS styles */
+    appearance: none;
+    writing-mode: bt-lr;
+    /* IE */
+    -webkit-appearance: slider-vertical;
+    /* WebKit */
+    margin-top: 15px;
+    margin-left: 11px;
+    width: 8px;
+    height: 125px;
+    border-radius: 5px;
+    /* Specified height */
+    background: #d3d3d3;
+    /* Grey background */
+    outline: none;
+    /* Remove outline */
+    opacity: 0.7;
+    /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s;
+    /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+
+}
+
+/* Mouse-over effects */
+
+#volumeSlider:hover {
+    opacity: 1;
+    /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use webkit (Chrome, Opera, Safari, Edge) and moz (Firefox) to override default look) */
+
+#volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /* Override default look */
+    appearance: none;
+    width: 15px;
+    /* Set a specific slider handle width */
+    height: 15px;
+    /* Slider handle height */
+    background: #4CAF50;
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+    border-radius: 50%;
+}
+
+#volumeSlider::-moz-range-thumb {
+    width: 15px;
+    /* Set a specific slider handle width */
+    height: 15px;
+    /* Slider handle height */
+    background: rgba(149, 66, 244, 1);
+    /* Green background */
+    cursor: pointer;
+    /* Cursor on hover */
+    border-radius: 50%;
+}
+
+#watchingCount {
+    overflow: hidden;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    height: 25px;
+    background: rgba(33, 168, 114, 0.6);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 8px;
+    padding-top: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+    color: white;
+}
+
+#watchingCount:hover {
+    cursor: pointer;
+    background: rgba(33, 168, 114, 0.8);
+}
+
+#logo {
+    float: left;
+    margin-left: 5px;
+    margin-top: 3px;
+    height: 35px;
+    filter: hue-rotate(20);
+}
+
+
+.customScroll::-webkit-scrollbar {
+    width: 12px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.customScroll::-webkit-scrollbar-thumb {
+    width: 8px;
+    background-color: rgba(149, 66, 244, 1);
+    border-radius: 50px;
+}
+
+textarea:focus,
+input:focus,
+button:focus {
+    outline: none;
+}
