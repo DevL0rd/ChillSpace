@@ -131,17 +131,13 @@ function Http_HandlerNew(request, response) {
                 }
             } else {
 
-                log("<GET> 404 '" + reqPath + "' ACCESS DENIED!", false, "HTTP");
-                response.writeHead(404, {
-                    'Content-Type': 'text/html'
-                })
+                log("<GET> 403 '" + reqPath + "' ACCESS DENIED!", false, "HTTP");
+                response.writeHead(403)
                 response.end()
             }
         } else {
-            log("<GET> 403 '" + reqPath + "' not found!", false, "HTTP");
-            response.writeHead(403, {
-                'Content-Type': 'text/html'
-            })
+            log("<GET> 404 '" + reqPath + "' not found!", false, "HTTP");
+            response.writeHead(404)
             response.end()
         }
     } else {
