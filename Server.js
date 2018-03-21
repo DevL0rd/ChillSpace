@@ -11,7 +11,7 @@ var http = require('http');
 var crypto = require('crypto');
 var mime = require('mime-types')
 var DB = require('./Devlord_modules/DB.js');
-
+var Throttle = require('throttle');
 //
 //Include DevLord Libs.
 //
@@ -30,7 +30,8 @@ if (fs.existsSync("./config.json")) {
         PORT: 80,
         HTTP_TIMEOUT_MS: 5000,
         maxPostSizeMB: 8,
-        bitRateKB: 500,
+        bitRateKB: 51000,
+        maxChunkSizeKB: 51000,
         maxUrlLength: 2048,
         "X-Frame-Options": "SAMEORIGIN",
         "X-XSS-Protection": "1; mode=block",
@@ -144,15 +145,15 @@ function Http_HandlerNew(request, response) {
 
                             var start = parseInt(partialstart, 10);
                             if (start >= 0) {
-                                var bitrateInBytes = settings.bitRateKB * 1000
-                                var defaultEnd = start + bitrateInBytes;
+                                var maxChunkInBytes = settings.maxChunkSizeKB * 1000
+                                var defaultEnd = start + maxChunkInBytes;
                                 var end = partialend ? parseInt(partialend, 10) : defaultEnd;
                                 if (end > total - 1) {
                                     end = total - 1
                                 }
                                 var chunksize = (end - start) + 1;
-                                if (chunksize > bitrateInBytes) {
-                                    end = start + bitrateInBytes;
+                                if (chunksize > maxChunkInBytes) {
+                                    end = start + maxChunkInBytes;
                                     if (end > total - 1) {
                                         end = total - 1
                                     }
@@ -174,8 +175,7 @@ function Http_HandlerNew(request, response) {
                                         start: start,
                                         end: end
                                     });
-                                    fs.createReadStream(fullPath).pipe(response);
-                                    file.pipe(response);
+                                    file.pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
                                 } catch (err) {
                                     log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
                                 }
@@ -198,7 +198,7 @@ function Http_HandlerNew(request, response) {
                                     'Content-Type': contentType
                                 });
                             try {
-                                fs.createReadStream(fullPath).pipe(response);
+                                fs.createReadStream(fullPath).pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
                             } catch (err) {
                                 log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
                             }
