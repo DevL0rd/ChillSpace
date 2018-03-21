@@ -12,6 +12,7 @@ var crypto = require('crypto');
 var mime = require('mime-types')
 var DB = require('./Devlord_modules/DB.js');
 var Throttle = require('throttle');
+var exec = require('child_process').exec;
 //
 //Include DevLord Libs.
 //
@@ -31,7 +32,6 @@ if (fs.existsSync("./config.json")) {
         HTTP_TIMEOUT_MS: 5000,
         maxPostSizeMB: 8,
         bitRateKB: 51000,
-        maxChunkSizeKB: 51000,
         maxUrlLength: 2048,
         "X-Frame-Options": "SAMEORIGIN",
         "X-XSS-Protection": "1; mode=block",
@@ -142,24 +142,11 @@ function Http_HandlerNew(request, response) {
                             var parts = range.replace(/bytes=/, "").split("-");
                             var partialstart = parts[0];
                             var partialend = parts[1];
-
                             var start = parseInt(partialstart, 10);
-                            if (start >= 0) {
-                                var maxChunkInBytes = settings.maxChunkSizeKB * 1000
-                                var defaultEnd = start + maxChunkInBytes;
-                                var end = partialend ? parseInt(partialend, 10) : defaultEnd;
-                                if (end > total - 1) {
-                                    end = total - 1
-                                }
-                                var chunksize = (end - start) + 1;
-                                if (chunksize > maxChunkInBytes) {
-                                    end = start + maxChunkInBytes;
-                                    if (end > total - 1) {
-                                        end = total - 1
-                                    }
-                                    chunksize = (end - start) + 1;
-                                }
-                                log("<GET>'" + fullPath + "' with byte range " + start + "-" + end + " (" + chunksize + " bytes)", false, "HTTP");
+                            var end = partialend ? parseInt(partialend, 10) : total - 1;
+                            var chunksize = (end - start) + 1;
+                            log("<GET>'" + fullPath + "' with byte range " + start + "-" + end + " (" + chunksize + " bytes)", false, "HTTP");
+                            if (start >= 0 && end < total) {
                                 var contentType = mime.lookup(reqPath)
                                 response.writeHead(206, {
                                     'X-Frame-Options': settings["X-Frame-Options"],
@@ -176,6 +163,12 @@ function Http_HandlerNew(request, response) {
                                         end: end
                                     });
                                     file.pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
+                                    var contentCategory = contentType.split("/")[0]
+                                    if (contentCategory == "video" || contentCategory == "audio" || contentCategory == "image" || contentCategory == "application") {
+                                        file.pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
+                                    } else {
+                                        file.pipe(response);
+                                    }
                                 } catch (err) {
                                     log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
                                 }
@@ -198,7 +191,12 @@ function Http_HandlerNew(request, response) {
                                     'Content-Type': contentType
                                 });
                             try {
-                                fs.createReadStream(fullPath).pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
+                                var contentCategory = contentType.split("/")[0]
+                                if (contentCategory == "video" || contentCategory == "audio" || contentCategory == "image" || contentCategory == "application") {
+                                    fs.createReadStream(fullPath).pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
+                                } else {
+                                    fs.createReadStream(fullPath).pipe(response);
+                                }
                             } catch (err) {
                                 log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
                             }

@@ -4,7 +4,6 @@
 	"HTTP_TIMEOUT_MS": 5000,
 	"maxPostSizeMB": 8,
 	"bitRateKB": 51000,
-	"maxChunkSizeKB": 51000,
 	"maxUrlLength": 2048,
 	"X-Frame-Options": "SAMEORIGIN",
 	"X-XSS-Protection": "1; mode=block",
