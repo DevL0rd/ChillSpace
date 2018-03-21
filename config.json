@@ -2,7 +2,12 @@
 	"IP": "0.0.0.0",
 	"PORT": 80,
 	"HTTP_TIMEOUT_MS": 5000,
-	"bitRate": 1024,
+	"maxPostSizeMB": 8,
+	"bitRateKB": 500,
+	"maxUrlLength": 2048,
+	"X-Frame-Options": "SAMEORIGIN",
+	"X-XSS-Protection": "1; mode=block",
+	"X-Content-Type-Options": "nosniff",
 	"directoryIndex": [
 		"index.html"
 	],

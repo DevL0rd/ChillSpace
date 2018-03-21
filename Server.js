@@ -29,7 +29,12 @@ if (fs.existsSync("./config.json")) {
         IP: "0.0.0.0",
         PORT: 80,
         HTTP_TIMEOUT_MS: 5000,
-        bitRate: 1024,
+        maxPostSizeMB: 8,
+        bitRateKB: 500,
+        maxUrlLength: 2048,
+        "X-Frame-Options": "SAMEORIGIN",
+        "X-XSS-Protection": "1; mode=block",
+        "X-Content-Type-Options": "nosniff",
         webRoot: "./WebRoot",
         directoryIndex: ["index.html"],
         blockedPaths: [],
@@ -61,112 +66,171 @@ function isFile(pathname) {
 }
 
 function Http_HandlerNew(request, response) {
-
     if (request.method == 'POST') {
         var body = '';
-        request.on('data', function (data) {
-            body += data;
-        });
-        request.on('end', function () {
+        var received = 0;
+        if (request.url.length < settings.maxUrlLength) {
+            request.on('data', function (data) {
+                body += data;
+                received += data.length;
+                if (received > settings.maxPostSizeMB * 1000000) {
+                    log("<POST> '" + reqPath + "' too large!", true, "HTTP");
+                    request.destroy();
+                    response.writeHead(413)
+                    response.end()
+                }
+            });
+            request.on('end', function () {
 
-            log("<POST> received.", false, "HTTP");
-            body = JSON.parse(body)
-            for (i in events["post"]) {
-                events["post"][i](request, response, body);
-            }
-        });
-
+                var urlParts = url.parse(request.url);
+                var reqPath = urlParts.pathname;
+                log("<POST> '" + reqPath + "'", false, "HTTP");
+                for (i in events["post"]) {
+                    if (events["post"][i](request, response, urlParts, body)) {
+                        break;
+                    }
+                }
+            });
+        } else {
+            log("<GET> 414 Uri too long!", true, "HTTP");
+            response.writeHead(414)
+            response.end()
+        }
 
     } else if (request.method == 'GET') {
-        var reqPath = url.parse(request.url).pathname;
-        var requestIsPath = !isFile(reqPath)
-        if (requestIsPath) {
-            if (reqPath.substr(reqPath.length - 1) != "/") {
-                reqPath = reqPath + "/"
+        var pluginHandledRequest = false;
+        var urlParts = url.parse(request.url);
+        var reqPath = urlParts.pathname;
+        if (request.url.length <= settings.maxUrlLength) {
+            var fullPath = settings.webRoot + reqPath
+            try {
+                var requestIsPath = fs.lstatSync(fullPath).isDirectory()
+            } catch (err) {
+                var requestIsPath = true;
             }
-            for (i in settings.directoryIndex) {
-                testPath = reqPath + "" + settings.directoryIndex[i]
-                if (fs.existsSync(settings.webRoot + testPath)) {
-                    reqPath = testPath
-                    requestIsPath = false;
+            for (i in events["get"]) {
+                if (events["get"][i](request, response, urlParts, requestIsPath)) {
+                    pluginHandledRequest = true;
                     break;
                 }
             }
-        }
-        var fullPath = settings.webRoot + reqPath
-        if (!requestIsPath && fs.existsSync(fullPath)) {
-            var filename = reqPath.replace(/^.*[\\\/]/, '')
-            var directory = reqPath.substring(0, reqPath.lastIndexOf("/"));
-            if (!settings.blockedPaths.includes(directory) && !settings.blockedFiles.includes(reqPath) && !settings.blockedFileNames.includes(filename) && !settings.blockedFileExtensions.includes(reqPath.split('.').pop())) {
-                var stat = fs.statSync(fullPath);
-                var total = stat.size;
-                if (request.headers['range']) {
-                    var range = request.headers.range;
-                    var parts = range.replace(/bytes=/, "").split("-");
-                    var partialstart = parts[0];
-                    var partialend = parts[1];
-
-                    var start = parseInt(partialstart, 10);
-                    if (start >= 0) {
-                        var defaultEnd = start + settings.bitRate;
-                        var end = partialend ? parseInt(partialend, 10) : defaultEnd;
-                        if (end > total - 1) {
-                            end = total - 1
+            if (!pluginHandledRequest) {
+                if (requestIsPath) {
+                    if (reqPath.substr(reqPath.length - 1) != "/") {
+                        reqPath = reqPath + "/"
+                    }
+                    for (i in settings.directoryIndex) {
+                        testPath = reqPath + "" + settings.directoryIndex[i]
+                        if (fs.existsSync(settings.webRoot + testPath)) {
+                            reqPath = testPath
+                            requestIsPath = false;
+                            break;
                         }
-                        var chunksize = (end - start) + 1;
-                        if (chunksize > settings.bitRate) {
-                            end = start + settings.bitRate;
-                            if (end > total - 1) {
-                                end = total - 1
+                    }
+                }
+                fullPath = settings.webRoot + reqPath
+                if (!requestIsPath && fs.existsSync(fullPath)) {
+                    var filename = fullPath.replace(/^.*[\\\/]/, '')
+                    var directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
+                    if (!settings.blockedPaths.includes(directory) && !settings.blockedFiles.includes(fullPath) && !settings.blockedFileNames.includes(filename) && !settings.blockedFileExtensions.includes(fullPath.split('.').pop())) {
+
+                        var stat = fs.statSync(fullPath);
+                        var total = stat.size;
+                        if (request.headers['range']) {
+                            var range = request.headers.range;
+                            var parts = range.replace(/bytes=/, "").split("-");
+                            var partialstart = parts[0];
+                            var partialend = parts[1];
+
+                            var start = parseInt(partialstart, 10);
+                            if (start >= 0) {
+                                var bitrateInBytes = settings.bitRateKB * 1000
+                                var defaultEnd = start + bitrateInBytes;
+                                var end = partialend ? parseInt(partialend, 10) : defaultEnd;
+                                if (end > total - 1) {
+                                    end = total - 1
+                                }
+                                var chunksize = (end - start) + 1;
+                                if (chunksize > bitrateInBytes) {
+                                    end = start + bitrateInBytes;
+                                    if (end > total - 1) {
+                                        end = total - 1
+                                    }
+                                    chunksize = (end - start) + 1;
+                                }
+                                log("<GET>'" + fullPath + "' with byte range " + start + "-" + end + " (" + chunksize + " bytes)", false, "HTTP");
+                                var contentType = mime.lookup(reqPath)
+                                response.writeHead(206, {
+                                    'X-Frame-Options': settings["X-Frame-Options"],
+                                    "X-XSS-Protection": settings["X-XSS-Protection"],
+                                    "X-Content-Type-Options": settings["X-Content-Type-Options"],
+                                    'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
+                                    'Accept-Ranges': 'bytes',
+                                    'Content-Length': chunksize,
+                                    'Content-Type': contentType
+                                });
+                                try {
+                                    var file = fs.createReadStream(fullPath, {
+                                        start: start,
+                                        end: end
+                                    });
+                                    fs.createReadStream(fullPath).pipe(response);
+                                    file.pipe(response);
+                                } catch (err) {
+                                    log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
+                                }
+
+                            } else {
+                                log("<GET> 416 '" + reqPath + "' Invalid byte range!", true, "HTTP");
+                                response.writeHead(416)
+                                response.end()
                             }
-                            chunksize = (end - start) + 1;
-                        }
+                        } else {
 
-                        log("<GET> 206 '" + reqPath + "' with byte range " + start + "-" + end + " (" + chunksize + " bytes)", false, "HTTP");
-                        var file = fs.createReadStream(fullPath, {
-                            start: start,
-                            end: end
-                        });
-                        var contentType = mime.lookup(reqPath)
-                        response.writeHead(206, {
-                            'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
-                            'Accept-Ranges': 'bytes',
-                            'Content-Length': chunksize,
-                            'Content-Type': contentType
-                        });
-                        file.pipe(response);
+                            log("<GET> '" + reqPath + "'", false, "HTTP");
+                            var contentType = mime.lookup(reqPath)
+                            if (contentType.split)
+                                response.writeHead(200, {
+                                    'X-Frame-Options': settings["X-Frame-Options"],
+                                    "X-XSS-Protection": settings["X-XSS-Protection"],
+                                    "X-Content-Type-Options": settings["X-Content-Type-Options"],
+                                    'Content-Length': total,
+                                    'Content-Type': contentType
+                                });
+                            try {
+                                fs.createReadStream(fullPath).pipe(response);
+                            } catch (err) {
+                                log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
+                            }
+
+
+                        }
                     } else {
-                        log("<GET> 416 '" + reqPath + "' Invalid byte range!", true, "HTTP");
-                        response.writeHead(416)
+
+                        log("<GET> 403 '" + reqPath + "' ACCESS DENIED!", true, "HTTP");
+                        response.writeHead(403)
                         response.end()
                     }
                 } else {
-                    log("<GET> 200 '" + reqPath + "' sent." + " (" + total + " bytes)", false, "HTTP");
-                    var contentType = mime.lookup(reqPath)
-                    response.writeHead(200, {
-                        'Content-Length': total,
-                        'Content-Type': contentType
-                    });
-                    fs.createReadStream(fullPath).pipe(response);
+                    log("<GET> 404 '" + reqPath + "' not found!", true, "HTTP");
+                    response.writeHead(404)
+                    response.end()
                 }
-            } else {
-
-                log("<GET> 403 '" + reqPath + "' ACCESS DENIED!", true, "HTTP");
-                response.writeHead(403)
-                response.end()
             }
         } else {
-            log("<GET> 404 '" + reqPath + "' not found!", true, "HTTP");
-            response.writeHead(404)
+            log("<GET> 414 Uri too long!", true, "HTTP");
+            response.writeHead(414)
             response.end()
         }
+    } else if (request.method == 'BREW') {
+        response.writeHead(418)
+        response.end()
     } else {
-        log("<UNKOWN METHOD> 501", true, "HTTP");
-        response.writeHead(501, {
-            'Content-Type': 'text/html'
-        })
-        response.end('Unknown method.')
+        log("<UNKOWN METHOD> 501 '" + request.method + "'", true, "HTTP");
+        response.writeHead(501)
+        response.end()
     }
+
 }
 
 server.on('error', function (err) {
