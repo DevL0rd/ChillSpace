@@ -1,12 +1,15 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-//Last Update: 5/18/2017
-//Version: 1.0.0
+//Last Update: 3/21/2018
+//Version: 1.1.0
 var fs = require('fs');
+var cc = require('./conColors.js');
 
 var NameSpace = "DevlordProject"
 var LoggingDir = "./Logging"
 var consoleLogging = true
+var errorLogging = true
+var timeStampColor = ''
 if (!fs.existsSync(LoggingDir)) {
     fs.mkdirSync(LoggingDir);
 }
@@ -15,8 +18,12 @@ function setNamespace(str) {
     NameSpace = str
 }
 
-function setConsoleLogging(bool) {
+function logConsole(bool) {
     consoleLogging = bool
+}
+
+function logErrors(bool) {
+    errorLogging = bool
 }
 
 function setLoggingDir(str) {
@@ -56,12 +63,30 @@ function timeStamp() {
     return date.join("/") + " " + time.join(":") + " " + suffix;
 }
 
+function isEven(n) {
+    n = Number(n);
+    return n === 0 || !!(n && !(n % 2));
+}
+
+function isOdd(n) {
+    return isEven(Number(n) + 1);
+}
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};
+
 function log(str, isError = false, NameSpaceStr = NameSpace) {
     var now = new Date();
     var date = [now.getMonth() + 1, now.getDate(), now.getFullYear()];
     var TodaysDate = date.join("-")
     var formattedString = "[" + timeStamp() + "] (" + NameSpaceStr + "): " + str
-    console.log(formattedString)
+    var formattedPrefixColored = cc.style.bright + cc.fg.white + "[" + cc.fg.blue + timeStamp() + cc.fg.white + "] (" + cc.fg.magenta + NameSpaceStr + cc.fg.white + "): "
+    var loggedStrColor = cc.fg.white
+    if (isError) loggedStrColor = cc.fg.red
+    var cstringColoredQuotes = str.replace(/\'.*\'/, cc.style.underscore + cc.fg.cyan + '$&' + cc.reset + cc.style.bright + loggedStrColor);
+    var formattedStringColored = formattedPrefixColored + loggedStrColor + cstringColoredQuotes + cc.reset + cc.fg.white
+    console.log(formattedStringColored)
     var formattedString = "\r\n" + formattedString
     if (consoleLogging) {
         fs.appendFile(LoggingDir + "/" + NameSpaceStr + "_C-Out_" + TodaysDate + ".txt", formattedString, function (err) {
@@ -93,4 +118,5 @@ function log(str, isError = false, NameSpaceStr = NameSpace) {
 exports.log = log;
 exports.setNamespace = setNamespace;
 exports.setLoggingDir = setLoggingDir;
-exports.setConsoleLogging = setConsoleLogging;
+exports.logConsole = logConsole;
+exports.logErrors = logErrors;

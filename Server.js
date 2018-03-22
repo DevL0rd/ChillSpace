@@ -1,7 +1,7 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-//Last Update: 3/17/2018
-//Version: 1.1.2
+//Last Update: 3/21/2018
+//Version: 2.0.1
 
 //Include Libs
 var url = require('url');
@@ -12,17 +12,16 @@ var crypto = require('crypto');
 var mime = require('mime-types')
 var DB = require('./Devlord_modules/DB.js');
 var Throttle = require('throttle');
-var exec = require('child_process').exec;
 //
 //Include DevLord Libs.
 //
 var Logging = require('./Devlord_modules/Logging.js');
-Logging.setNamespace('Console')
-Logging.setConsoleLogging(false)
+Logging.setNamespace('Server');
+Logging.logConsole(false);
 
-//Startup
-Logging.log("Starting Up...");
-//Load DBS
+var cc = require('./Devlord_modules/conColors.js');
+var cs = require('./Devlord_modules/conSplash.js');
+
 if (fs.existsSync("./config.json")) {
     var settings = DB.load("./config.json")
 } else {
@@ -46,24 +45,74 @@ if (fs.existsSync("./config.json")) {
     DB.save("./config.json", settings)
 }
 
+var commands = {}
+commands.exit = function () {
+    process.exit()
+}
+var events = {
+    "connection": [],
+    "disconnect": [],
+    "post": [],
+    "get": [],
+    "on": function (event, callback) {
+        if (this[event] != null) {
+            this[event].push(callback)
+        } else {
+            Logging.log("Event '" + event + "' is not found.", true, "Server")
+        }
+    }
+};
+
 var server = http.createServer(Http_HandlerNew)
-var io = require('socket.io')(server);
 server.timeout = settings.HTTP_TIMEOUT_MS;
-//startServer
-Logging.log("Starting server at '" + settings.IP + ":" + settings.PORT + "'...", false, "HTTP");
-server.listen(settings.PORT, settings.IP);
+
+var io = require('socket.io')(server);
+io.connectioncount = 0;
+io.clientcount = 0;
+io.IP_BAN_LIST = [];
 io.generate_key = function () {
     var sha = crypto.createHash('sha256');
     sha.update(Math.random().toString());
     return sha.digest('hex');
 }
+io.on('error', function (err) {
+    Logging.log(err, true, "IO");
+});
+io.on('uncaughtException', function (err) {
+    Logging.log(err, true, "IO");
+});
+io.on('connection', function (socket) {
+    if (socket.request.connection.remoteAddress in io.IP_BAN_LIST) {
+        Logging.log("[" + socket.request.connection.remoteAddress + "] Rejected!" + " IP address is banned. (" + io.IP_BAN_LIST[socket.request.connection.remoteAddress].reason + ")", true, "IO");
+        Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.red + " REJECTED! " + "IP address is banned. '" + io.IP_BAN_LIST[socket.request.connection.remoteAddress].reason + "'", true, "IO");
+        socket.disconnect()
+    } else {
+        Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.green + " connected!", false, "IO");
+        io.connectioncount++
+            io.clientcount++
+            for (i in events["connection"]) {
+                events["connection"][i](socket)
+            }
+        io.emit('connectionCount', io.clientcount)
+        socket.on('disconnect', function (data) {
+            Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.yellow + " disconnected...", false, "IO");
+            io.clientcount--;
+            for (i in events["disconnect"]) {
+                events["disconnect"][i](socket)
+            }
+            io.emit('connectionCount', io.clientcount)
+        });
+    }
+})
 
-function log(str, isError = false, nameSpace = "Server") {
-    Logging.log(str, isError, nameSpace);
-}
-
-function isFile(pathname) {
-    return pathname.split('/').pop().indexOf('.') > -1;
+Logging.log("Loading plugins...", false, "Server")
+var plugins = require('require-all')({
+    dirname: __dirname + '/Plugins',
+    recursive: false
+});
+for (var i in plugins) {
+    Logging.log("Plugin '" + i + "' loaded.", false, "Server")
+    plugins[i].init(settings, events, io, Logging.log, commands);
 }
 
 function Http_HandlerNew(request, response) {
@@ -75,17 +124,16 @@ function Http_HandlerNew(request, response) {
                 body += data;
                 received += data.length;
                 if (received > settings.maxPostSizeMB * 1000000) {
-                    log("<POST> '" + reqPath + "' too large!", true, "HTTP");
+                    Logging.log("<POST> '" + reqPath + "' too large!", true);
                     request.destroy();
                     response.writeHead(413)
                     response.end()
                 }
             });
             request.on('end', function () {
-
                 var urlParts = url.parse(request.url);
                 var reqPath = urlParts.pathname;
-                log("<POST> '" + reqPath + "'", false, "HTTP");
+                Logging.log("<POST> '" + reqPath + "'");
                 for (i in events["post"]) {
                     if (events["post"][i](request, response, urlParts, body)) {
                         break;
@@ -93,11 +141,10 @@ function Http_HandlerNew(request, response) {
                 }
             });
         } else {
-            log("<GET> 414 Uri too long!", true, "HTTP");
+            Logging.log("<GET> Uri too long!", true);
             response.writeHead(414)
             response.end()
         }
-
     } else if (request.method == 'GET') {
         var pluginHandledRequest = false;
         var urlParts = url.parse(request.url);
@@ -134,7 +181,6 @@ function Http_HandlerNew(request, response) {
                     var filename = fullPath.replace(/^.*[\\\/]/, '')
                     var directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     if (!settings.blockedPaths.includes(directory) && !settings.blockedFiles.includes(fullPath) && !settings.blockedFileNames.includes(filename) && !settings.blockedFileExtensions.includes(fullPath.split('.').pop())) {
-
                         var stat = fs.statSync(fullPath);
                         var total = stat.size;
                         if (request.headers['range']) {
@@ -145,7 +191,7 @@ function Http_HandlerNew(request, response) {
                             var start = parseInt(partialstart, 10);
                             var end = partialend ? parseInt(partialend, 10) : total - 1;
                             var chunksize = (end - start) + 1;
-                            log("<GET>'" + fullPath + "' with byte range " + start + "-" + end + " (" + chunksize + " bytes)", false, "HTTP");
+                            Logging.log("<GET>'" + fullPath + "' byte range " + start + "-" + end);
                             if (start >= 0 && end < total) {
                                 var contentType = mime.lookup(reqPath)
                                 response.writeHead(206, {
@@ -170,17 +216,16 @@ function Http_HandlerNew(request, response) {
                                         file.pipe(response);
                                     }
                                 } catch (err) {
-                                    log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
+                                    Logging.log("'" + fullPath + "' " + err, true);
                                 }
 
                             } else {
-                                log("<GET> 416 '" + reqPath + "' Invalid byte range!", true, "HTTP");
+                                Logging.log("<GET> '" + reqPath + "' Invalid byte range!", true);
                                 response.writeHead(416)
                                 response.end()
                             }
                         } else {
-
-                            log("<GET> '" + reqPath + "'", false, "HTTP");
+                            Logging.log("<GET> '" + reqPath + "'");
                             var contentType = mime.lookup(reqPath)
                             if (contentType.split)
                                 response.writeHead(200, {
@@ -198,25 +243,22 @@ function Http_HandlerNew(request, response) {
                                     fs.createReadStream(fullPath).pipe(response);
                                 }
                             } catch (err) {
-                                log("ERROR: '" + fullPath + "' " + err, true, "HTTP");
+                                Logging.log("'" + fullPath + "' " + err, true);
                             }
-
-
                         }
                     } else {
-
-                        log("<GET> 403 '" + reqPath + "' ACCESS DENIED!", true, "HTTP");
+                        Logging.log("<GET> '" + reqPath + "' ACCESS DENIED!", true);
                         response.writeHead(403)
                         response.end()
                     }
                 } else {
-                    log("<GET> 404 '" + reqPath + "' not found!", true, "HTTP");
+                    Logging.log("<GET> '" + reqPath + "' not found!", true);
                     response.writeHead(404)
                     response.end()
                 }
             }
         } else {
-            log("<GET> 414 Uri too long!", true, "HTTP");
+            Logging.log("<GET> Uri too long!", true);
             response.writeHead(414)
             response.end()
         }
@@ -224,83 +266,22 @@ function Http_HandlerNew(request, response) {
         response.writeHead(418)
         response.end()
     } else {
-        log("<UNKOWN METHOD> 501 '" + request.method + "'", true, "HTTP");
+        Logging.log("<UNKOWN METHOD> '" + request.method + "'", true);
         response.writeHead(501)
         response.end()
     }
-
 }
 
 server.on('error', function (err) {
-    Logging.log(err, true, "HTTP");
+    Logging.log(err, true, "Server");
 });
 server.on('uncaughtException', function (err) {
-    Logging.log(err, true, "HTTP");
-});
-io.on('error', function (err) {
-    Logging.log(err, true, "IO");
-});
-io.on('uncaughtException', function (err) {
-    Logging.log(err, true, "IO");
+    Logging.log(err, true, "Server");
 });
 
-//Statistics and io tracking
-io.connectioncount = 0;
-io.clientcount = 0;
-io.IP_BAN_LIST = [];
-var events = {
-    "connection": [],
-    "disconnect": [],
-    "post": [],
-    "get": [],
-    "on": function (event, callback) {
-        if (this[event] != null) {
-            this[event].push(callback)
-        } else {
-            log("ERROR: Event '" + event + "' is not found.", true)
-        }
-    }
-};
-//on io connection, setup client dat
-io.on('connection', function (socket) {
-    //if connection is in ban list then show error and disconnect socket
-    if (socket.request.connection.remoteAddress in io.IP_BAN_LIST) {
-        log("[" + socket.request.connection.remoteAddress + "] Rejected!" + " IP address is banned. (" + io.IP_BAN_LIST[socket.request.connection.remoteAddress].reason + ")", true, "IO");
-        socket.disconnect()
+Logging.log("Starting server at '" + settings.IP + ":" + settings.PORT + "'...", false, "Server");
+server.listen(settings.PORT, settings.IP);
 
-    } else {
-        log("[" + socket.request.connection.remoteAddress + "] Connected! ", false, "IO");
-        io.connectioncount++
-            io.clientcount++
-            for (i in events["connection"]) {
-                events["connection"][i](socket)
-            }
-        io.emit('connectionCount', io.clientcount)
-        socket.on('disconnect', function (data) {
-            log("[" + this.request.connection.remoteAddress + "] Disconnected", false, "IO");
-            io.clientcount--;
-            for (i in events["disconnect"]) {
-                events["disconnect"][i](socket)
-            }
-            io.emit('connectionCount', io.clientcount)
-
-        });
-    }
-})
-
-var plugins = require('require-all')({
-    dirname: __dirname + '/Plugins',
-    recursive: false
-});
-var commands = {}
-commands.exit = function () {
-    process.exit()
-}
-Logging.log("Loading DevL0rd Plugins...")
-for (var i in plugins) {
-    Logging.log("Plugin '" + i + "' loaded.")
-    plugins[i].init(settings, events, io, log, commands);
-}
 process.stdin.on('data', function (line) {
     var message = line.toString().replace("\r\n", "").replace("\n", "")
     var messageLowercase = message.toLowerCase();
