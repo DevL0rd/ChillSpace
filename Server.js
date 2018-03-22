@@ -16,7 +16,7 @@ var Throttle = require('throttle');
 //Include DevLord Libs.
 //
 var Logging = require('./Devlord_modules/Logging.js');
-Logging.setNamespace('Server');
+Logging.setNamespace('HTTP');
 Logging.logConsole(false);
 
 var cc = require('./Devlord_modules/conColors.js');
@@ -87,16 +87,20 @@ io.on('connection', function (socket) {
         Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.red + " REJECTED! " + "IP address is banned. '" + io.IP_BAN_LIST[socket.request.connection.remoteAddress].reason + "'", true, "IO");
         socket.disconnect()
     } else {
-        Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.green + " connected!", false, "IO");
-        io.connectioncount++
-            io.clientcount++
-            for (i in events["connection"]) {
-                events["connection"][i](socket)
-            }
+        io.connectioncount++;
+        io.clientcount++;
+        Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.green + " connected!" + cc.fg.white + " " + io.clientcount + " clients connected.", false, "IO");
+        Logging.setNamespace('Plugin');
+        for (i in events["connection"]) {
+            events["connection"][i](socket)
+        }
         io.emit('connectionCount', io.clientcount)
         socket.on('disconnect', function (data) {
-            Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.yellow + " disconnected...", false, "IO");
+
             io.clientcount--;
+
+            Logging.log(cc.fg.white + "[" + cc.fg.cyan + socket.request.connection.remoteAddress + cc.fg.white + "]" + cc.fg.yellow + " disconnected..." + cc.fg.white + " " + io.clientcount + " clients connected.", false, "IO");
+            Logging.setNamespace('Plugin');
             for (i in events["disconnect"]) {
                 events["disconnect"][i](socket)
             }
