@@ -94,6 +94,7 @@ io.on('connection', function (socket) {
         for (i in events["connection"]) {
             events["connection"][i](socket)
         }
+        Logging.setNamespace('HTTP');
         io.emit('connectionCount', io.clientcount)
         socket.on('disconnect', function (data) {
 
@@ -104,6 +105,7 @@ io.on('connection', function (socket) {
             for (i in events["disconnect"]) {
                 events["disconnect"][i](socket)
             }
+            Logging.setNamespace('HTTP');
             io.emit('connectionCount', io.clientcount)
         });
     }
@@ -116,7 +118,9 @@ var plugins = require('require-all')({
 });
 for (var i in plugins) {
     Logging.log("Plugin '" + i + "' loaded.", false, "Server")
+    Logging.setNamespace('Plugin');
     plugins[i].init(settings, events, io, Logging.log, commands);
+    Logging.setNamespace('HTTP');
 }
 
 function Http_HandlerNew(request, response) {
@@ -138,11 +142,15 @@ function Http_HandlerNew(request, response) {
                 var urlParts = url.parse(request.url);
                 var reqPath = urlParts.pathname;
                 Logging.log("<POST> '" + reqPath + "'");
+
+                Logging.setNamespace('Plugin');
                 for (i in events["post"]) {
                     if (events["post"][i](request, response, urlParts, body)) {
                         break;
                     }
                 }
+
+                Logging.setNamespace('HTTP');
             });
         } else {
             Logging.log("<GET> Uri too long!", true);
@@ -160,12 +168,15 @@ function Http_HandlerNew(request, response) {
             } catch (err) {
                 var requestIsPath = true;
             }
+
+            Logging.setNamespace('Plugin');
             for (i in events["get"]) {
                 if (events["get"][i](request, response, urlParts, requestIsPath)) {
                     pluginHandledRequest = true;
                     break;
                 }
             }
+            Logging.setNamespace('HTTP');
             if (!pluginHandledRequest) {
                 if (requestIsPath) {
                     if (reqPath.substr(reqPath.length - 1) != "/") {
@@ -222,7 +233,6 @@ function Http_HandlerNew(request, response) {
                                 } catch (err) {
                                     Logging.log("'" + fullPath + "' " + err, true);
                                 }
-
                             } else {
                                 Logging.log("<GET> '" + reqPath + "' Invalid byte range!", true);
                                 response.writeHead(416)
