@@ -30,8 +30,12 @@ if (fs.existsSync("./config.json")) {
         PORT: 80,
         HTTP_TIMEOUT_MS: 5000,
         maxPostSizeMB: 8,
-        bitRateKB: 51000,
+        videoBitRateKB: 51000,
+        audioBitRateKB: 230,
+        applicationDownloadThrottleMB: 10,
+        generalDownloadThrottleMB: 2,
         maxUrlLength: 2048,
+        "Cache-Control": "max-age=86400",
         "X-Frame-Options": "SAMEORIGIN",
         "X-XSS-Protection": "1; mode=block",
         "X-Content-Type-Options": "nosniff",
@@ -196,6 +200,7 @@ function Http_HandlerNew(request, response) {
                     var filename = fullPath.replace(/^.*[\\\/]/, '')
                     var directory = fullPath.substring(0, fullPath.lastIndexOf("/"));
                     if (!settings.blockedPaths.includes(directory) && !settings.blockedFiles.includes(fullPath) && !settings.blockedFileNames.includes(filename) && !settings.blockedFileExtensions.includes(fullPath.split('.').pop())) {
+                        var contentType = mime.lookup(reqPath) || 'application/octet-stream'
                         var stat = fs.statSync(fullPath);
                         var total = stat.size;
                         if (request.headers['range']) {
@@ -208,7 +213,6 @@ function Http_HandlerNew(request, response) {
                             var chunksize = (end - start) + 1;
                             Logging.log("<GET>'" + fullPath + "' byte range " + start + "-" + end);
                             if (start >= 0 && end < total) {
-                                var contentType = mime.lookup(reqPath)
                                 response.writeHead(206, {
                                     'X-Frame-Options': settings["X-Frame-Options"],
                                     "X-XSS-Protection": settings["X-XSS-Protection"],
@@ -216,19 +220,24 @@ function Http_HandlerNew(request, response) {
                                     'Content-Range': 'bytes ' + start + '-' + end + '/' + total,
                                     'Accept-Ranges': 'bytes',
                                     'Content-Length': chunksize,
-                                    'Content-Type': contentType
+                                    'Content-Type': contentType,
+                                    "Cache-Control": settings["Cache-Control"],
+                                    "Last-Modified": stat.mtime.toUTCString()
                                 });
                                 try {
                                     var file = fs.createReadStream(fullPath, {
                                         start: start,
                                         end: end
                                     });
-                                    file.pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
                                     var contentCategory = contentType.split("/")[0]
-                                    if (contentCategory == "video" || contentCategory == "audio" || contentCategory == "image" || contentCategory == "application") {
-                                        file.pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
+                                    if (contentCategory == "video") {
+                                        file.pipe(new Throttle(settings.videoBitRateKB * 1000)).pipe(response);
+                                    } else if (contentType == "audio") {
+                                        file.pipe(new Throttle(settings.audioBitRateKB * 1000)).pipe(response);
+                                    } else if (contentType == "application") {
+                                        file.pipe(new Throttle(settings.applicationDownloadThrottleMB * 1000000)).pipe(response);
                                     } else {
-                                        file.pipe(response);
+                                        file.pipe(new Throttle(settings.generalDownloadThrottleMB * 1000000)).pipe(response);
                                     }
                                 } catch (err) {
                                     Logging.log("'" + fullPath + "' " + err, true);
@@ -239,27 +248,42 @@ function Http_HandlerNew(request, response) {
                                 response.end()
                             }
                         } else {
-                            Logging.log("<GET> '" + reqPath + "'");
-                            var contentType = mime.lookup(reqPath)
-                            if (contentType.split)
+                            var reqModDate = request.headers["if-modified-since"];
+                            if (reqModDate != null && new Date(reqModDate).getTime() == stat.mtime.getTime()) {
+                                Logging.log("<GET> '" + reqPath + "' loaded from cache.");
+                                response.writeHead(304, {
+                                    "Last-Modified": stat.mtime.toUTCString()
+                                });
+                                response.end();
+                            } else {
+                                Logging.log("<GET> '" + reqPath + "'");
+                                var contentType = mime.lookup(reqPath)
                                 response.writeHead(200, {
                                     'X-Frame-Options': settings["X-Frame-Options"],
                                     "X-XSS-Protection": settings["X-XSS-Protection"],
                                     "X-Content-Type-Options": settings["X-Content-Type-Options"],
                                     'Content-Length': total,
-                                    'Content-Type': contentType
+                                    'Content-Type': contentType,
+                                    "Cache-Control": settings["Cache-Control"],
+                                    "Last-Modified": stat.mtime.toUTCString()
                                 });
-                            try {
-                                var contentCategory = contentType.split("/")[0]
-                                if (contentCategory == "video" || contentCategory == "audio" || contentCategory == "image" || contentCategory == "application") {
-                                    fs.createReadStream(fullPath).pipe(new Throttle(settings.bitRateKB * 1000)).pipe(response);
-                                } else {
-                                    fs.createReadStream(fullPath).pipe(response);
+                                try {
+                                    var contentCategory = contentType.split("/")[0]
+                                    if (contentCategory == "video") {
+                                        fs.createReadStream(fullPath).pipe(new Throttle(settings.videoBitRateKB * 1000)).pipe(response);
+                                    } else if (contentType == "audio") {
+                                        fs.createReadStream(fullPath).pipe(new Throttle(settings.audioBitRateKB * 1000)).pipe(response);
+                                    } else if (contentType == "application") {
+                                        fs.createReadStream(fullPath).pipe(new Throttle(settings.applicationDownloadThrottleMB * 1000000)).pipe(response);
+                                    } else {
+                                        fs.createReadStream(fullPath).pipe(new Throttle(settings.generalDownloadThrottleMB * 1000000)).pipe(response);
+                                    }
+                                } catch (err) {
+                                    Logging.log("'" + fullPath + "' " + err, true);
                                 }
-                            } catch (err) {
-                                Logging.log("'" + fullPath + "' " + err, true);
                             }
                         }
+
                     } else {
                         Logging.log("<GET> '" + reqPath + "' ACCESS DENIED!", true);
                         response.writeHead(403)
