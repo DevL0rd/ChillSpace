@@ -18,7 +18,7 @@ if (fs.existsSync("./Plugins/MediaShare/currentPlaylist.json")) {
     DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
 }
 
-function init(settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands) {
     events.on("disconnect", function (socket) {
         socket.host = false;
         var sockets = io.sockets.sockets;

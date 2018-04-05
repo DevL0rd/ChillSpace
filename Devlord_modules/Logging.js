@@ -77,6 +77,7 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 
 function log(str, isError = false, NameSpaceStr = NameSpace) {
+    str = "" + str;
     var now = new Date();
     var date = [now.getMonth() + 1, now.getDate(), now.getFullYear()];
     var TodaysDate = date.join("-")

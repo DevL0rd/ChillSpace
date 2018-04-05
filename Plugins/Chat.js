@@ -8,7 +8,7 @@ var DB = require('../Devlord_modules/DB.js');
 var saveTimeout;
 
 
-function init(settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands) {
 
     events.on("connection", function (socket) {
         socket.on('sendMessage', function (msg) {

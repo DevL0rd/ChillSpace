@@ -20,7 +20,7 @@ if (fs.existsSync("./Plugins/Accounts/Account_Settings.json")) {
 }
 var saveTimeout;
 
-function init(settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands) {
     commands.test = function (message, messageLowercase, arguments) {
         log("Test", false, "Test");
     }
