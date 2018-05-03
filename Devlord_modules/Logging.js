@@ -1,36 +1,56 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-//Last Update: 3/21/2018
-//Version: 1.1.0
+//Last Update: 4/19/2018
+//Version: 1.2.0
 var fs = require('fs');
 var cc = require('./conColors.js');
-
-var NameSpace = "DevlordProject"
-var LoggingDir = "./Logging"
-var consoleLogging = true
-var errorLogging = true
-var timeStampColor = ''
-if (!fs.existsSync(LoggingDir)) {
-    fs.mkdirSync(LoggingDir);
-}
-
-function setNamespace(str) {
-    NameSpace = str
-}
-
-function logConsole(bool) {
-    consoleLogging = bool
-}
-
-function logErrors(bool) {
-    errorLogging = bool
-}
-
+var NameSpace = "Devlord Project";
+var LoggingDir = "./Logs";
+var consoleLogging = true;
+var errorLogging = true;
+var consoleLogging = true;
+var errorLogging = true;
+var logging = true;
+var consolePrinting = true;
+var errorPrinting = true;
+var printing = true;
+var consoleNamespacePrintFilter = [];
+var errorNamespacePrintFilter = [];
 function setLoggingDir(str) {
-    LoggingDir = str
+    LoggingDir = str;
     if (!fs.existsSync(LoggingDir)) {
         fs.mkdirSync(LoggingDir);
     }
+}
+function setNamespace(str) {
+    NameSpace = str;
+}
+function setLogging(bool) {
+    logging = bool;
+}
+function logConsole(bool) {
+    consoleLogging = bool;
+}
+function logErrors(bool) {
+    errorLogging = bool;
+}
+
+function printConsole(bool) {
+    consolePrinting = bool;
+}
+
+function printErrors(bool) {
+    errorPrinting = bool;
+}
+
+function setPrinting(bool) {
+    printing = bool;
+}
+function setConsoleNamespacePrintFilter(filter) {
+    consoleNamespacePrintFilter = filter;
+}
+function setErrorNamespacePrintFilter(filter) {
+    errorNamespacePrintFilter = filter;
 }
 
 function timeStamp() {
@@ -76,48 +96,60 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.split(search).join(replacement);
 };
 
-function log(str, isError = false, NameSpaceStr = NameSpace) {
-    str = "" + str;
+function formatAndColorString(NameSpaceStr, str, isError) {
     var now = new Date();
     var date = [now.getMonth() + 1, now.getDate(), now.getFullYear()];
-    var TodaysDate = date.join("-")
-    var formattedString = "[" + timeStamp() + "] (" + NameSpaceStr + "): " + str
-    var formattedPrefixColored = cc.style.bright + cc.fg.white + "[" + cc.fg.blue + timeStamp() + cc.fg.white + "] (" + cc.fg.magenta + NameSpaceStr + cc.fg.white + "): "
-    var loggedStrColor = cc.fg.white
-    if (isError) loggedStrColor = cc.fg.red
+    var TodaysDate = date.join("-");
+    var formattedPrefixColored = cc.style.bright + cc.fg.white + "[" + cc.fg.blue + timeStamp() + cc.fg.white + "] (" + cc.fg.magenta + NameSpaceStr + cc.fg.white + "): ";
+    var loggedStrColor = cc.fg.white;
+    if (isError) loggedStrColor = cc.fg.red;
     var cstringColoredQuotes = str.replace(/\'.*\'/, cc.style.underscore + cc.fg.cyan + '$&' + cc.reset + cc.style.bright + loggedStrColor);
-    var formattedStringColored = formattedPrefixColored + loggedStrColor + cstringColoredQuotes + cc.reset + cc.fg.white
-    console.log(formattedStringColored)
-    var formattedString = "\r\n" + formattedString
-    if (consoleLogging) {
-        fs.appendFile(LoggingDir + "/" + NameSpaceStr + "_C-Out_" + TodaysDate + ".txt", formattedString, function (err) {
-            if (err) {
-                console.log("[" + timeStamp() + "]: " + err)
-            }
-        });
-        fs.appendFile(LoggingDir + "/" + "C-Out_" + TodaysDate + ".txt", formattedString, function (err) {
-            if (err) {
-                console.log("[" + timeStamp() + "]: " + err)
-            }
-        });
-    }
-    if (isError) {
-        fs.appendFile(LoggingDir + "/" + "E-Out_" + TodaysDate + ".txt", formattedString, function (err) {
-            if (err) {
-                console.log("[" + timeStamp() + "]: " + err)
-            }
-        });
-        fs.appendFile(LoggingDir + "/" + NameSpaceStr + "_E-Out_" + TodaysDate + ".txt", formattedString, function (err) {
-            if (err) {
-                console.log("[" + timeStamp() + "]: " + err)
-            }
-        });
-    }
+    return formattedPrefixColored + loggedStrColor + cstringColoredQuotes + cc.reset + cc.fg.white;
 }
 
+function formatString(str, NameSpaceStr) {
+    var formattedString = "[" + timeStamp() + "] (" + NameSpaceStr + "): " + str;
+    return "\r\n" + formattedString;
+}
+function log(str, isError = false, NameSpaceStr = NameSpace) {
+    setTimeout(function () {
+        str = "" + str;
+        if (printing) {
+            if (isError) {
+                if (errorPrinting && !errorNamespacePrintFilter.includes(NameSpaceStr)) {
+                    console.log(formatAndColorString(NameSpaceStr, str, isError));
+                }
+            } else {
+                if (consolePrinting && !consoleNamespacePrintFilter.includes(NameSpaceStr)) {
+                    console.log(formatAndColorString(NameSpaceStr, str, isError));
+                }
+            }
+        }
+        var formattedString = formatString(str, NameSpaceStr);
+        if (logging) {
+            var now = new Date();
+            var date = [now.getMonth() + 1, now.getDate(), now.getFullYear()];
+            var TodaysDate = date.join("-");
+            if (consoleLogging) {
+                fs.appendFile(LoggingDir + "/" + NameSpaceStr + "_C-Out_" + TodaysDate + ".txt", formattedString, function (err) { });
+                fs.appendFile(LoggingDir + "/" + "C-Out_" + TodaysDate + ".txt", formattedString, function (err) { });
+            }
+            if (isError) {
+                fs.appendFile(LoggingDir + "/" + "E-Out_" + TodaysDate + ".txt", formattedString, function (err) { });
+                fs.appendFile(LoggingDir + "/" + NameSpaceStr + "_E-Out_" + TodaysDate + ".txt", formattedString, function (err) { });
+            }
+        }
+    }, 0);
+}
 
 exports.log = log;
 exports.setNamespace = setNamespace;
 exports.setLoggingDir = setLoggingDir;
 exports.logConsole = logConsole;
 exports.logErrors = logErrors;
+exports.setLogging = setLogging;
+exports.setPrinting = setPrinting;
+exports.printConsole = printConsole;
+exports.printErrors = printErrors;
+exports.setConsoleNamespacePrintFilter = setConsoleNamespacePrintFilter;
+exports.setErrorNamespacePrintFilter = setErrorNamespacePrintFilter;

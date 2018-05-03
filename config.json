@@ -1,23 +1,41 @@
 {
 	"IP": "0.0.0.0",
 	"PORT": 80,
-	"HTTP_TIMEOUT_MS": 5000,
+	"timeout": 5000,
+	"maxHeadersCount": 20,
 	"maxPostSizeMB": 8,
-	"videoBitRateKB": 51000,
-	"audioBitRateKB": 230,
-	"applicationDownloadThrottleMB": 10,
-	"generalDownloadThrottleMB": 2,
 	"maxUrlLength": 2048,
-	"Cache-Control": "max-age=86400",
-	"X-Frame-Options": "SAMEORIGIN",
-	"X-XSS-Protection": "1; mode=block",
-	"X-Content-Type-Options": "nosniff",
 	"directoryIndex": [
 		"index.html"
 	],
 	"webRoot": "./WebRoot",
-	"blockedPaths": [],
-	"blockedFiles": [],
-	"blockedFileNames": [],
-	"blockedFileExtensions": []
+	"throttling": {
+		"videoBitRateKB": 51000,
+		"audioBitRateKB": 230,
+		"applicationDownloadThrottleMB": 15
+	},
+	"defaultHeaders": {
+		"Cache-Control": "max-age=0",
+		"X-Frame-Options": "SAMEORIGIN",
+		"X-XSS-Protection": "1; mode=block",
+		"X-Content-Type-Options": "nosniff"
+	},
+	"security": {
+		"blockedPaths": [],
+		"blockedFiles": [],
+		"blockedFileNames": [],
+		"blockedFileExtensions": []
+	},
+	"logging": {
+		"enabled": true,
+		"directory": "./Logs",
+		"consoleLoggingEnabled": false,
+		"errorLoggingEnabled": true,
+		"printConsole": true,
+		"printErrors": true,
+		"consoleNamespacePrintFilter": [
+			"HTTP"
+		],
+		"errorNamespacePrintFilter": []
+	}
 }
