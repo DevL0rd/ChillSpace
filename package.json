@@ -1,7 +1,8 @@
 {
     "dependencies": {
         "mkdirp": "latest",
-        "youtube-parser": "latest"
+        "youtube-parser": "latest",
+        "bcrypt": "latest"
     },
     "author": {
         "name": "Dustin Harris",

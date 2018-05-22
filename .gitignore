@@ -2,3 +2,4 @@ node_modules/
 Logs/
 Plugins/Accounts/
 package-lock.json
+WebRoot/downloads/TwitchBot-Prebuilt.zip
