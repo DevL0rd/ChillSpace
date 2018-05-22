@@ -11,11 +11,12 @@ var currentVideoSource
 var videoIsStopped = false;
 var syncEveryone = false;
 var host
-if (fs.existsSync("./Plugins/MediaShare/currentPlaylist.json")) {
-    var playlist = DB.load("./Plugins/MediaShare/currentPlaylist.json")
+var playlistDir = __dirname + "/MediaShare/currentPlaylist.json";
+if (fs.existsSync(playlistDir)) {
+    var playlist = DB.load(playlistDir)
 } else {
     var playlist = []
-    DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+    DB.save(playlistDir, playlist)
 }
 
 function init(plugins, settings, events, io, log, commands) {
@@ -65,7 +66,7 @@ function init(plugins, settings, events, io, log, commands) {
 
                         io.emit("updatePlaylist", playlist)
 
-                        DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                        DB.save(playlistDir, playlist)
                     })
                 } else if (url.includes('googlevideo.com')) {
                     playlist.push({
@@ -86,7 +87,7 @@ function init(plugins, settings, events, io, log, commands) {
                     })
                     io.emit("updatePlaylist", playlist)
 
-                    DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                    DB.save(playlistDir, playlist)
                 } else if (extension == "mp4") {
 
                     playlist.push({
@@ -107,7 +108,7 @@ function init(plugins, settings, events, io, log, commands) {
                     })
                     io.emit("updatePlaylist", playlist)
 
-                    DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                    DB.save(playlistDir, playlist)
 
                 } else {
                     playlist.push({
@@ -127,7 +128,7 @@ function init(plugins, settings, events, io, log, commands) {
                     })
                     io.emit("updatePlaylist", playlist)
 
-                    DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                    DB.save(playlistDir, playlist)
                 }
             }
         })
@@ -141,7 +142,7 @@ function init(plugins, settings, events, io, log, commands) {
                 }
                 io.emit("updatePlaylist", playlist)
 
-                DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                DB.save(playlistDir, playlist)
             }
         })
         socket.on("videoFailed", function () {
@@ -159,7 +160,7 @@ function init(plugins, settings, events, io, log, commands) {
                 }
                 io.emit("updatePlaylist", playlist)
 
-                DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                DB.save(playlistDir, playlist)
             }
         })
         socket.on('vote', function (url) {
@@ -173,7 +174,7 @@ function init(plugins, settings, events, io, log, commands) {
                             playlist.sort(dynamicSort("vote")).reverse();
                             io.emit("updatePlaylist", playlist)
 
-                            DB.save("./Plugins/MediaShare/currentPlaylist.json", playlist)
+                            DB.save(playlistDir, playlist)
                         }
                         break;
                     }

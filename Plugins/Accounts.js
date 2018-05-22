@@ -6,17 +6,19 @@ var fs = require('fs');
 var DB = require('../Devlord_modules/DB.js');
 var persistentLoginTimeout = 864000000
 //Load DBS
-if (fs.existsSync("./Plugins/Accounts/Accounts.json")) {
-    var Accounts = DB.load("./Plugins/Accounts/Accounts.json")
+var accountDBPath = __dirname + "/Accounts/Accounts.json";
+if (fs.existsSync(accountDBPath)) {
+    var Accounts = DB.load(accountDBPath)
 } else {
     var Accounts = {}
-    DB.save("./Plugins/Accounts/Accounts.json", Accounts)
+    DB.save(accountDBPath, Accounts)
 }
-if (fs.existsSync("./Plugins/Accounts/Account_Settings.json")) {
-    var Account_Settings = DB.load("./Plugins/Accounts/Account_Settings.json")
+var accountSettingsPath = __dirname + "/Accounts/Account_Settings.json"
+if (fs.existsSync(accountSettingsPath)) {
+    var Account_Settings = DB.load(accountSettingsPath)
 } else {
     var Account_Settings = {}
-    DB.save("./Plugins/Accounts/Account_Settings.json", Account_Settings)
+    DB.save(accountSettingsPath, Account_Settings)
 }
 var saveTimeout;
 
@@ -59,7 +61,7 @@ function init(plugins, settings, events, io, log, commands) {
                 socket.isLoggedIn = false;
                 clearTimeout(saveTimeout);
                 saveTimeout = setTimeout(function () {
-                    DB.save("./Plugins/Accounts/Accounts.json", Accounts)
+                    DB.save(accountDBPath, Accounts)
                 }, 500)
 
                 io.emit("userLoggedOff", socket.email)
@@ -89,7 +91,7 @@ function init(plugins, settings, events, io, log, commands) {
                                 Accounts[data.email].loginKeys[loginKey] = Date.now() + persistentLoginTimeout
                                 clearTimeout(saveTimeout);
                                 saveTimeout = setTimeout(function () {
-                                    DB.save("./Plugins/Accounts/Accounts.json", Accounts)
+                                    DB.save(accountDBPath, Accounts)
                                 }, 500)
                                 socket.emit("loginResponse", {
                                     persistentLoginKey: loginKey,
@@ -149,7 +151,7 @@ function init(plugins, settings, events, io, log, commands) {
                                 Accounts[data.email].loginKeys[loginKey] = Date.now() + persistentLoginTimeout
                                 clearTimeout(saveTimeout);
                                 saveTimeout = setTimeout(function () {
-                                    DB.save("./Plugins/Accounts/Accounts.json", Accounts)
+                                    DB.save(accountDBPath, Accounts)
                                 }, 500)
                                 socket.emit("loginResponse", {
                                     persistentLoginKey: loginKey,
@@ -201,7 +203,7 @@ function init(plugins, settings, events, io, log, commands) {
                                     Accounts[data.email].loginKeys = {}
                                     clearTimeout(saveTimeout);
                                     saveTimeout = setTimeout(function () {
-                                        DB.save("./Plugins/Accounts/Accounts.json", Accounts)
+                                        DB.save(accountDBPath, Accounts)
                                     }, 500)
                                     socket.emit("registerResponse", "registered")
                                     log("Account '" + data.email + "' was registered.", false, "Accounts");
