@@ -1,177 +1,193 @@
-﻿<!DOCTYPE html>
-
-<html lang="en">
+﻿<html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
     <title>Devlord Base Web App</title>
-    <link rel="stylesheet" href="/css/sytles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/fa-svg-with-js.css">
+    <link rel="stylesheet" href="css/sytles.css">
 </head>
 
 <body>
+    <nav id="nav" class="navbar navbar-expand navbar-dark">
+        <a class="navbar-brand" href="javascript:void(0)">
+            <img src="img/logo_white.png" height="30" class="d-inline-block align-top" alt="">
+        </a>
 
-
-
-    <video id="player" autoplay muted>
-    
-  <source type="video/mp4">
-        Your browser does not support the video tag.
-  </video>
-    <div id="controlsBG">
-
-    </div>
-    <div id="videoTitleBG">
-
-    </div>
-
-    <div id="playerArea">
-
-
-        <div id="videoTitle">
-            <div id="videoTitleText">
+        <div id="videoTitleText" class="d-none d-sm-block">
+            Nothing playing
+        </div>
+        <span class="navbar-nav dropdown ml-auto">
+            <a class="dropdown-toggle nav-link" href="#" id="userDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i id="profileIcon" class="fas fa-user"></i>
+                <img id="profilePic" style="display: none;">
+            </a>
+            <div class="dropdown-menu" aria-labelledby="userDrop">
+                <a id="loginLink" class="dropdown-item" href="#login" data-toggle="modal">Login</a>
+                <a id="logoutLink" class="dropdown-item" href="javascript:void(0)" onclick="javascript:logout();">Logout</a>
             </div>
+        </span>
+    </nav>
 
-        </div>
+    <div class="row fadeIn">
+        <div id="playerArea" onmousemove="showControls()" class="col-lg-9">
+            <div id="playerContainer">
+                <video id="player" src="" autoplay muted>
 
-        <div id="playlist" class="customScroll">
+                    <source type="video/mp4"> Your browser does not support the video tag.
+                </video>
+                <table id="videoLoadingCover">
+                    <tr>
+                        <td><img src="/img/loading.gif" id="loadingGif"></td>
+                    </tr>
+                </table>
+                <div id="systemMessageBox">
+                    <div id="systemName">
+                        System
+                    </div>
+                    <div id="systemMessage">
+                        Test message
+                    </div>
+                </div>
+                <div id="videoOverlay">
+                    <input id="videoUrl" type="text" placeholder="Video url">
+                    <div id="playListBar0" class="playListBar">
+                        <img class="videoUserPhoto">
+                        <span class="playlistTitle">
 
-        </div>
-
-    </div>
-
-    <div id="videoLoadingCover">
-
-        <img src="/img/loading.gif" id="lodaingGif">
-    </div>
-    <div id="controls">
-        <button id="togglePlay" onclick="togglePlay()">▶</button>
-        <input id="videoTrack" type="range" min="0" max="10" step="0.01">
-        <button id="volume">🔊</button>
-        <div id="volumeDropdown" class="dropdownMenu">
-
-            <input id="volumeSlider" type="range" orient="vertical" min="0" max="100" step="0.01">
-
-        </div>
-    </div>
-
-
-
-
-
-
-
-    <div id="playListBar0" class="playListBar">
-        <div class="videoUserPhoto">
-            <img class="userBarPhotoHolder">
-        </div>
-        <div class="playlistTitle">
-
-        </div>
-        <div class="voteBox">
-            Vote 0
-        </div>
+                        </span>
+                        <span class="voteBox">
+                            Vote 0
+                        </span>
 
 
-    </div>
+                    </div>
 
+                    <div id="playlist" class="customScroll">
 
+                    </div>
 
-    <div id="systemMessageBox">
-        <div id="systemName">
-            System
-        </div>
-        <div id="systemMessage">
-            Test message
-        </div>
-    </div>
-    <div id="titleBar">
-        <img src="img/logo_white.png" id="logo">
-
-
-        <input class="login_inputs" id="videoUrl" placeholder="Video Url">
-
-        <div id="watchingCount">
-            0 Watching
-        </div>
-
-    </div>
-
-    <div id="accountBar">
-        <div id="accountPhoto" class="userBarPhoto">
-
-            <img id="profilePic" class="userBarPhotoHolder">
-        </div>
-        <div id="accountName" class="accountName">Logged Out</div>
-    </div>
-
-    <div id="chatArea">
-        <div id="chatBox0" class="chatBoxTemplate">
-            <div class="chatBoxPhoto">
-                <img class="chatBoxPhotoHolder">
-            </div>
-            <div class="chatUsername">
-                Username here
-            </div>
-
-            <div class="chatMessage">
-
-                Test message
+                    <div id="controls">
+                        <button id="togglePlay" onclick="togglePlay()">
+                            <i class="fa fa-play" aria-hidden="true"></i>
+                        </button>
+                        <span id="volumeDropdown" class="dropdownMenu">
+                            <input id="volumeSlider" type="range" orient="vertical" min="0" max="100" step="0.01">
+                        </span>
+                        <input id="videoTrack" type="range" min="0" max="10" step="0.01">
+                        <button id="volume">
+                            <i class="fa fa-volume-up" aria-hidden="true"></i>
+                        </button>
+                        <button id="toggleFullscreen">
+                            <i class="fas fa-arrows-alt"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <input id="chatBar" type="text" placeholder="Send a message">
-
-
-    <div id="chatLog" class="customScroll">
-
-    </div>
-
-    <div id="typingNotice">
-
-        <img src="/img/loading.gif" id="typingGif">
-        <div id="typingNoticeText">
-            Someone is typing...
-        </div>
-    </div>
-
-    <input id="alwaysShowChat" type="checkbox">
-    <div id="accountDropdown" class="dropdownMenu">
-        <div> <button id="logout" class="dropdownSelection" onclick="logout()"> Logout </button></div>
-    </div>
-    <div id="onlineUsers" class="dropdownMenu customScroll">
-        <div id="userBar0" class="userBarTemplate">
-            <div class="userBarPhoto">
-                <img class="userBarPhotoHolder">
+        <div id="chat" class="col-lg-3">
+            <div class="chatHeader">Chat</div>
+            <div id="chatLog" class="customScroll">
+                <div id="chatBox0" class="chatBox">
+                    <div class="chatUserInfoHolder">
+                        <img class="chatBoxPhoto">
+                        <span class="chatUsername">
+                            Username here
+                        </span>
+                    </div>
+                    <div class="chatMessage">
+                        Test message
+                    </div>
+                </div>
             </div>
-            <div class="userBarName">
-                Username here
+            <div id="typingNotice">
+                <img src="/img/loading.gif" id="typingGif">
+                <span id="typingNoticeText">
+                    Someone is typing...
+                </span>
+            </div>
+            <input id="chatBar" type="text" placeholder="Send a message">
+        </div>
+
+    </div>
+    <div id="login" class="modal fade text-center">
+        <div class="modal-dialog">
+            <div class="modal-content loginModal">
+                <div class="login-user-img">
+                    <img src="img/profilePics/noprofilepic.jpg">
+                </div>
+                <button type="button" class="close closeLogin" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="login-user-name">
+                    <h1>Login plz</h1>
+                </div>
+                <div id="loginOutput">
+
+                </div>
+                <div class="form-input">
+                    <div class="form-group">
+                        <input id="login_email" type="email" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <input id="login_username" class="form-control" placeholder="Username" style="display:none;">
+                    </div>
+                    <div class="form-group">
+                        <input id="login_pswd" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input id="login_passwordcheck" type="password" class="form-control" placeholder="Confirm Password" style="display:none;">
+                    </div>
+                    <button id="login_button" type="submit" class="btn btn-success" onclick="loginButton()">Login</button>
+                    <button id="register_button" type="submit" class="btn btn-success" onclick="showRegister()">Create An Account</button>
+                </div>
+                <a href="javascript:void(0)">Forgot Password?</a>
             </div>
         </div>
     </div>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper-1.14.0.min.js"></script>
+    <script src="js/bootstrap-4.1.0.min.js"></script>
+    <script src="js/fontawesome-all.min.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/socket.io.js"></script>
+    <script src="js/client.js"></script>
+    <script src="js/accounts.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        var chatIsShowing = true;
 
-    <div id="login" class="dropdownMenu">
+        function toggleChat() {
+            $("#chat").toggleClass("collapsed");
+            $("#media").toggleClass("col-lg-9 col-lg-12");
+        }
 
-        <center>
-            <div id="loginOutput">Please Login</div>
-        </center>
+        function resizeChat() {
+            if (window.innerWidth < 992) {
+                $("#chat").height(window.innerHeight - $("#nav").innerHeight() - $("#playerArea").innerHeight());
 
-        <div id="emailarea"> <input type="email" autocomplete="on" class="login_inputs" id="login_email" placeholder="Email"></div>
-        <div id="usernamearea"> <input type="username" class="login_inputs" id="login_username" placeholder="Username"></div>
-        <div id="passwordarea"> <input type="password" autocomplete="on" class="login_inputs" id="login_pswd" placeholder="Password"></div>
-        <div id="password2area"> <input type="password" class="login_inputs" id="login_pswdcheck" placeholder="Password"></div>
-        <div> <button id="login_button" class="dropdownSelection" onclick="loginButton()"> Login </button></div>
-        <div id="forgotPasswordLink">
-            <center><a href="javascript:forgotPassword();" link="#ffffff" vlink="#ffffff" alink="#ffffff">I forgot my password</a></center>
-        </div>
-        <div id="registerLink">
-            <center><a href="javascript:showRegister();" link="#ffffff" vlink="#ffffff" alink="#ffffff">Click here to register</a></center>
-        </div>
-    </div>
+            } else {
+                $("#chat").height("100%")
+                $("#chat").height($("#chat").innerHeight() - $("#nav").innerHeight())
+            }
+        }
+        window.onresize = function() {
 
+            resizeChat();
+        }
+
+
+        $("#player").resize(function() {
+            resizeChat();
+        });
+        window.onload = function() {
+            console.log("")
+            resizeChat();
+        }
+
+    </script>
 </body>
-<script src="/js/jquery-3.2.1.min.js"></script>
-<script src="/js/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/js/socket.io.js"></script>
-<script src="/js/client.js"></script>
 
 </html>

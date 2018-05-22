@@ -9,7 +9,6 @@ var saveTimeout;
 
 
 function init(plugins, settings, events, io, log, commands) {
-
     events.on("connection", function (socket) {
         socket.on('sendMessage', function (msg) {
             if (socket.isLoggedIn) {

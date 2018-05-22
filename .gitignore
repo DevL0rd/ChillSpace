@@ -1,2 +1,4 @@
 node_modules/
-Logging/
+Logs/
+Plugins/Accounts/
+package-lock.json

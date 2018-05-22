@@ -1,644 +1,200 @@
 html {
-    background: url(../img/bg.jpg) no-repeat center center fixed;
+    background: url(../img/bg.jpg);
     background-size: cover;
-    height: 100%;
-    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
 
 body {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
-    padding: 0px;
-    font-family: "calibri";
-    background: url("/img/bg.jpg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    height: 100%;
+    background: transparent;
     overflow: hidden;
 }
 
-a:link {
-    color: white;
-    text-decoration: none;
+.brand-icon {
+    color: lime;
 }
 
-a:visited {
-    color: white;
-    text-decoration: none;
-}
-
-a:hover {
-    color: white;
-    text-decoration: none;
-}
-
-a:active {
-    color: white;
-    text-decoration: none;
-}
-
-
-
-
-#titleBar {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: calc(100% - 250px);
-    height: 40px;
-    background: rgba(50, 50, 50, 0);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    min-width: 510px;
-}
-
-#accountBar {
-    overflow: hidden;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    width: 250px;
-    height: 40px;
-    background: rgba(149, 66, 244, 0);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-
-}
-
-#accountBar:hover {
-    cursor: pointer;
-    background: rgba(161, 79, 255, 0);
-}
-
-.accountName {
-    margin-top: 8px;
-    margin-left: 30px;
-    font-size: 18px;
-    position: absolute;
-    width: 250px;
-    left: 10px;
-    color: white;
-}
-
-.userBarTemplate {
+.collapsed {
     display: none;
-    margin-top: 5px;
-    overflow: hidden;
-    width: calc(100% - 20px);
-    height: auto;
 }
 
-.userBar {
-    margin-top: 5px;
-    overflow: hidden;
-    width: calc(100% - 20px);
-    height: 40px;
-    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.84) 0%, rgba(0, 0, 0, 0) 90%, rgba(0, 0, 0, 0) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6000000', endColorstr='#00000000', GradientType=1);
-    /* IE6-9 fallback on horizontal gradient */
-    border-top-left-radius: 25px;
+.navbar-dark {
+    /* -webkit-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.75); */
+    background: rgba(0, 0, 0, 0.7);
 
-    border-bottom-left-radius: 25px;
 }
 
-#playlist {
-
-    position: absolute;
-    top: 40px;
-    right: 0px;
-    width: 100%;
-    height: calc(100% - 40px);
-    overflow-y: auto;
+#logoutLink {
+    display: none;
 }
 
-
-.playListBar {
-    margin-top: 12px;
-    margin-left: 40px;
-    border-radius: 8px;
-    width: calc(100% - 80px);
-    height: 20px;
-    color: white;
-    word-wrap: break-word;
-    background: rgba(20, 20, 20, 0.4);
+.loginModal {
+    position: relative;
+    margin: 0 auto;
+    margin-top: 100px;
     padding: 10px;
-    font-size: 15px;
-}
-
-#playListBar0 {
-
-    display: none;
-}
-
-.playlistTitle {
-    float: left;
-    margin-left: 5px;
-    width: calc(100% - 80px);
-}
-
-.voteBox {
-    float: right;
-    border-radius: 8px;
-    font-size: 12px;
-    color: white;
-    padding-top: 5px;
-    padding: 6px;
-    background: rgba(33, 168, 114, 0.6);
-    margin-top: -2px;
-}
-
-.voteBox:hover {
-    cursor: pointer;
-    background: rgba(33, 168, 114, 0.8);
-}
-
-.voteBoxRed {
-    float: right;
-    border-radius: 8px;
-    font-size: 12px;
-    color: white;
-    padding-top: 5px;
-    padding: 6px;
-    background: #4286f4;
-    margin-top: -22px;
-}
-
-.voteBoxRed:hover {
-    cursor: pointer;
-    background: #4286f4;
-}
-
-.userBarPhotoHolder {
-    height: 100%;
-}
-
-.playListBar:hover {
-    cursor: pointer;
-}
-
-.messageImage {
-    width: 300px;
-    margin-left: 10px;
-}
-
-.userBarName {
-    margin-top: 13px;
-    margin-left: 50px;
-    color: white;
-}
-
-.userBarPhoto {
-    margin-top: 5px;
-    margin-left: 5px;
-    float: left;
-    width: 30px;
-    height: 30px;
-    background: white;
-    border-radius: 100px;
-    overflow: hidden;
-}
-
-.videoUserPhoto {
-    margin-top: -5px;
-    margin-left: 0px;
-    float: left;
-    width: 30px;
-    height: 30px;
-    background: white;
-    border-radius: 100px;
-    overflow: hidden;
-}
-
-.chatBoxPhoto {
-    margin-top: 2px;
-    margin-left: 2px;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    background: white;
-    border-radius: 100px;
-    overflow: hidden;
-}
-
-.chatBoxPhotoHolder {
-    height: 100%;
-}
-
-#login {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0px;
-    width: 250px;
-    padding-bottom: 5px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    overflow: hidden;
-    background: rgba(50, 50, 50, 0.2);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-
-
-.dropdownSelection {
-    margin-top: 5px;
-    margin-left: 15px;
-    width: calc(100% - 25px);
-    -webkit-transition-duration: 0.4s;
-    /* Safari */
-    transition-duration: 0.4s;
-    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.5);
     border: none;
-    color: white;
-    background-color: rgba(149, 66, 244, 0.8);
-    padding: 5px 24px;
-    font-size: 15px;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.dropdownSelection:hover {
-    background-color: rgba(160, 82, 249, 0.8);
-    /* Green */
-    color: white;
-}
-
-.dropdownMenu {
-    background: rgba(50, 50, 50, 0.2);
-    padding-bottom: 5px;
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding-bottom: 5px;
-}
-
-#onlineUsers {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0px;
-    width: 250px;
-    height: 40%;
-    max-height: 200px;
-    overflow-x: hidden;
-}
-
-#accountDropdown {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0px;
-    width: 250px;
-
-}
-
-#login_pswdcheck {
-    display: none;
-}
-
-#login_username {
-    display: none;
+    border-radius: 5px 5px 8px 8px;
+    -webkit-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    width: 60%;
 }
 
 #loginOutput {
-    font-size: 15px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    color: white;
+    margin-bottom: 5px;
 }
 
-.login_inputs {
-    background-color: #1e1e1e;
-    border-radius: 10px;
-    border: none;
-    color: white;
-    margin-top: 5px;
-    margin-left: 15px;
-    width: calc(100% - 25px);
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+@media (max-width: 992px) {
+    .loginModal {
+        width: 100%;
+    }
 }
 
-#typingNotice {
-    display: none;
-    position: absolute;
-    bottom: 75px;
-    left: 5px;
-    border-radius: 5px;
-    background: rgba(50, 50, 50, 0.5);
-    color: white;
-    padding: 5px;
+.login-user-img {
+    margin-top: -50px;
 }
 
-#alwaysShowChat {
-    display: none;
-    top: 45px;
-    left: 2px;
-    position: absolute;
+.login-user-img img {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
 }
 
-#chatBar {
-    display: none;
-    position: absolute;
-    bottom: 33px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom-right-radius: 10px;
-    border: none;
-    color: white;
-    width: 375px;
+#profilePic {
+    border-radius: 50%;
+    width: 25px;
     height: 25px;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    resize: none;
-    overflow: hidden;
 }
 
-#chatArea {
-    pointer-events: none;
-    resize: none;
+.login-user-name {
+    margin: 10px 0px;
+}
+
+.login-user-name h1 {
+    font-size: 30px;
+    color: #f0f0f0;
+}
+
+.closeLogin {
     position: absolute;
-    top: 40px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-#chatLog {
-    display: none;
-    position: absolute;
-    top: 40px;
-    left: 0px;
-    height: calc(100% - 125px);
-    width: 350px;
-    overflow-y: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-bottom: 12px;
-
-}
-
-.chatBoxTemplate {
-    display: none;
-    position: absolute;
-    bottom: 20px;
-    left: 5px;
-    color: white;
-    overflow: hidden;
-    border-top-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.chatBox {
-    min-width: 100px;
-    position: absolute;
-    bottom: 20px;
-    left: 5px;
-    color: white;
-    overflow: hidden;
-    border-top-left-radius: 10px;
-    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6000000', endColorstr='#00000000', GradientType=1);
-    /* IE6-9 fallback on horizontal gradient */
-}
-
-.chatBoxLogged {
-
-    margin-top: 12px;
-    color: white;
-    overflow: hidden;
-    border-top-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    max-width: 400px;
-    width: auto;
-    background: -moz-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(-45deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6000000', endColorstr='#00000000', GradientType=1);
-    /* IE6-9 fallback on horizontal gradient */
-}
-
-.chatUsername {
-    padding-left: 25px;
-
-    padding-right: 5px;
-    background: -moz-linear-gradient(-45deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(-45deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(135deg, rgba(93, 18, 158, 0.9) 0%, rgba(50, 10, 85, 0.7) 46%, rgba(14, 3, 24, 0) 85%, rgba(0, 0, 0, 0) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e65d129e', endColorstr='#00000000', GradientType=1);
-    /* IE6-9 fallback on horizontal gradient */
-    width: 100%;
-    height: 23px;
-}
-
-.chatMessage {
-
-    width: 100%;
-
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    word-wrap: break-word;
-    max-width: 200px;
-}
-
-#systemMessageBox {
-    display: none;
-    position: absolute;
-    bottom: 40px;
+    top: 5px;
     right: 10px;
-    color: white;
-    overflow: hidden;
-    border-top-right-radius: 10px;
-    border-bottom-left-radius: 10px;
+    color: #f0f0f0;
 }
 
-#systemMessage {
-    background: rgba(40, 40, 40, 0.6);
+.form-input button {
     width: 100%;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 8px;
-    padding-bottom: 15px;
-    word-wrap: break-word;
-    max-width: 395px;
-
-    font-size: 16px;
+    margin-bottom: 20px;
 }
 
-#systemName {
-    padding-left: 5px;
-    padding-right: 15px;
-    font-size: 20px;
-    background: rgba(33, 168, 114, 0.6);
+.loginModal-links {
+    border-radius: 0px 0px 5px 5px;
+    background-color: #ECF0F1;
+    padding: 15px;
+}
+
+/* player */
+
+#playerArea {
+    position: relative;
     width: 100%;
-}
-
-#forgotPasswordLink {
-    margin-top: 5px;
-}
-
-#registerLink {
-    margin-top: 5px;
+    height: calc(100% - 59px);
+    background: rgba(0, 0, 0, 0.6);
+    position: relative;
+    height: calc(100% - 59px);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0px;
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    /* IE6-9 */
+    padding: 0px;
 }
 
 #player {
-    position: absolute;
-    top: 40px;
-    right: 0px;
     width: 100%;
-    height: calc(100% - 40px);
-    margin: auto;
+    height: 100%;
 }
 
-#videoUrl {
+#playerContainer {
+    background: transparent;
+    width: 100%;
+    height: auto%;
+}
+
+#videoOverlay,
+#videoLoadingCover {
     display: none;
-    float: left;
-    width: calc(100% - 235px);
-    margin-top: 8px;
-    background: #232323;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
 }
 
-#playerArea {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-    height: calc(100% - 40px);
+#videoOverlay {
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    /* IE6-9 */
 }
 
 #videoLoadingCover {
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-    height: calc(100% - 40px);
-    background: rgba(33, 33, 33, 0.8);
-    background: -moz-linear-gradient(left, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, rgba(15, 13, 13, 0.7) 0%, rgba(40, 40, 40, 0.57) 32%, rgba(40, 40, 40, 0.5) 50%, rgba(40, 40, 40, 0.57) 68%, rgba(0, 0, 0, 0.7) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b30f0d0d', endColorstr='#b3000000', GradientType=1);
-    /* IE6-9 */
+    background: rgba(0, 0, 0, 0.5);
+    text-align: center;
 }
 
-#lodaingGif {
-    display: block;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 300px;
-    height: 200px;
-    margin-left: -150px;
-    margin-top: -100px;
+#videoLoadingCover td {
+    vertical-align: middle;
+    text-align: center;
 }
 
-#typingGif {
-    float: left;
-    top: 0px;
-    left: 0px;
-    height: 40px;
-
+#loadingGif {
+    width: 200px;
+    height: 150px;
 }
 
-#typingNoticeText {
-    float: left;
-    top: 5px;
-    left: 60px;
-    padding-top: 10px;
+#videoTitleText {
+    font-size: 18px;
+    color: white;
 }
 
 #controls {
-    display: none;
     position: absolute;
     bottom: 0px;
-    right: 0px;
+    left: 0px;
     width: 100%;
-
-    height: 150px;
+    padding: 5px;
 }
 
-#videoTitle {
-    position: absolute;
-    top: 15px;
-    right: -15px;
-    width: 100%;
-    height: 150px;
+#togglePlay {
+    border: none;
+    color: rgba(149, 66, 244, 0.8);
     font-size: 20px;
-    padding-left: 15px;
-    color: white;
-
-    /* IE6-9 */
+    background: transparent;
 }
 
-#controlsBG {
-    display: none;
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-
-    height: 150px;
-    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.79) 99%, rgba(0, 0, 0, 0.8) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#cc000000', GradientType=0);
-    /* IE6-9 */
-}
-
-#videoTitleBG {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0px;
-    width: 100%;
-    height: 150px;
-    font-size: 46px;
-    padding-left: 15px;
-    color: white;
-    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
-    /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
-    /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.79) 1%, rgba(0, 0, 0, 0) 100%);
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc000000', endColorstr='#00000000', GradientType=0);
-    /* IE6-9 */
+#togglePlay:focus {
+    outline: none;
 }
 
 #videoTrack {
     -webkit-appearance: none;
     /* Override default CSS styles */
     appearance: none;
-    position: absolute;
-    bottom: 10px;
-    left: 50px;
-    width: calc(100% - 105px);
+    width: calc(100% - 110px);
     height: 10px;
     border-radius: 5px;
     /* Specified height */
@@ -651,7 +207,6 @@ a:active {
     -webkit-transition: .2s;
     /* 0.2 seconds transition on hover */
     transition: opacity .2s;
-
 }
 
 /* Mouse-over effects */
@@ -690,31 +245,42 @@ a:active {
     border-radius: 50%;
 }
 
-#togglePlay {
-    position: absolute;
-    bottom: 5px;
-    left: 10px;
+@media (max-width: 992px) {
+    #playerArea {
+        height: auto;
+    }
+    #player {
+        height: auto;
+    }
+}
+
+#volume {
     border: none;
-    color: rgba(149, 66, 244, 1);
+    color: rgba(149, 66, 244, 0.8);
     font-size: 20px;
     background: transparent;
 }
 
-#volume {
-    position: absolute;
-    bottom: 4px;
-    right: 10px;
+#volume:focus {
+    outline: none;
+}
+
+#toggleFullscreen {
     border: none;
-    color: white;
+    color: rgba(149, 66, 244, 0.8);
     font-size: 20px;
     background: transparent;
+}
+
+#toggleFullscreen:focus {
+    outline: none;
 }
 
 #volumeDropdown {
     display: none;
     position: absolute;
     bottom: 40px;
-    right: 18px;
+    right: 45px;
     width: 30px;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
@@ -745,7 +311,6 @@ a:active {
     -webkit-transition: .2s;
     /* 0.2 seconds transition on hover */
     transition: opacity .2s;
-
 }
 
 /* Mouse-over effects */
@@ -784,34 +349,227 @@ a:active {
     border-radius: 50%;
 }
 
-#watchingCount {
-    overflow: hidden;
+#systemMessageBox {
+    display: none;
     position: absolute;
-    top: 5px;
-    right: 5px;
-    height: 25px;
-    background: rgba(33, 168, 114, 0.6);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 8px;
-    padding-top: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
+    bottom: 40px;
+    right: 10px;
     color: white;
+    overflow: hidden;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
-#watchingCount:hover {
+#systemMessage {
+    background: rgba(40, 40, 40, 0.6);
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 8px;
+    padding-bottom: 15px;
+    word-wrap: break-word;
+    max-width: 395px;
+
+    font-size: 16px;
+}
+
+#systemName {
+    padding-left: 5px;
+    padding-right: 15px;
+    font-size: 20px;
+    background: rgba(33, 168, 114, 0.6);
+    width: 100%;
+}
+
+/* playlist */
+
+#playlist {
+    width: 100%;
+    height: calc(100% - 80px);
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.playListBar {
+    position: relative;
+    border-radius: 8px;
+    color: white;
+    word-wrap: break-word;
+    background: rgba(32, 32, 32, 0.4);
+    padding: 8px;
+    padding-right: 60px;
+    font-size: 15px;
+    margin-top: 5px;
+}
+
+#playListBar0 {
+    display: none;
+}
+
+.playlistTitle {
+    margin-left: 5px;
+}
+
+.videoUserPhoto {
+    margin-right: 5px;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.voteBox {
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: white;
+    padding: 6px;
+    background: rgba(33, 168, 114, 0.6);
+}
+
+.voteBox:hover {
     cursor: pointer;
     background: rgba(33, 168, 114, 0.8);
 }
 
-#logo {
-    float: left;
-    margin-left: 5px;
-    margin-top: 3px;
-    height: 35px;
-    filter: hue-rotate(20);
+.voteBoxRed {
+    position: absolute;
+    right: 5px;
+    top: 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: white;
+    padding: 6px;
+    background: #4286f4;
 }
 
+.voteBoxRed:hover {
+    cursor: pointer;
+    background: #4286f4;
+}
+
+#videoUrl {
+    display: block;
+    padding: 8px;
+    margin-top: 8px;
+    margin-left: 8px;
+    width: calc(100% - 16px);
+    color: white;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    border: none;
+}
+
+#videoUrl:focus {
+    outline: none;
+}
+
+/* chat */
+
+.chatHeader {
+    color: white;
+    background: rgba(33, 168, 114, 0.6);
+    font-size: 20px;
+    padding: 6px;
+    text-align: center;
+}
+
+#chat {
+    position: relative;
+    height: calc(100% - 59px);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 0px;
+    background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    /* IE6-9 */
+}
+
+
+.chatBox {
+    display: none;
+    color: white;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+}
+
+.chatUserInfoHolder {
+    padding: 5px;
+}
+
+.chatBoxPhoto {
+    display: inline;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.chatUsername {
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.chatMessage {
+    width: 100%;
+    padding: 5px 10px;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.messageImage {
+    width: 300px;
+    margin-left: 10px;
+}
+
+#typingGif {
+    float: left;
+    top: 0px;
+    left: 0px;
+    height: 40px;
+}
+
+#chatBar {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    resize: none;
+    border: none;
+    padding: 8px;
+}
+
+#chatBar:focus {
+    outline: none;
+}
+
+#chatLog {
+    overflow-x: hidden;
+    height: calc(100% - 82px);
+}
+
+#typingNotice {
+    display: none;
+    position: absolute;
+    bottom: 30px;
+    right: 5px;
+    border-radius: 5px;
+    background: rgba(17, 17, 17, 0.8);
+    color: white;
+    padding: 5px;
+}
+
+/* scroll */
 
 .customScroll::-webkit-scrollbar {
     width: 12px;
@@ -824,8 +582,9 @@ a:active {
     border-radius: 50px;
 }
 
-textarea:focus,
-input:focus,
-button:focus {
-    outline: none;
+/* bootstrap fix */
+
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
 }
