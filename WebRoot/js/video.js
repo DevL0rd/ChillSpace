@@ -28,7 +28,7 @@ function togglePlay() {
 }
 
 player.onwaiting = function () {
-    $("#videoLoadingCover").fadeOut(400);
+    $("#videoLoadingCover").fadeIn(400);
 };
 
 var antiSyncStutterTimeout;
