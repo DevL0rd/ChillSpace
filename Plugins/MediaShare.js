@@ -56,12 +56,12 @@ function init(plugins, settings, events, io, log, commands) {
                             currentVideoSource = playlist.shift()
                             io.emit('getVideo', currentVideoSource)
                         }
+                        log(socket.username + " added '" + title + "'to the queue.");
                         io.emit("newMessage", {
                             username: "Server",
                             msg: socket.username + " added '" + title + "'to the queue.",
                             profilePicture: socket.profilePicture
                         })
-
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -78,6 +78,7 @@ function init(plugins, settings, events, io, log, commands) {
                         currentVideoSource = playlist.shift()
                         io.emit('getVideo', currentVideoSource)
                     }
+                    log(socket.username + " added a youtube video to the queue.");
                     io.emit("newMessage", {
                         username: "Server",
                         msg: socket.username + " added a youtube video to the queue.",
@@ -99,6 +100,7 @@ function init(plugins, settings, events, io, log, commands) {
                         currentVideoSource = playlist.shift()
                         io.emit('getVideo', currentVideoSource)
                     }
+                    log(socket.username + " added a video to the queue.");
                     io.emit("newMessage", {
                         username: "Server",
                         msg: socket.username + " added a video to the queue.",
@@ -120,6 +122,7 @@ function init(plugins, settings, events, io, log, commands) {
                         currentVideoSource = playlist.shift()
                         io.emit('getVideo', currentVideoSource)
                     }
+                    log(socket.username + " added a unknown source to the queue.");
                     io.emit("newMessage", {
                         username: "Server",
                         msg: socket.username + " added a unknown source to the queue."
