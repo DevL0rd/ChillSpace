@@ -1,6 +1,12 @@
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
 }
+var isMobile = false;
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    isMobile = true;
+    var supportsOrientationChange = "onorientationchange" in window,
+        orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
+}
 //IE support
 if (!String.prototype.includes) {
     String.prototype.includes = function (search, start) {

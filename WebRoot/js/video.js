@@ -2,16 +2,19 @@ var player = document.getElementById('player');
 var isStopped = false;
 socket.on('playVideo', function () {
     try {
-
         player.play();
+        if (!isMobile) {
+            player.muted = false;
+        }
     } catch (err) {
 
         socket.emit("videoFailed");
     }
-
+    isStopped = false;
 })
 socket.on('pauseVideo', function () {
     player.pause();
+    isStopped = true;
 })
 
 function togglePlay() {
@@ -31,7 +34,6 @@ player.onwaiting = function () {
 var antiSyncStutterTimeout;
 var alreadySynced = false;
 player.onplaying = function () {
-    isStopped = false;
     $("#togglePlay").html("<i class='fa fa-pause' aria-hidden='true'></i>");
     if (!alreadySynced) {
         socket.emit("syncVideo");
@@ -97,6 +99,9 @@ player.onloadeddata = function () {
             player.pause();
         } else {
             player.play();
+        }
+        if (!isMobile) {
+            player.muted = false;
         }
     } catch (err) {
 
