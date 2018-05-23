@@ -18,7 +18,15 @@ if (fs.existsSync(playlistDir)) {
     var playlist = []
     DB.save(playlistDir, playlist)
 }
-
+function findWithAttrCount(array, attr, value) {
+    var attrMatchCount = 0;
+    for (i in array) {
+        if (array[i][attr] === value) {
+            attrMatchCount++;
+        }
+    }
+    return attrMatchCount;
+}
 function init(plugins, settings, events, io, log, commands) {
     events.on("disconnect", function (socket) {
         socket.host = false;
@@ -42,98 +50,111 @@ function init(plugins, settings, events, io, log, commands) {
 
         socket.on('addVideo', function (url) {
             if (socket.isLoggedIn) {
-                var extension = url.substr(1).split('.').pop()
-                if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    getYoutubeMp4Url(url, function (title, src) {
+                var videosPosted = findWithAttrCount(playlist, "username", socket.username)
+
+                if (videosPosted < 3) {
+                    var extension = url.substr(1).split('.').pop()
+                    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                        getYoutubeMp4Url(url, function (title, src) {
+                            playlist.push({
+                                src: src,
+                                title: title,
+                                vote: 0,
+                                voters: [],
+                                profilePicture: socket.profilePicture,
+                                username: socket.username
+                            });
+                            if (currentVideoSource == null && playlist.length > 0) {
+                                currentVideoSource = playlist.shift()
+                                videoIsStopped = false;
+                                io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
+                            }
+                            log(socket.username + " added '" + title + "'to the queue.");
+                            io.emit("newMessage", {
+                                username: "Server",
+                                msg: socket.username + " added '" + title + "'to the queue.",
+                                profilePicture: socket.profilePicture
+                            })
+                            io.emit("updatePlaylist", playlist)
+
+                            DB.save(playlistDir, playlist)
+                        })
+                    } else if (url.includes('googlevideo.com')) {
                         playlist.push({
-                            src: src,
-                            title: title,
+                            src: url,
+                            title: "Unknown Youtube Video",
                             vote: 0,
                             voters: [],
-                            profilePicture: socket.profilePicture
+                            profilePicture: socket.profilePicture,
+                            username: socket.username
                         });
                         if (currentVideoSource == null && playlist.length > 0) {
                             currentVideoSource = playlist.shift()
                             videoIsStopped = false;
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
-                        log(socket.username + " added '" + title + "'to the queue.");
+                        log(socket.username + " added a youtube video to the queue.");
                         io.emit("newMessage", {
                             username: "Server",
-                            msg: socket.username + " added '" + title + "'to the queue.",
+                            msg: socket.username + " added a youtube video to the queue.",
                             profilePicture: socket.profilePicture
                         })
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
-                    })
-                } else if (url.includes('googlevideo.com')) {
-                    playlist.push({
-                        src: url,
-                        title: "Unknown Youtube Video",
-                        vote: 0,
-                        voters: [],
-                        profilePicture: socket.profilePicture
-                    });
-                    if (currentVideoSource == null && playlist.length > 0) {
-                        currentVideoSource = playlist.shift()
-                        videoIsStopped = false;
-                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
+                    } else if (extension == "mp4") {
+
+                        playlist.push({
+                            src: url,
+                            title: "Unknown MP4 Video",
+                            vote: 0,
+                            voters: [],
+                            profilePicture: socket.profilePicture,
+                            username: socket.username
+                        });
+                        if (currentVideoSource == null && playlist.length > 0) {
+                            currentVideoSource = playlist.shift()
+                            videoIsStopped = false;
+                            io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
+                        }
+                        log(socket.username + " added a video to the queue.");
+                        io.emit("newMessage", {
+                            username: "Server",
+                            msg: socket.username + " added a video to the queue.",
+                            profilePicture: socket.profilePicture
+                        })
+                        io.emit("updatePlaylist", playlist)
+
+                        DB.save(playlistDir, playlist)
+
+                    } else {
+                        playlist.push({
+                            src: url,
+                            title: "Unknown Source",
+                            vote: 0,
+                            voters: [],
+                            profilePicture: socket.profilePicture,
+                            username: socket.username
+                        });
+                        if (currentVideoSource == null && playlist.length > 0) {
+                            currentVideoSource = playlist.shift()
+                            videoIsStopped = false;
+                            io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
+                        }
+                        log(socket.username + " added a unknown source to the queue.");
+                        io.emit("newMessage", {
+                            username: "Server",
+                            msg: socket.username + " added a unknown source to the queue."
+                        })
+                        io.emit("updatePlaylist", playlist)
+
+                        DB.save(playlistDir, playlist)
                     }
-                    log(socket.username + " added a youtube video to the queue.");
-                    io.emit("newMessage", {
-                        username: "Server",
-                        msg: socket.username + " added a youtube video to the queue.",
-                        profilePicture: socket.profilePicture
-                    })
-                    io.emit("updatePlaylist", playlist)
-
-                    DB.save(playlistDir, playlist)
-                } else if (extension == "mp4") {
-
-                    playlist.push({
-                        src: url,
-                        title: "Unknown MP4 Video",
-                        vote: 0,
-                        voters: [],
-                        profilePicture: socket.profilePicture
-                    });
-                    if (currentVideoSource == null && playlist.length > 0) {
-                        currentVideoSource = playlist.shift()
-                        videoIsStopped = false;
-                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
-                    }
-                    log(socket.username + " added a video to the queue.");
-                    io.emit("newMessage", {
-                        username: "Server",
-                        msg: socket.username + " added a video to the queue.",
-                        profilePicture: socket.profilePicture
-                    })
-                    io.emit("updatePlaylist", playlist)
-
-                    DB.save(playlistDir, playlist)
-
                 } else {
-                    playlist.push({
-                        src: url,
-                        title: "Unknown Source",
-                        vote: 0,
-                        voters: [],
-                        profilePicture: socket.profilePicture
-                    });
-                    if (currentVideoSource == null && playlist.length > 0) {
-                        currentVideoSource = playlist.shift()
-                        videoIsStopped = false;
-                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
-                    }
-                    log(socket.username + " added a unknown source to the queue.");
-                    io.emit("newMessage", {
+                    socket.emit("newMessage", {
                         username: "Server",
-                        msg: socket.username + " added a unknown source to the queue."
+                        msg: "You have already added 3 videos. Please wait to add more."
                     })
-                    io.emit("updatePlaylist", playlist)
-
-                    DB.save(playlistDir, playlist)
                 }
             }
         })
