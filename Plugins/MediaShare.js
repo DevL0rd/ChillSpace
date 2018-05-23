@@ -27,14 +27,12 @@ function init(plugins, settings, events, io, log, commands) {
             var socketIt = sockets[socketId];
             if (socket != socketIt) {
                 socketIt.host = true;
-
                 host = socketIt
                 break;
             }
         }
     })
     events.on("connection", function (socket) {
-
         if (io.clientcount == 1) {
             socket.host = true;
             host = socket
@@ -141,7 +139,6 @@ function init(plugins, settings, events, io, log, commands) {
 
                 }
                 io.emit("updatePlaylist", playlist)
-
                 DB.save(playlistDir, playlist)
             }
         })
@@ -170,10 +167,8 @@ function init(plugins, settings, events, io, log, commands) {
                         if (!playlist[i].voters.includes(socket.username)) {
                             playlist[i].voters.push(socket.username)
                             playlist[i].vote++;
-
                             playlist.sort(dynamicSort("vote")).reverse();
                             io.emit("updatePlaylist", playlist)
-
                             DB.save(playlistDir, playlist)
                         }
                         break;
@@ -233,13 +228,18 @@ function init(plugins, settings, events, io, log, commands) {
                         }
                     }
                 }
-
                 videoSyncBuffer = []
             }
         })
         socket.on('trackChanged', function (timeSeconds) {
-            if (socket.isLoggedIn) {
+            if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
                 io.emit('setVideoTime', timeSeconds)
+            } else {
+                socket.emit("newMessage", {
+                    username: "Server",
+                    msg: "You do not have permission to use video controls.",
+                    profilePicture: socket.profilePicture
+                })
             }
         })
         socket.on('syncVideo', function () {
@@ -248,8 +248,10 @@ function init(plugins, settings, events, io, log, commands) {
                 host.emit("getVideoTime")
             }
         })
+
         socket.on('playVideo', function () {
-            if (socket.isLoggedIn) {
+
+            if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
                 log(socket.email + " played the video.")
                 io.emit("playVideo")
                 videoIsStopped = false;
@@ -258,16 +260,28 @@ function init(plugins, settings, events, io, log, commands) {
                     msg: socket.username + " un-paused the video.",
                     profilePicture: socket.profilePicture
                 })
+            } else {
+                socket.emit("newMessage", {
+                    username: "Server",
+                    msg: "You do not have permission to use video controls.",
+                    profilePicture: socket.profilePicture
+                })
             }
         })
         socket.on('pauseVideo', function () {
-            if (socket.isLoggedIn) {
+            if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
                 log(socket.email + " paused the video.")
                 io.emit("pauseVideo")
                 videoIsStopped = true;
                 io.emit("newMessage", {
                     username: "Server",
                     msg: socket.username + " paused the video.",
+                    profilePicture: socket.profilePicture
+                })
+            } else {
+                socket.emit("newMessage", {
+                    username: "Server",
+                    msg: "You do not have permission to use video controls.",
                     profilePicture: socket.profilePicture
                 })
             }
@@ -285,9 +299,9 @@ setInterval(function () {
 
 function getYoutubeMp4Url(url, onGetUrl) {
     youTubeParser.getURL(url, {
-            quality: 'high',
-            container: 'webm'
-        })
+        quality: 'high',
+        container: 'webm'
+    })
         .then(
             function (urlList) {
                 // Access URLs. 

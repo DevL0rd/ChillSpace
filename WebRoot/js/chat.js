@@ -18,21 +18,49 @@ socket.on('newMessage', function (data) {
         systemMessageSound.play();
     } else {
         messageSound.play();
-        if (lastMessageFrom == data.username) {
-            $(lastMessageElement).find('.chatMessage').append("<br>" + linkify(data.msg));
-        } else {
-            var elem = $("#chatBox0").clone().appendTo("#chatLog");
-            $(elem).find('.chatUsername').text(data.username);
-            $(elem).find('.chatMessage').html(linkify(data.msg));
-            $(elem).attr("class", "chatBox");
-            $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
-            $(elem).show(400);
-            lastMessageFrom = data.username
-            lastMessageElement = elem
-        }
+        showMessage(data)
         scrollToEndOfChat();
     }
 })
+var floatElems = [];
+function showMessage(data) {
+    if (lastMessageFrom == data.username) {
+        $(lastMessageElement).find('.chatMessage').append("<br>" + linkify(data.msg));
+    } else {
+        var elem = $("#chatBox0").clone().appendTo("#chatLog");
+        $(elem).find('.chatUsername').text(data.username);
+        $(elem).find('.chatMessage').html(linkify(data.msg));
+        $(floatElem).attr("id", "");
+        $(elem).attr("class", "chatBox");
+        $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
+        $(elem).show(400);
+        lastMessageFrom = data.username
+        lastMessageElement = elem
+    }
+    scrollToEndOfChat();
+    var floatElem = $("#chatBox0").clone().appendTo("#chatFloatArea");
+    $(floatElem).find('.chatUsername').text(data.username);
+    $(floatElem).find('.chatMessage').html(linkify(data.msg));
+    $(floatElem).attr("id", "");
+    $(floatElem).attr("class", "chatBox");
+    $(floatElem).find('.chatBoxPhoto').attr('src', data.profilePicture);
+    $(floatElem).show(400);
+
+    var fElemTimeout = setTimeout(function () {
+        $(floatElem).slideUp(1000, function () {
+            this.remove();
+        });
+    }, 4000);
+    floatElems.push({ elem: floatElem, timeout: fElemTimeout });
+    if (floatElems.length > 2) {
+        var remElem = floatElems.shift();
+        clearTimeout(remElem.timeout);
+        $(remElem.elem).slideUp(500, function () {
+            this.remove();
+        });
+    }
+}
+
 var isTypingTimeout
 $("#chatBar").keyup(function (event) {
     if (event.keyCode === 13) {

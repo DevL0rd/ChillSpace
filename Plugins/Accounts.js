@@ -1,7 +1,6 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-//Last Update: 3/17/2018
-//Version: 1.1.0
+
 var fs = require('fs');
 var DB = require('../Devlord_modules/DB.js');
 var persistentLoginTimeout = 864000000
@@ -20,7 +19,17 @@ if (fs.existsSync(accountSettingsPath)) {
     var Account_Settings = {}
     DB.save(accountSettingsPath, Account_Settings)
 }
-var saveTimeout;
+var permissionGroupsPath = __dirname + "/Accounts/permissionGroups.json";
+if (fs.existsSync(permissionGroupsPath)) {
+    var permissionGroups = DB.load(permissionGroupsPath)
+} else {
+    var permissionGroups = {
+        admin: { permissions: [] },
+        moderator: { permissions: [] }
+    }
+    DB.save(permissionGroupsPath, permissionGroups);
+}
+
 
 function init(plugins, settings, events, io, log, commands) {
     commands.test = function (message, messageLowercase, arguments) {
@@ -56,13 +65,9 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("logout", function () {
             if (socket.isLoggedIn) {
                 Accounts[socket.email].loginKeys = {};
-
                 socket.email = "";
                 socket.isLoggedIn = false;
-                clearTimeout(saveTimeout);
-                saveTimeout = setTimeout(function () {
-                    DB.save(accountDBPath, Accounts)
-                }, 500)
+                DB.save(accountDBPath, Accounts)
 
                 io.emit("userLoggedOff", socket.email)
                 socket.emit("forcelogout")
@@ -85,14 +90,12 @@ function init(plugins, settings, events, io, log, commands) {
                                 socket.email = data.email;
                                 socket.username = Accounts[data.email].username;
                                 socket.profilePicture = Accounts[data.email].profilePicture;
+                                socket.permissionGroups = Accounts[data.email].permissionGroups;
                                 Accounts[data.email].lastIp = socket.request.connection.remoteAddress;
                                 Accounts[data.email].lastLoginTS = Date.now();
                                 var loginKey = io.generate_key()
-                                Accounts[data.email].loginKeys[loginKey] = Date.now() + persistentLoginTimeout
-                                clearTimeout(saveTimeout);
-                                saveTimeout = setTimeout(function () {
-                                    DB.save(accountDBPath, Accounts)
-                                }, 500)
+                                Accounts[data.email].loginKeys[loginKey] = { ip: socket.request.connection.remoteAddress, timeout: Date.now() + persistentLoginTimeout }
+                                DB.save(accountDBPath, Accounts)
                                 socket.emit("loginResponse", {
                                     persistentLoginKey: loginKey,
                                     username: socket.username,
@@ -120,7 +123,7 @@ function init(plugins, settings, events, io, log, commands) {
                                     })
                                 }
                             } else {
-                                log("'" + data.email + "' Login attempt failed, invalid password.", false, "Accounts");
+                                log("'" + data.email + "' Login attempt failed, invalid password.", true, "Accounts");
                                 socket.emit("loginResponse", "failed")
                             }
                         } else {
@@ -138,21 +141,18 @@ function init(plugins, settings, events, io, log, commands) {
                     if (data.persistentLoginKey != null) {
                         if (data.email in Accounts && data.persistentLoginKey in Accounts[data.email].loginKeys) {
 
-                            if (Date.now() < Accounts[data.email].loginKeys[data.persistentLoginKey]) {
+                            if (Accounts[data.email].loginKeys[data.persistentLoginKey].ip == socket.request.connection.remoteAddress && Date.now() < Accounts[data.email].loginKeys[data.persistentLoginKey].timeout) {
 
                                 socket.isLoggedIn = true;
                                 socket.email = data.email;
                                 socket.username = Accounts[data.email].username;
 
+                                socket.permissionGroups = Accounts[data.email].permissionGroups;
                                 socket.profilePicture = Accounts[data.email].profilePicture;
                                 Accounts[data.email].lastIp = socket.request.connection.remoteAddress;
                                 Accounts[data.email].lastLoginTS = Date.now();
                                 var loginKey = io.generate_key()
-                                Accounts[data.email].loginKeys[loginKey] = Date.now() + persistentLoginTimeout
-                                clearTimeout(saveTimeout);
-                                saveTimeout = setTimeout(function () {
-                                    DB.save(accountDBPath, Accounts)
-                                }, 500)
+                                Accounts[data.email].loginKeys[loginKey] = { ip: socket.request.connection.remoteAddress, timeout: Date.now() + persistentLoginTimeout }
                                 socket.emit("loginResponse", {
                                     persistentLoginKey: loginKey,
                                     username: socket.username,
@@ -180,8 +180,11 @@ function init(plugins, settings, events, io, log, commands) {
                                         msg: "'" + socket.username + "' has logged in."
                                     })
                                 }
+                            } else {
+                                log("Login attempt failed, key and ip combination do not match. '" + data.email + "'", true, "Accounts");
                             }
-                            delete Accounts[data.email][data.persistentLoginKey];
+                            delete Accounts[data.email].loginKeys[data.persistentLoginKey];
+                            DB.save(accountDBPath, Accounts);
                         }
                     }
                 }
@@ -201,10 +204,8 @@ function init(plugins, settings, events, io, log, commands) {
                                     Accounts[data.email].accountCreationTS = Date.now();
                                     Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg"
                                     Accounts[data.email].loginKeys = {}
-                                    clearTimeout(saveTimeout);
-                                    saveTimeout = setTimeout(function () {
-                                        DB.save(accountDBPath, Accounts)
-                                    }, 500)
+                                    Accounts[data.email].permissionGroups = [];
+                                    DB.save(accountDBPath, Accounts)
                                     socket.emit("registerResponse", "registered")
                                     log("Account '" + data.email + "' was registered.", false, "Accounts");
                                 } else {
@@ -245,15 +246,32 @@ function init(plugins, settings, events, io, log, commands) {
 
     })
 }
-
+var permissionsCache = {}
+function getPermissions(email) {
+    var usersPermGroups = Accounts[email].permissionGroups;
+    var permissions = [];
+    for (g in usersPermGroups) {
+        var gName = usersPermGroups[g]
+        if (permissionGroups[gName]) {
+            permissions = permissions.concat(permissionGroups[gName].permissions);
+        }
+    }
+    return permissions;
+}
+function hasPermission(email, permissionString) {
+    if (!permissionsCache[email]) {
+        permissionsCache[email] = getPermissions(email);
+    }
+    return permissionsCache[email].includes(permissionString);
+}
 function userExists(username) {
     var usernameExists = false;
     for (emailadd in Accounts) {
         if (Accounts[emailadd].username == username) {
-            usernameExists = true
-            break;
+            return true;
         }
     }
-    return usernameExists;
 }
-module.exports.init = init;
+exports.init = init;
+exports.getPermissions = getPermissions;
+exports.hasPermission = hasPermission;

@@ -20,15 +20,31 @@
             Nothing playing
         </div>
         <span class="navbar-nav dropdown ml-auto">
+            <a class="dropdown-toggle nav-link" href="#" id="onlineDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-eye"></i>
+                <span id="onlineCount"></span>
+            </a>
+            <div id="onlineUsers" class="dropdown-menu dropdown-menu-right customScroll" aria-labelledby="onlineDrop">
+                <div id="userBar0" class="userBarTemplate dropdown-item">
+                    <img class="userBarPhoto">
+                    <span class="userBarName">
+                        Username here
+                    </span>
+                </div>
+            </div>
+        </span>
+        <span class="navbar-nav dropdown">
             <a class="dropdown-toggle nav-link" href="#" id="userDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i id="profileIcon" class="fas fa-user"></i>
                 <img id="profilePic" style="display: none;">
             </a>
-            <div class="dropdown-menu" aria-labelledby="userDrop">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDrop">
                 <a id="loginLink" class="dropdown-item" href="#login" data-toggle="modal">Login</a>
                 <a id="logoutLink" class="dropdown-item" href="javascript:void(0)" onclick="javascript:logout();">Logout</a>
             </div>
+
         </span>
+
     </nav>
 
     <div class="row fadeIn">
@@ -40,7 +56,9 @@
                 </video>
                 <table id="videoLoadingCover">
                     <tr>
-                        <td><img src="/img/loading.gif" id="loadingGif"></td>
+                        <td>
+                            <img src="/img/loading.gif" id="loadingGif">
+                        </td>
                     </tr>
                 </table>
                 <div id="systemMessageBox">
@@ -50,6 +68,9 @@
                     <div id="systemMessage">
                         Test message
                     </div>
+                </div>
+                <div id="chatFloatArea">
+
                 </div>
                 <div id="videoOverlay">
                     <input id="videoUrl" type="text" placeholder="Video url">
@@ -64,7 +85,6 @@
 
 
                     </div>
-
                     <div id="playlist" class="customScroll">
 
                     </div>
@@ -156,6 +176,7 @@
     <script src="js/client.js"></script>
     <script src="js/accounts.js"></script>
     <script src="js/chat.js"></script>
+    <script src="js/video.js"></script>
     <script>
         var chatIsShowing = true;
 
@@ -173,16 +194,16 @@
                 $("#chat").height($("#chat").innerHeight() - $("#nav").innerHeight())
             }
         }
-        window.onresize = function() {
+        window.onresize = function () {
 
             resizeChat();
         }
 
 
-        $("#player").resize(function() {
+        $("#player").resize(function () {
             resizeChat();
         });
-        window.onload = function() {
+        window.onload = function () {
             console.log("")
             resizeChat();
         }
