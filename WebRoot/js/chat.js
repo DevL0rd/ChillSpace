@@ -19,6 +19,7 @@ socket.on('newMessage', function (data) {
     } else {
         messageSound.play();
         showMessage(data)
+        floatMessage(data);
         scrollToEndOfChat();
     }
 })
@@ -30,14 +31,15 @@ function showMessage(data) {
         var elem = $("#chatBox0").clone().appendTo("#chatLog");
         $(elem).find('.chatUsername').text(data.username);
         $(elem).find('.chatMessage').html(linkify(data.msg));
-        $(floatElem).attr("id", "");
+        $(elem).attr("id", "");
         $(elem).attr("class", "chatBox");
         $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
         $(elem).show(400);
         lastMessageFrom = data.username
         lastMessageElement = elem
     }
-    scrollToEndOfChat();
+}
+function floatMessage(data) {
     var floatElem = $("#chatBox0").clone().appendTo("#chatFloatArea");
     $(floatElem).find('.chatUsername').text(data.username);
     $(floatElem).find('.chatMessage').html(linkify(data.msg));
@@ -91,6 +93,13 @@ socket.on('isTyping', function (user) {
         }, 1000)
     }
 })
+socket.on("getChatLog", function (cLog) {
+    console.log("madeit!")
+    for (i in cLog) {
+        showMessage(cLog[i]);
+    }
+    scrollToEndOfChat();
+});
 
 function linkify(inputText) {
     inputText = inputText.replace(/(http\S+\.(jpg|gif|png|bmp|webp))/gim, '<img class="img-fluid" src="$1" />');

@@ -3,23 +3,29 @@
 
 var fs = require('fs');
 var DB = require('../Devlord_modules/DB.js');
+var chatLog = [];
 function init(plugins, settings, events, io, log, commands) {
     events.on("connection", function (socket) {
+        socket.emit("getChatLog", chatLog);
         socket.on('sendMessage', function (msg) {
             if (socket.isLoggedIn) {
                 if (!socket.messageTimeout) {
                     socket.messageTimeout = 0;
                 }
                 var nowMS = new Date().getTime();
-
                 if (nowMS > socket.messageTimeout) {
                     socket.messageTimeout = nowMS + 1000;
                     log(socket.email + ": " + msg)
-                    io.emit("newMessage", {
+                    var msgObj = {
                         username: socket.username,
                         msg: msg,
                         profilePicture: socket.profilePicture
-                    })
+                    };
+                    io.emit("newMessage", msgObj)
+                    chatLog.push(msgObj);
+                    if (chatLog.length > 60) {
+                        chatLog.shift();
+                    }
                 } else {
                     socket.messageTimeout = nowMS + 1000;
                     socket.emit("newMessage", {

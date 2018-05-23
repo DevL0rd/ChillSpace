@@ -27,6 +27,7 @@ function findWithAttrCount(array, attr, value) {
     }
     return attrMatchCount;
 }
+
 function init(plugins, settings, events, io, log, commands) {
     events.on("disconnect", function (socket) {
         socket.host = false;
@@ -39,7 +40,7 @@ function init(plugins, settings, events, io, log, commands) {
                 break;
             }
         }
-    })
+    });
     events.on("connection", function (socket) {
         if (io.clientcount == 1) {
             socket.host = true;
@@ -47,7 +48,6 @@ function init(plugins, settings, events, io, log, commands) {
         } else {
             socket.host = false;
         }
-
         socket.on('addVideo', function (url) {
             if (socket.isLoggedIn) {
                 var videosPosted = findWithAttrCount(playlist, "username", socket.username)
@@ -78,8 +78,10 @@ function init(plugins, settings, events, io, log, commands) {
                             io.emit("updatePlaylist", playlist)
 
                             DB.save(playlistDir, playlist)
+
                         })
                     } else if (url.includes('googlevideo.com')) {
+
                         playlist.push({
                             src: url,
                             title: "Unknown Youtube Video",

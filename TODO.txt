@@ -1,0 +1,8 @@
+//video synced on server side.
+//calculate video sync with ping delay. Should help with high ping connections like satelite.
+add ability to update profile picture
+wait after login to show profile pic, then fade out login.
+add verify email address
+add change password
+add delete account
+add notification email subscrption messages like come visit uswe are live!
