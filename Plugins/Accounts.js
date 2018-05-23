@@ -65,13 +65,13 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("logout", function () {
             if (socket.isLoggedIn) {
                 Accounts[socket.email].loginKeys = {};
-                socket.email = "";
                 socket.isLoggedIn = false;
                 DB.save(accountDBPath, Accounts)
 
                 io.emit("userLoggedOff", socket.email)
                 socket.emit("forcelogout")
                 log("'" + socket.email + "' has logged out.", false, "Accounts");
+                socket.email = "";
                 io.emit("newMessage", {
                     username: "Server",
                     msg: "'" + socket.username + "' has logged out."
