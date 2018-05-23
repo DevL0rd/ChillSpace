@@ -54,7 +54,8 @@ function init(plugins, settings, events, io, log, commands) {
                         });
                         if (currentVideoSource == null && playlist.length > 0) {
                             currentVideoSource = playlist.shift()
-                            io.emit('getVideo', currentVideoSource)
+                            videoIsStopped = false;
+                            io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
                         log(socket.username + " added '" + title + "'to the queue.");
                         io.emit("newMessage", {
@@ -76,7 +77,8 @@ function init(plugins, settings, events, io, log, commands) {
                     });
                     if (currentVideoSource == null && playlist.length > 0) {
                         currentVideoSource = playlist.shift()
-                        io.emit('getVideo', currentVideoSource)
+                        videoIsStopped = false;
+                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                     }
                     log(socket.username + " added a youtube video to the queue.");
                     io.emit("newMessage", {
@@ -98,7 +100,8 @@ function init(plugins, settings, events, io, log, commands) {
                     });
                     if (currentVideoSource == null && playlist.length > 0) {
                         currentVideoSource = playlist.shift()
-                        io.emit('getVideo', currentVideoSource)
+                        videoIsStopped = false;
+                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                     }
                     log(socket.username + " added a video to the queue.");
                     io.emit("newMessage", {
@@ -120,7 +123,8 @@ function init(plugins, settings, events, io, log, commands) {
                     });
                     if (currentVideoSource == null && playlist.length > 0) {
                         currentVideoSource = playlist.shift()
-                        io.emit('getVideo', currentVideoSource)
+                        videoIsStopped = false;
+                        io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                     }
                     log(socket.username + " added a unknown source to the queue.");
                     io.emit("newMessage", {
@@ -138,8 +142,8 @@ function init(plugins, settings, events, io, log, commands) {
                 currentVideoSource = null;
                 if (playlist.length > 0) {
                     currentVideoSource = playlist.shift()
-                    io.emit('getVideo', currentVideoSource)
-
+                    videoIsStopped = false;
+                    io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                 }
                 io.emit("updatePlaylist", playlist)
                 DB.save(playlistDir, playlist)
@@ -155,8 +159,8 @@ function init(plugins, settings, events, io, log, commands) {
                 currentVideoSource = null
                 if (playlist.length > 0) {
                     currentVideoSource = playlist.shift()
-                    io.emit('getVideo', currentVideoSource)
-
+                    videoIsStopped = false;
+                    io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                 }
                 io.emit("updatePlaylist", playlist)
 
@@ -197,17 +201,12 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on('getVideo', function () {
             if (currentVideoSource == null && playlist.length > 0) {
                 currentVideoSource = playlist.shift()
-                io.emit('getVideo', currentVideoSource)
-                if (videoIsStopped) {
-                    io.emit('pauseVideo')
-                }
+                videoIsStopped = false;
+                io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
             }
             if (currentVideoSource != null) {
 
-                socket.emit('getVideo', currentVideoSource)
-            }
-            if (videoIsStopped) {
-                socket.emit('pauseVideo')
+                socket.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
             }
 
             io.emit("updatePlaylist", playlist)

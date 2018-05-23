@@ -1,6 +1,21 @@
 
 (function () {
 	var offset = 50;
+	//IE support
+	if (!String.prototype.includes) {
+		String.prototype.includes = function (search, start) {
+			'use strict';
+			if (typeof start !== 'number') {
+				start = 0;
+			}
+
+			if (start + search.length > this.length) {
+				return false;
+			} else {
+				return this.indexOf(search, start) !== -1;
+			}
+		};
+	}
 	function getAnimations(styleSheetName) {
 		var anims = [];
 		for (i in document.styleSheets) {
@@ -30,9 +45,6 @@
 		var animatedElementsList = [];
 		animations.forEach(function (anim) {
 			var els = document.getElementsByClassName(anim);
-			console.log(anim)
-			console.log(els)
-			console.log(htmlCollectionToArray(els))
 			animatedElementsList = animatedElementsList.concat(htmlCollectionToArray(els));
 		});
 		return animatedElementsList;

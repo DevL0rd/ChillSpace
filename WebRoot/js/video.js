@@ -91,7 +91,17 @@ $('#volume').click(function () {
 player.volume = 0.5;
 
 player.onloadeddata = function () {
-    player.play();
+    try {
+        socket.emit("syncVideo");
+        if (isStopped) {
+            player.pause();
+        } else {
+            player.play();
+        }
+    } catch (err) {
+
+        socket.emit("videoFailed");
+    }
 };
 
 player.addEventListener('ended', function () {
@@ -118,13 +128,14 @@ socket.on('setVideoTime', function (timeSeconds) {
 })
 
 socket.on('getVideo', function (data) {
-    $('#player').attr('src', data.src);
-    socket.emit("syncVideo");
-    isStopped = true;
+    $('#player').attr('src', data.videoData.src);
+
+    isStopped = data.isPaused;
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
-    $('#videoTitleText').html(data.title)
+    $('#videoTitleText').html(data.videoData.title)
 
 })
+
 if (localStorage.volume != null) {
     player.volume = localStorage.volume
     $("#volumeSlider").val(localStorage.volume * 100);
