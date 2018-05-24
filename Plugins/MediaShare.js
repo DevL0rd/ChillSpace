@@ -50,9 +50,7 @@ function init(plugins, settings, events, io, log, commands) {
         }
         socket.on('addVideo', function (url) {
             if (socket.isLoggedIn && url) {
-                var videosPosted = findWithAttrCount(playlist, "username", socket.username)
-
-                if (videosPosted < 3) {
+                if (plugins.Accounts.hasPermission(socket.email, "unlimitedVideos") || findWithAttrCount(playlist, "username", socket.username) < 3) {
                     var extension = url.substr(1).split('.').pop()
                     if (url.includes('youtube.com') || url.includes('youtu.be')) {
                         getYoutubeMp4Url(url, function (title, src) {
