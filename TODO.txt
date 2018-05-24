@@ -1,8 +1,8 @@
+fix float chat showing after un-fullscreen
 fix is typing box
 fix scroll to bottom
 add tutorial
 add ability to update profile picture
-wait after login to show profile pic, then fade out login.
 add verify email address
 add change password
 add delete account
