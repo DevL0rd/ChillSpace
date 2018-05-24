@@ -61,23 +61,33 @@ function init(plugins, settings, events, io, log, commands) {
         socket.email = "";
         socket.on('ping', function (data) {
             socket.emit('pong', {});
-        })
+        });
+
+        socket.on("getPermissions", function () {
+            if (socket.isLoggedIn) {
+                socket.emit("getPermissions", getPermissions(socket.email));
+            }
+        });
+        socket.on("getProfilePicture", function (email) {
+            if (Accounts[email]) {
+                socket.emit("getProfilePicture", Accounts[email].profilePicture);
+            }
+        });
         socket.on("logout", function () {
             if (socket.isLoggedIn) {
                 Accounts[socket.email].loginKeys = {};
                 socket.isLoggedIn = false;
-                DB.save(accountDBPath, Accounts)
-
-                io.emit("userLoggedOff", socket.email)
-                socket.emit("forcelogout")
+                DB.save(accountDBPath, Accounts);
+                io.emit("userLoggedOff", socket.email);
+                socket.emit("forcelogout");
                 log("'" + socket.email + "' has logged out.", false, "Accounts");
                 socket.email = "";
                 io.emit("newMessage", {
                     username: "Server",
                     msg: "'" + socket.username + "' has logged out."
-                })
+                });
             }
-        })
+        });
 
         socket.on("login", function (data) {
             if (data != null) {
@@ -242,8 +252,6 @@ function init(plugins, settings, events, io, log, commands) {
 
             }
         })
-
-
     })
 }
 var permissionsCache = {}

@@ -20,7 +20,8 @@
             Nothing playing
         </div>
         <span class="navbar-nav dropdown ml-auto">
-            <a class="dropdown-toggle nav-link" href="#" id="onlineDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="dropdown-toggle nav-link" href="javascript:void(0)" id="onlineDrop" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
                 <i class="fas fa-eye"></i>
                 <span id="onlineCount"></span>
             </a>
@@ -34,7 +35,7 @@
             </div>
         </span>
         <span class="navbar-nav dropdown">
-            <a class="dropdown-toggle nav-link" href="#" id="userDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="dropdown-toggle nav-link" href="javascript:void(0)" id="userDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i id="profileIcon" class="fas fa-user"></i>
                 <img id="profilePic" style="display: none;">
             </a>
@@ -54,13 +55,13 @@
 
                     <source type="video/mp4"> Your browser does not support the video tag.
                 </video>
-                <table id="videoLoadingCover">
-                    <tr>
-                        <td>
-                            <img src="/img/loading.gif" id="loadingGif">
-                        </td>
-                    </tr>
-                </table>
+                <div id="videoLoadingCover">
+                    <div class="centerHorz" style="height: 100%;">
+                        <div class="centerVert">
+                            <img src="/img/loading.gif" class="loadingGif">
+                        </div>
+                    </div>
+                </div>
                 <div id="systemMessageBox">
                     <div id="systemName">
                         System
@@ -73,7 +74,7 @@
 
                 </div>
                 <div id="videoOverlay">
-                    <input id="videoUrl" type="text" placeholder="Video url">
+                    <input id="videoUrl" type="text" placeholder="Login to add a video" disabled>
                     <div id="playListBar0" class="playListBar">
                         <img class="videoUserPhoto">
                         <span class="playlistTitle">
@@ -82,8 +83,6 @@
                         <span class="voteBox">
                             Vote 0
                         </span>
-
-
                     </div>
                     <div id="playlist" class="customScroll">
 
@@ -97,38 +96,39 @@
                             <input id="volumeSlider" type="range" orient="vertical" min="0" max="100" step="0.01">
                         </span>
                         <input id="videoTrack" type="range" min="0" max="10" step="0.01">
-                        <button id="volume">
-                            <i class="fa fa-volume-up" aria-hidden="true"></i>
-                        </button>
+
                         <button id="toggleFullscreen">
                             <i class="fas fa-arrows-alt"></i>
+                        </button>
+                        <button id="volume">
+                            <i class="fa fa-volume-up" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <div id="chat" class="col-lg-3">
-            <div class="chatHeader">Chat</div>
-            <div id="chatLog" class="customScroll">
-                <div id="chatBox0" class="chatBox">
-                    <div class="chatUserInfoHolder">
-                        <img class="chatBoxPhoto">
-                        <span class="chatUsername">
-                            Username here
-                        </span>
-                    </div>
-                    <div class="chatMessage">
-                        Test message
-                    </div>
+            <div id="chatBox0" class="chatBox">
+                <div class="chatUserInfoHolder">
+                    <img class="chatBoxPhoto">
+                    <span class="chatUsername">
+                        Username here
+                    </span>
+                </div>
+                <div class="chatMessage">
+                    Test message
                 </div>
             </div>
+            <div class="chatHeader">Chat</div>
+            <div id="chatLog" class="customScroll">
+
+            </div>
             <div id="typingNotice">
-                <img src="/img/loading.gif" id="typingGif">
                 <span id="typingNoticeText">
                     Someone is typing...
                 </span>
             </div>
-            <input id="chatBar" type="text" placeholder="Send a message">
+            <input id="chatBar" type="text" placeholder="Login to use chat" disabled>
         </div>
 
     </div>
@@ -136,18 +136,19 @@
         <div class="modal-dialog">
             <div class="modal-content loginModal">
                 <div class="login-user-img">
-                    <img src="img/profilePics/noprofilepic.jpg">
+                    <img id="loginImg" src="img/profilePics/noprofilepic.jpg">
                 </div>
                 <button type="button" class="close closeLogin" data-dismiss="modal">
                     <i class="fas fa-times"></i>
                 </button>
-                <div class="login-user-name">
+                <div id="loginGreeting">
                     <h1>Login plz</h1>
+                    <span>Logging in enables you to share videos and to join in chat!</span>
                 </div>
                 <div id="loginOutput">
 
                 </div>
-                <div class="form-input">
+                <div id="loginInputs" class="form-input">
                     <div class="form-group">
                         <input id="login_email" type="email" class="form-control" placeholder="Email">
                     </div>
@@ -162,9 +163,17 @@
                     </div>
                     <button id="login_button" type="submit" class="btn btn-success" onclick="loginButton()">Login</button>
                     <button id="register_button" type="submit" class="btn btn-success" onclick="showRegister()">Create An Account</button>
+                    <a href="javascript:void(0)">Forgot Password?</a>
                 </div>
-                <a href="javascript:void(0)">Forgot Password?</a>
             </div>
+        </div>
+    </div>
+    <div id="pageLoadingCover">
+        <div class="centerVert">
+            <img src="/img/loading.gif" class="loadingGif">
+            <h1 style="color:rgb(206, 206, 206); font-size: 16px;">
+                Chillspace is loading...
+            </h1>
         </div>
     </div>
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -195,17 +204,17 @@
             }
         }
         window.onresize = function () {
-
             resizeChat();
         }
-
-
         $("#player").resize(function () {
             resizeChat();
         });
         window.onload = function () {
-            console.log("")
             resizeChat();
+            $("#pageLoadingCover").fadeOut(400);
+            setTimeout(function () {
+                $("#videoOverlay").fadeOut(400);
+            }, 6000)
         }
 
     </script>

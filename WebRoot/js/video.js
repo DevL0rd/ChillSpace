@@ -1,5 +1,8 @@
 var player = document.getElementById('player');
 var isStopped = false;
+var noMediaVideoSrc = "https://www.videvo.net/videvo_files/converted/2016_01/preview/Blue_Particle_Motion_Background_1080.mov81869.webm";
+$('#player').attr('src', noMediaVideoSrc);
+player.loop = true;
 socket.on('playVideo', function () {
     try {
         player.play();
@@ -7,7 +10,6 @@ socket.on('playVideo', function () {
             player.muted = false;
         }
     } catch (err) {
-
         socket.emit("videoFailed");
     }
     isStopped = false;
@@ -92,9 +94,9 @@ $('#volume').click(function () {
 });
 player.volume = 0.5;
 
-player.onloadeddata = function () {
+player.onloadeddata = loadedVideoData;
+function loadedVideoData() {
     try {
-        socket.emit("syncVideo");
         if (isStopped) {
             player.pause();
         } else {
@@ -103,13 +105,18 @@ player.onloadeddata = function () {
         if (!isMobile) {
             player.muted = false;
         }
+        socket.emit("syncVideo");
     } catch (err) {
-
         socket.emit("videoFailed");
     }
 };
-
+var vidEndedTimeout
 player.addEventListener('ended', function () {
+    player.loop = true;
+    clearTimeout(vidEndedTimeout);
+    vidEndedTimeout = setTimeout(function () {
+        $('#player').attr('src', noMediaVideoSrc);
+    }, 3000);
     socket.emit("videoEnded");
 }, false);
 
@@ -133,12 +140,25 @@ socket.on('setVideoTime', function (timeSeconds) {
 })
 
 socket.on('getVideo', function (data) {
+    clearTimeout(vidEndedTimeout);
     $('#player').attr('src', data.videoData.src);
-
     isStopped = data.isPaused;
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
     $('#videoTitleText').html(data.videoData.title)
-
+    try {
+        socket.emit("syncVideo");
+        if (isStopped) {
+            player.pause();
+        } else {
+            player.play();
+        }
+        if (!isMobile) {
+            player.muted = false;
+        }
+    } catch (err) {
+        socket.emit("videoFailed");
+    }
+    player.loop = false;
 })
 
 if (localStorage.volume != null) {

@@ -273,7 +273,6 @@ function init(plugins, settings, events, io, log, commands) {
                 host.emit("getVideoTime")
             }
         })
-
         socket.on('playVideo', function () {
 
             if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
@@ -302,24 +301,23 @@ function init(plugins, settings, events, io, log, commands) {
                     username: "Server",
                     msg: socket.username + " paused the video.",
                     profilePicture: socket.profilePicture
-                })
+                });
             } else {
                 socket.emit("newMessage", {
                     username: "Server",
                     msg: "You do not have permission to use video controls.",
                     profilePicture: socket.profilePicture
-                })
+                });
             }
-        })
-    })
+        });
+    });
 }
 
 setInterval(function () {
-    if (host != null) {
+    if (host != null && currentVideoSource) {
         host.emit("getVideoTime")
         syncEveryone = true;
     }
-
 }, 1000)
 
 function getYoutubeMp4Url(url, onGetUrl) {

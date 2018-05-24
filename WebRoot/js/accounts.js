@@ -19,12 +19,20 @@ socket.on('loginResponse', function (res) {
         localStorage.persistentLoginKey = res.persistentLoginKey;
         localStorage.username = res.username;
         $("#profilePic").attr('src', res.profilePicture);
-        $(".login-user-img").attr('src', res.profilePicture);
-        $("#profilePic").show();
+        $("#loginImg").attr('src', res.profilePicture);
         $("#profileIcon").hide();
-        $(".closeLogin").trigger("click");
+        $("#profilePic").show();
         $("#loginLink").hide();
         $("#logoutLink").show();
+        $("#loginInputs").hide(400);
+        $("#loginGreeting").html("<h1>Welcome back</h1>");
+        socket.emit("getPermissions");
+        setTimeout(function () {
+            $(".closeLogin").trigger("click");
+            setTimeout(function () {
+                $("#loginInputs").show();
+            }, 1000);
+        }, 3000);
     }
 });
 
@@ -58,13 +66,25 @@ socket.on('registerResponse', function (res) {
             $("#login_button").text("Login");
             $("#register_button").show();
             isRegistering = false;
-        }, 5000)
+        }, 1000)
     }
 });
 socket.on('forcelogout', function (res) {
     logout();
 });
-
+var getImageTimeout
+$("#login_email").on("change paste keyup", function () {
+    clearTimeout(getImageTimeout);
+    if ($("#login_email").val().includes("@") && $("#login_email").val().includes(".")) {
+        getImageTimeout = setTimeout(function () {
+            socket.emit("getProfilePicture", $("#login_email").val())
+        }, 500);
+    }
+    console.log("lookie!")
+});
+socket.on("getProfilePicture", function (imgSrc) {
+    $("#loginImg").attr('src', imgSrc);
+});
 function register() {
     //verify registration info is valid
     if ($("#login_email").val().length < 6 || !$("#login_email").val().includes("@")) {

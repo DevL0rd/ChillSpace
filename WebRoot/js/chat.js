@@ -20,6 +20,7 @@ socket.on('newMessage', function (data) {
         messageSound.play();
         showMessage(data)
         floatMessage(data);
+        refreshAnimatedElements();
         scrollToEndOfChat();
     }
 })
@@ -32,7 +33,7 @@ function showMessage(data) {
         $(elem).find('.chatUsername').text(data.username);
         $(elem).find('.chatMessage').html(linkify(data.msg));
         $(elem).attr("id", "");
-        $(elem).attr("class", "chatBox");
+        $(elem).attr("class", "chatBox bounceLeft");
         $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
         $(elem).show(400);
         lastMessageFrom = data.username
@@ -94,10 +95,10 @@ socket.on('isTyping', function (user) {
     }
 })
 socket.on("getChatLog", function (cLog) {
-    console.log("madeit!")
     for (i in cLog) {
         showMessage(cLog[i]);
     }
+    refreshAnimatedElements();
     scrollToEndOfChat();
 });
 
@@ -108,6 +109,7 @@ function linkify(inputText) {
 }
 
 function scrollToEndOfChat() {
-    var chatLog = document.getElementById("chatLog");
-    chatLog.scrollTop = chatLog.scrollHeight;
+    $("#chatLog").animate({
+        scrollTop: $('#chatLog')[0].scrollHeight
+    }, 1000);
 }

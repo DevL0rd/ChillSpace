@@ -7,7 +7,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
     var supportsOrientationChange = "onorientationchange" in window,
         orientationEvent = supportsOrientationChange ? "orientationchange" : "resize";
 }
-//IE support
+//IE support string includes
 if (!String.prototype.includes) {
     String.prototype.includes = function (search, start) {
         'use strict';
@@ -22,7 +22,18 @@ if (!String.prototype.includes) {
         }
     };
 }
-
+//IE support array includes
+if (!Array.prototype.includes) {
+    Object.defineProperty(Array.prototype, "includes", {
+        enumerable: false,
+        value: function (obj) {
+            var newArr = this.filter(function (el) {
+                return el == obj;
+            });
+            return newArr.length > 0;
+        }
+    });
+}
 
 var socket = io();
 
@@ -30,6 +41,7 @@ socket.on('forceRefresh', function () {
     window.location.reload();
 });
 socket.on('connect', function () {
+    $("#chatLog").html("");
     socket.emit("getVideo");
     socket.emit("updateUsers");
     if (localStorage.persistentLoginKey != null && localStorage.persistentLoginKey != "") {
@@ -37,9 +49,26 @@ socket.on('connect', function () {
             email: localStorage.email,
             persistentLoginKey: localStorage.persistentLoginKey
         });
+    } else {
+        $("#loginLink").trigger("click");
     }
-});
 
+});
+var permissions = [];
+socket.on("getPermissions", function (perms) {
+    permissions = perms;
+    if (hasPermission("controlVideo")) {
+        $("#togglePlay").show();
+        $("#videoTrack").show();
+    }
+    $("#videoUrl").prop('disabled', false);
+    $("#chatBar").prop('disabled', false);
+    $("#videoUrl").attr('placeholder', "Submit a youtube/video url");
+    $("#chatBar").attr('placeholder', "Type here to chat");
+});
+function hasPermission(permString) {
+    return permissions.includes(permString);
+}
 socket.on('disconnect', function () {
 
 });
