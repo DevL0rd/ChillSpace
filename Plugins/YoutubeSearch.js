@@ -9,7 +9,7 @@ if (fs.existsSync(__dirname + "/YoutubeSearch/settings.json")) {
     var settings = DB.load(__dirname + "/YoutubeSearch/settings.json")
 } else {
     settings = {
-        youtubeApiKey: "AIzaSyB_LEvbvxljoTEihjC-9dWelHHli4IoVns"
+        youtubeApiKey: ""
     }
     DB.save(__dirname + "/YoutubeSearch/settings.json", settings)
 }

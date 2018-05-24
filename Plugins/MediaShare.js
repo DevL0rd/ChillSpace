@@ -325,7 +325,7 @@ setInterval(function () {
 function getYoutubeMp4Url(url, onGetUrl) {
     youTubeParser.getURL(url, {
         quality: 'high',
-        container: 'webm'
+        container: 'mp4'
     })
         .then(
             function (urlList) {
