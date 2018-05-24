@@ -31,7 +31,8 @@ socket.on('loginResponse', function (res) {
             $(".closeLogin").trigger("click");
             setTimeout(function () {
                 $("#loginInputs").show();
-            }, 1000);
+                $("#loginGreeting").html("<h1>Login pl0x</h1><span>Logging in enables you to share videos and to join in chat!</span>");
+            }, 400);
         }, 3000);
     }
 });

@@ -54,6 +54,14 @@ socket.on('syncCheck', function (timeSeconds) {
 
             try {
                 player.currentTime = timeSeconds;
+                if (isStopped) {
+                    player.pause();
+                } else {
+                    player.play();
+                }
+                if (!isMobile) {
+                    player.muted = false;
+                }
             } catch (err) {
 
             }
@@ -132,6 +140,14 @@ socket.on('setVideoTime', function (timeSeconds) {
     try {
         if (!isUsingSlider) {
             player.currentTime = timeSeconds;
+            if (isStopped) {
+                player.pause();
+            } else {
+                player.play();
+            }
+            if (!isMobile) {
+                player.muted = false;
+            }
         }
     } catch (err) {
 
@@ -145,19 +161,6 @@ socket.on('getVideo', function (data) {
     isStopped = data.isPaused;
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
     $('#videoTitleText').html(data.videoData.title)
-    try {
-        socket.emit("syncVideo");
-        if (isStopped) {
-            player.pause();
-        } else {
-            player.play();
-        }
-        if (!isMobile) {
-            player.muted = false;
-        }
-    } catch (err) {
-        socket.emit("videoFailed");
-    }
     player.loop = false;
 })
 
@@ -166,7 +169,6 @@ if (localStorage.volume != null) {
     $("#volumeSlider").val(localStorage.volume * 100);
 }
 document.getElementById('player').onpause = function () {
-    isStopped = true;
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
     socket.emit("syncVideo");
 };
