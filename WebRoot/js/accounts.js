@@ -223,7 +223,6 @@ socket.on('updateUser', function (userData) {
 })
 function addToUserList(userData) {
     if (localStorage.email != userData.email && onlineUsers[userData.email] == null) {
-        console.log("test")
         var elem = $("#userBar0").clone().appendTo("#onlineUsers");
         $(elem).find('.userBarName').text(userData.username);
         $(elem).attr("class", "userBar dropdown-item");

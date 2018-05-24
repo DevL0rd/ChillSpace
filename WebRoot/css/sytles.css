@@ -631,8 +631,8 @@ body {
 #typingNotice {
     display: none;
     position: absolute;
-    bottom: 30px;
-    right: 5px;
+    bottom: 40px;
+    right: 10px;
     border-radius: 5px;
     background: rgba(17, 17, 17, 0.8);
     color: white;
