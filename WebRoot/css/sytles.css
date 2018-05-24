@@ -44,6 +44,7 @@ body {
     white-space: nowrap;
     background-color: rgba(133, 45, 204, 0.562);
     border: 0;
+    transition-duration: 0.4s;
 }
 .dropdown-item:hover{
     color: white;
@@ -242,6 +243,7 @@ body {
     color: rgba(149, 66, 244, 0.8);
     font-size: 20px;
     background: transparent;
+    transition-duration: 0.4s;
 }
 #togglePlay:hover {
     color: rgba(26, 167, 80, 0.562);
@@ -322,6 +324,7 @@ body {
     color: rgba(149, 66, 244, 0.8);
     font-size: 20px;
     background: transparent;
+    transition-duration: 0.4s;
 }
 #volume:hover {
     color: rgba(26, 167, 80, 0.562);
@@ -336,6 +339,7 @@ body {
     font-size: 20px;
     background: transparent;
     float: right;
+    transition-duration: 0.4s;
 }
 #toggleFullscreen:hover {
     color: rgba(26, 167, 80, 0.562);
@@ -450,23 +454,13 @@ body {
 }
 
 /* playlist */
-#chatFloatArea{
-    display: none;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    bottom:0px;
-    right:0px;
-    overflow: hidden;
-    pointer-events: none;
-}
+
 #playlist {
     width: 100%;
-    height: calc(100% - 80px);
+    height: calc(100% - 85px);
     overflow-y: auto;
     padding: 5px;
 }
-
 .playListBar {
     position: relative;
     border-radius: 8px;
@@ -505,11 +499,12 @@ body {
     color: white;
     padding: 6px;
     background: rgba(33, 168, 114, 0.6);
+    transition-duration: 0.4s;
 }
 
 .voteBox:hover {
     cursor: pointer;
-    background: rgba(33, 168, 114, 0.8);
+    background: rgba(24, 175, 115, 0.8);
 }
 
 .voteBoxRed {
@@ -521,11 +516,12 @@ body {
     color: white;
     padding: 6px;
     background: #4286f4;
+    transition-duration: 0.4s;
 }
 
 .voteBoxRed:hover {
     cursor: pointer;
-    background: #4286f4;
+    background: #2c74e9;
 }
 
 #videoUrl {
@@ -543,7 +539,32 @@ body {
 #videoUrl:focus {
     outline: none;
 }
+/* search */
 
+
+#searchResults{
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    width: 100%;
+    height: calc(100% - 85px);
+    overflow-y: auto;
+    padding: 5px;
+}
+.searchResult {
+    color: rgb(221, 221, 221);
+    background: rgba(37, 37, 37, 0.5);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+.searchResult:hover {
+    background: rgba(33, 168, 114, 0.8);
+}
+.videoThumbnail{
+    margin-right: 5px;
+}
 /* chat */
 
 .chatHeader {
@@ -638,7 +659,16 @@ body {
     color: white;
     padding: 5px;
 }
-
+#chatFloatArea{
+    display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom:0px;
+    right:0px;
+    overflow: hidden;
+    pointer-events: none;
+}
 /* scroll */
 
 .customScroll::-webkit-scrollbar {

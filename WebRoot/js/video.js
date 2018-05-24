@@ -172,14 +172,59 @@ document.getElementById('player').onpause = function () {
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
     socket.emit("syncVideo");
 };
+var videoSearchTimeout
 $("#videoUrl").keyup(function (event) {
+    clearTimeout(videoSearchTimeout);
     if (event.keyCode === 13) {
-        socket.emit("addVideo", $("#videoUrl").val());
-        $("#videoUrl").val("");
+        searchForVideo($("#videoUrl").val(), "youtube");
+    } else {
+        videoSearchTimeout = setTimeout(function () {
+            searchForVideo($("#videoUrl").val(), "youtube");
+        }, 1000)
     }
     showControls();
 });
+$("#searchResults").scroll(showControls);
+$("#playlist").scroll(showControls);
+function searchForVideo(searchStr, whereSearch) {
+    if (searchStr) {
+        if (whereSearch == "youtube") {
+            socket.emit("searchYoutube", $("#videoUrl").val());
+        }
+    } else {
+        hideSearch();
+    }
+}
+socket.on("searchYoutube", function (results) {
+    $("#searchResults").html("");
+    $("#playlist").hide();
+    for (i in results) {
+        if (results[i].id.kind == "youtube#video") {
+            var result = results[i].snippet;
+            var videoUrl = "https://www.youtube.com/watch?v=" + results[i].id.videoId;
+            var elem = $("#searchResult0").clone().appendTo("#searchResults");
+            elem.attr('class', "searchResult bounceLeft");
+            elem.attr('videoUrl', videoUrl);
+            elem.click(function () {
+                postVideoUrl(this.getAttribute('videoUrl'));
+            });
+            $(elem).find('.videoTitle').text(result.title);
+            $(elem).find('.videoThumbnail').attr('src', result.thumbnails.default.url);
+            $(elem).show(400);
+        }
+    }
+    refreshAnimatedElements();
+});
 
+function postVideoUrl(url) {
+    socket.emit('addVideo', url);
+    hideSearch();
+}
+function hideSearch() {
+    $("#searchResults").html("");
+    $("#videoUrl").val("");
+    $("#playlist").fadeIn(400);
+}
 var cachedPlaylist = []
 socket.on('updatePlaylist', function (playlist) {
     $("#playlist").html("")
@@ -188,26 +233,22 @@ socket.on('updatePlaylist', function (playlist) {
         $(elem).find('.playlistTitle').text(playlist[i].title);
 
         $(elem).find('.videoUserPhoto').attr('src', playlist[i].profilePicture)
+
         if (playlist[i].voters.includes(localStorage.username)) {
 
-            $(elem).find(".voteBox").html("Votes   " + playlist[i].vote)
-
-
-            $(elem).find(".voteBox").addClass("voteBoxRed")
+            $(elem).find(".voteBox").html("Votes   " + playlist[i].vote);
+            $(elem).find(".voteBox").addClass("voteBoxRed");
         } else {
-            $(elem).find(".voteBox").html("Votes   " + playlist[i].vote)
-
-            $(elem).find(".voteBox").removeClass("voteBoxRed")
+            $(elem).find(".voteBox").html("Votes   " + playlist[i].vote);
+            $(elem).find(".voteBox").removeClass("voteBoxRed");
             $(elem).find(".voteBox").bind('click', {
                 src: playlist[i].src,
                 title: playlist[i].title
             }, function (event) {
                 var data = event.data;
-                vote(data.src)
+                vote(data.src);
             });
         }
-
-
         $(elem).fadeIn(400);
     }
 })
@@ -222,7 +263,7 @@ function showControls() {
     $("#videoOverlay").fadeIn(400);
     hideControlsTimeout = setTimeout(function () {
         $("#videoOverlay").fadeOut(400);
-    }, 6000)
+    }, 8000)
 }
 
 $('#toggleFullscreen').on('click', function () {

@@ -63,7 +63,7 @@ socket.on("getPermissions", function (perms) {
     }
     $("#videoUrl").prop('disabled', false);
     $("#chatBar").prop('disabled', false);
-    $("#videoUrl").attr('placeholder', "Submit a youtube/video url");
+    $("#videoUrl").attr('placeholder', "Search video name or input a url.");
     $("#chatBar").attr('placeholder', "Type here to chat");
 });
 function hasPermission(permString) {
