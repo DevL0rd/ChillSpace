@@ -8,7 +8,7 @@ function init(plugins, settings, events, io, log, commands) {
     events.on("connection", function (socket) {
         socket.emit("getChatLog", chatLog);
         socket.on('sendMessage', function (msg) {
-            if (socket.isLoggedIn) {
+            if (socket.isLoggedIn && msg) {
                 if (!socket.messageTimeout) {
                     socket.messageTimeout = 0;
                 }
@@ -35,7 +35,6 @@ function init(plugins, settings, events, io, log, commands) {
                     })
                 }
             }
-
         })
         socket.on('isTyping', function () {
             if (socket.isLoggedIn) {

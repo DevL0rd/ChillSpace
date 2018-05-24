@@ -17,13 +17,15 @@ youTube.setKey(settings.youtubeApiKey);
 function init(plugins, settings, events, io, log, commands) {
     events.on("connection", function (socket) {
         socket.on("searchYoutube", function (searchStr) {
-            youTube.search(searchStr, 25, function (error, result) {
-                if (error) {
-                    socket.emit("searchYoutube", []);
-                } else {
-                    socket.emit("searchYoutube", result.items);
-                }
-            });
+            if (searchStr) {
+                youTube.search(searchStr, 25, function (error, result) {
+                    if (error) {
+                        socket.emit("searchYoutube", []);
+                    } else {
+                        socket.emit("searchYoutube", result.items);
+                    }
+                });
+            }
         });
     })
 }

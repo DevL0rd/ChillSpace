@@ -49,7 +49,7 @@ function init(plugins, settings, events, io, log, commands) {
             socket.host = false;
         }
         socket.on('addVideo', function (url) {
-            if (socket.isLoggedIn) {
+            if (socket.isLoggedIn && url) {
                 var videosPosted = findWithAttrCount(playlist, "username", socket.username)
 
                 if (videosPosted < 3) {
@@ -191,7 +191,7 @@ function init(plugins, settings, events, io, log, commands) {
             }
         })
         socket.on('vote', function (url) {
-            if (socket.isLoggedIn) {
+            if (socket.isLoggedIn && url) {
                 for (i in playlist) {
                     if (playlist[i].src == url) {
                         if (!playlist[i].voters.includes(socket.username)) {
@@ -235,7 +235,7 @@ function init(plugins, settings, events, io, log, commands) {
             io.emit("updatePlaylist", playlist)
         })
         socket.on("getVideoTime", function (timeSeconds) {
-            if (socket.host) {
+            if (socket.host && timeSeconds && !isNaN(timeSeconds)) {
                 if (syncEveryone) {
                     var sockets = io.sockets.sockets;
                     for (var socketId in sockets) {
@@ -257,14 +257,18 @@ function init(plugins, settings, events, io, log, commands) {
             }
         })
         socket.on('trackChanged', function (timeSeconds) {
-            if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
-                io.emit('setVideoTime', timeSeconds)
-            } else {
-                socket.emit("newMessage", {
-                    username: "Server",
-                    msg: "You do not have permission to use video controls.",
-                    profilePicture: socket.profilePicture
-                })
+            if (timeSeconds && !isNaN(timeSeconds)) {
+
+
+                if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
+                    io.emit('setVideoTime', timeSeconds)
+                } else {
+                    socket.emit("newMessage", {
+                        username: "Server",
+                        msg: "You do not have permission to use video controls.",
+                        profilePicture: socket.profilePicture
+                    })
+                }
             }
         })
         socket.on('syncVideo', function () {

@@ -90,9 +90,9 @@ function init(plugins, settings, events, io, log, commands) {
         });
 
         socket.on("login", function (data) {
-            if (data != null) {
-                if (data.email != null && data.email.length > 3 && data.email.includes("@")) {
-                    if ((data.password != null && data.password.length > 3)) {
+            if (data) {
+                if (data.email && data.email.length > 3 && data.email.includes("@")) {
+                    if ((data.password && data.password.length > 3)) {
                         data.email = data.email.toLowerCase()
                         if (data.email in Accounts) {
                             if (Accounts[data.email].password == data.password) {
@@ -145,10 +145,10 @@ function init(plugins, settings, events, io, log, commands) {
             }
         })
         socket.on("autologin", function (data) {
-            if (data != null) {
-                if (data.email != null) {
+            if (data) {
+                if (data.email) {
                     data.email = data.email.toLowerCase()
-                    if (data.persistentLoginKey != null) {
+                    if (data.persistentLoginKey) {
                         if (data.email in Accounts && data.persistentLoginKey in Accounts[data.email].loginKeys) {
 
                             if (Accounts[data.email].loginKeys[data.persistentLoginKey].ip == socket.request.connection.remoteAddress && Date.now() < Accounts[data.email].loginKeys[data.persistentLoginKey].timeout) {
@@ -201,11 +201,11 @@ function init(plugins, settings, events, io, log, commands) {
             }
         })
         socket.on("register", function (data) {
-            if (data != null) {
-                if (data.email != null && data.email.length > 6 && data.email.includes("@")) {
+            if (data) {
+                if (data.email && data.email.length > 6 && data.email.includes("@")) {
                     data.email = data.email.toLowerCase()
-                    if (data.password != null && data.password.length > 3) {
-                        if (data.username != null && data.username.length > 2 && !data.username.includes(" ") && !data.username.includes("   ")) {
+                    if (data.password && data.password.length > 3) {
+                        if (data.username && data.username.length > 2 && !data.username.includes(" ") && !data.username.includes("   ")) {
                             if (!(data.email in Accounts)) {
                                 if (!userExists(data.username)) {
                                     Accounts[data.email] = {}
@@ -229,7 +229,7 @@ function init(plugins, settings, events, io, log, commands) {
                 }
             }
         })
-        socket.on("unregister", function (data) {
+        socket.on("unregister", function () {
             if (socket.isLoggedIn) {
                 delete Accounts[socket.email]
                 log("Account '" + socket.email + "' was removed.", false, "Accounts");
