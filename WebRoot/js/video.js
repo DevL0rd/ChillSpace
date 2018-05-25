@@ -175,29 +175,35 @@ document.getElementById('player').onpause = function () {
 var videoSearchTimeout
 $("#videoUrl").keyup(function (event) {
     clearTimeout(videoSearchTimeout);
+    var searchMethod = $('#searchMethodSelector').find(":selected").text();
     if (event.keyCode === 13) {
-        searchForVideo($("#videoUrl").val(), "youtube");
+        searchForVideo($("#videoUrl").val(), searchMethod);
     } else {
-        videoSearchTimeout = setTimeout(function () {
-            searchForVideo($("#videoUrl").val(), "youtube");
-        }, 1000)
+        if (searchMethod != "Direct Url") {
+            videoSearchTimeout = setTimeout(function () {
+                searchForVideo($("#videoUrl").val(), searchMethod);
+            }, 1000)
+        }
     }
     showControls();
 });
 $("#searchResults").scroll(showControls);
 $("#playlist").scroll(showControls);
-function searchForVideo(searchStr, whereSearch) {
+function searchForVideo(searchStr, searchMethod) {
     if (searchStr) {
-        if (whereSearch == "youtube") {
+        $("#searchResults").html("");
+        $("#playlist").hide();
+        $("#searchResults").fadeIn(400);
+        if (searchMethod == "Youtube") {
             socket.emit("searchYoutube", $("#videoUrl").val());
+        } else {
+            socket.emit("addVideo", $("#videoUrl").val());
         }
     } else {
         hideSearch();
     }
 }
 socket.on("searchYoutube", function (results) {
-    $("#searchResults").html("");
-    $("#playlist").hide();
     for (i in results) {
         if (results[i].id.kind == "youtube#video") {
             var result = results[i].snippet;
@@ -214,7 +220,6 @@ socket.on("searchYoutube", function (results) {
             $(elem).show(400);
         }
     }
-    $("#searchResults").fadeIn(400);
     refreshAnimatedElements();
 });
 

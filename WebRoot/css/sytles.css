@@ -529,7 +529,7 @@ body {
     margin-top: 8px;
     margin-left: 8px;
     margin-right: 0px;
-    width: calc(100% - 80px);
+    width: calc(100% - 140px);
     color: white;
     background: rgba(32, 32, 32, 0.6);
     border-radius: 8px;
@@ -548,7 +548,7 @@ body {
     top: 50px;
     left: 0px;
     width: 100%;
-    height: calc(100% - 145px);
+    height: calc(100% - 85px);
     overflow: hidden;
     overflow-y: auto;
     padding: 5px;

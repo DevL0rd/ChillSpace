@@ -1,12 +1,10 @@
-add multiple options for where to search for videos
 add user badges like admin, mod, etc..
 add emotes
 muting a user
-fix float chat showing after un-fullscreen
 fix is typing box
-add tutorial
 add ability to update profile picture
 add verify email address
 add change password
 add delete account
-add notification email subscrption messages like come visit us we are live!
+suggestion box
+add tutorial
