@@ -132,7 +132,7 @@ function init(plugins, settings, events, io, log, commands) {
                         DB.save(playlistDir, playlist)
                     }
                 } else {
-                    plugins["Chat"].sendServerPm(socket, "You have already added 3 videos. Please wait to add more.");
+                    plugins["Chat"].sendServerPm(socket, "You have already added 3 videos. Please wait to add more.", 6000);
                 }
             }
         })
@@ -151,7 +151,7 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("videoFailed", function () {
 
             if (socket.host) {
-                plugins["Chat"].sendServerBroadcast("Video could not be played, source inaccessible.");
+                plugins["Chat"].sendServerBroadcast("Video could not be played, source inaccessible.", 6000);
                 currentVideoSource = null
                 if (playlist.length > 0) {
                     currentVideoSource = playlist.shift()
@@ -250,7 +250,7 @@ function init(plugins, settings, events, io, log, commands) {
                 log(socket.email + " un-paused the video.")
                 io.emit("playVideo")
                 videoIsStopped = false;
-                plugins["Chat"].sendServerBroadcast(socket.username + " un-paused the video.");
+                plugins["Chat"].sendServerBroadcast(socket.username + " un-paused the video.", 6000);
             }
         })
         socket.on('pauseVideo', function () {
@@ -258,7 +258,7 @@ function init(plugins, settings, events, io, log, commands) {
                 log(socket.email + " paused the video.")
                 io.emit("pauseVideo")
                 videoIsStopped = true;
-                plugins["Chat"].sendServerBroadcast(socket.username + " paused the video.");
+                plugins["Chat"].sendServerBroadcast(socket.username + " paused the video.", 6000);
             }
         });
     });

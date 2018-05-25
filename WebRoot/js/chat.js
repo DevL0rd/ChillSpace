@@ -25,6 +25,11 @@ function showMessage(data) {
         $(elem).attr("id", "");
         if (data.username == "Server") {
             $(elem).attr("class", "chatBox bounceLeft serverMessage");
+            if (data.timeout) {
+                setTimeout(function () {
+                    $(elem).hide(400);
+                }, data.timeout)
+            }
         } else {
             $(elem).attr("class", "chatBox bounceLeft");
         }

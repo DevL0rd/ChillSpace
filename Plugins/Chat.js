@@ -18,7 +18,6 @@ function init(plugins, settings, events, io, log, commands) {
                 }
                 var nowMS = new Date().getTime();
                 if (nowMS > socket.messageTimeout) {
-                    socket.messageTimeout = nowMS + 1000;
                     log(socket.email + ": " + msg)
                     msg = msg.replace(/<[^>]+>/g, ''); // sanatize input, remove html tags.
                     if (msg.charAt(0) == "!") {
@@ -31,9 +30,9 @@ function init(plugins, settings, events, io, log, commands) {
                         sendMessage(socket, msg);
                     }
                 } else {
-                    socket.messageTimeout = nowMS + 1000;
-                    sendServerPm(socket, "You must wait at least 1 second between messages.")
+                    sendServerPm(socket, "You must wait at least 1 second between messages.", 6000)
                 }
+                socket.messageTimeout = nowMS + 1000;
 
             }
         })
@@ -81,27 +80,31 @@ function sendPm(socket, toSocket, msg) {
     };
     toSocket.emit("newMessage", msgObj)
 }
-function sendServerPm(socket, msg) {
+function sendServerPm(socket, msg, timeout = 0) {
     var msgObj = {
         username: "Server",
         msg: msg,
         profilePicture: "img/profilePics/server.png",
         badges: [],
+        timeout: timeout,
         isPM: true
     };
     socket.emit("newMessage", msgObj)
 }
-function sendServerBroadcast(msg) {
+function sendServerBroadcast(msg, timeout = 0) {
     var msgObj = {
         username: "Server",
         msg: msg,
         profilePicture: "img/profilePics/server.png",
+        timeout: timeout,
         badges: []
     };
     serverIo.emit("newMessage", msgObj);
-    chatLog.push(msgObj);
-    if (chatLog.length > 60) {
-        chatLog.shift();
+    if (!timeout) {
+        chatLog.push(msgObj);
+        if (chatLog.length > 60) {
+            chatLog.shift();
+        }
     }
 }
 var commands = {
@@ -140,7 +143,7 @@ function handleCommand(command, args, fullMessage, socket) {
         if (!commands[command].requiredPermission || serverPlugins["Accounts"].hasPermission(socket.email, commands[command].requiredPermission)) {
             commands[command].do(args, fullMessage, socket);
         } else {
-            sendServerPm(socket, "You do not have permission to use this command.");
+            sendServerPm(socket, "You do not have permission to use this command.", 6000);
         }
     }
 }
