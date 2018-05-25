@@ -1,8 +1,7 @@
-add user badges like admin, mod, etc..
 add emotes
 muting a user
 fix is typing box
-add ability to update profile picture
+add ability to update profile picture (https://codepen.io/dsalvagni/pen/BLapab)
 add verify email address
 add change password
 add delete account

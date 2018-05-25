@@ -52,7 +52,6 @@ socket.on('connect', function () {
     } else {
         $("#loginLink").trigger("click");
     }
-
 });
 var permissions = [];
 socket.on("getPermissions", function (perms) {

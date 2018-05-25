@@ -215,6 +215,7 @@ function init(plugins, settings, events, io, log, commands) {
                                     Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg"
                                     Accounts[data.email].loginKeys = {}
                                     Accounts[data.email].permissionGroups = [];
+                                    Accounts[data.email].permissions = [];
                                     DB.save(accountDBPath, Accounts)
                                     socket.emit("registerResponse", "registered")
                                     log("Account '" + data.email + "' was registered.", false, "Accounts");
@@ -256,21 +257,21 @@ function init(plugins, settings, events, io, log, commands) {
 }
 var permissionsCache = {}
 function getPermissions(email) {
-    var usersPermGroups = Accounts[email].permissionGroups;
-    var permissions = [];
-    for (g in usersPermGroups) {
-        var gName = usersPermGroups[g]
-        if (permissionGroups[gName]) {
-            permissions = permissions.concat(permissionGroups[gName].permissions);
+    if (!permissionsCache[email]) {
+        var usersPermGroups = Accounts[email].permissionGroups;
+        var permissions = Accounts[email].permissions;
+        for (g in usersPermGroups) {
+            var gName = usersPermGroups[g]
+            if (permissionGroups[gName]) {
+                permissions = permissions.concat(permissionGroups[gName].permissions);
+            }
         }
+        permissionsCache[email] = permissions;
     }
-    return permissions;
+    return permissionsCache[email];
 }
 function hasPermission(email, permissionString) {
-    if (!permissionsCache[email]) {
-        permissionsCache[email] = getPermissions(email);
-    }
-    return permissionsCache[email].includes(permissionString);
+    return getPermissions(email).includes(permissionString);
 }
 function userExists(username) {
     var usernameExists = false;

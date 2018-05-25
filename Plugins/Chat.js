@@ -20,7 +20,8 @@ function init(plugins, settings, events, io, log, commands) {
                     var msgObj = {
                         username: socket.username,
                         msg: msg,
-                        profilePicture: socket.profilePicture
+                        profilePicture: socket.profilePicture,
+                        badges: getBadges(socket.email)
                     };
                     io.emit("newMessage", msgObj)
                     chatLog.push(msgObj);
@@ -46,5 +47,16 @@ function init(plugins, settings, events, io, log, commands) {
             }
         })
     })
+    function getBadges(email) {
+        var perms = plugins["Accounts"].getPermissions(email);
+        var badges = [];
+        for (i in perms) {
+            var perm = perms[i];
+            if (perm.includes("badge_")) {
+                badges.push(perm.split("badge_").pop());
+            }
+        }
+        return badges;
+    }
 }
 module.exports.init = init;

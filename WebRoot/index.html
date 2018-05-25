@@ -11,6 +11,16 @@
 </head>
 
 <body>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119904084-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-119904084-1');
+    </script>
+
     <nav id="nav" class="navbar navbar-expand navbar-dark">
         <a class="navbar-brand" href="javascript:void(0)">
             <img src="img/logo_white.png" height="30" class="d-inline-block align-top" alt="">
@@ -103,7 +113,6 @@
                             <input id="volumeSlider" type="range" orient="vertical" min="0" max="100" step="0.01">
                         </span>
                         <input id="videoTrack" type="range" min="0" max="10" step="0.01">
-
                         <button id="toggleFullscreen">
                             <i class="fas fa-arrows-alt"></i>
                         </button>
@@ -114,10 +123,13 @@
                 </div>
             </div>
         </div>
+
         <div id="chat" class="col-lg-3">
             <div id="chatBox0" class="chatBox">
                 <div class="chatUserInfoHolder">
                     <img class="chatBoxPhoto">
+
+                    <span class="badges"></span>
                     <span class="chatUsername">
                         Username here
                     </span>

@@ -37,6 +37,14 @@ function showMessage(data) {
         $(elem).attr("id", "");
         $(elem).attr("class", "chatBox bounceLeft");
         $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
+        var badgeGenHtml = "";
+        for (i in data.badges) {
+            var badge = data.badges[i];
+            var badgeUrl = "img/badges/" + badge + ".png"
+            badgeGenHtml += "<img src='" + badgeUrl + "'>"
+        }
+        $(elem).find('.badges').html(badgeGenHtml);
+
         $(elem).show(400);
         lastMessageFrom = data.username
         lastMessageElement = elem
