@@ -16,6 +16,7 @@ function init(plugins, settings, events, io, log, commands) {
                 if (nowMS > socket.messageTimeout) {
                     socket.messageTimeout = nowMS + 1000;
                     log(socket.email + ": " + msg)
+                    msg = msg.replace(/<[^>]+>/g, ''); // sanatize input, remove html tags.
                     var msgObj = {
                         username: socket.username,
                         msg: msg,

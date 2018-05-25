@@ -19,7 +19,9 @@ socket.on('newMessage', function (data) {
     } else {
         messageSound.play();
         showMessage(data)
-        floatMessage(data);
+        if ($("#chatFloatArea").is(":visible")) {
+            floatMessage(data);
+        }
         refreshAnimatedElements();
         scrollToEndOfChat();
     }
@@ -107,9 +109,14 @@ function linkify(inputText) {
     inputText = inputText.replace(/(http\S+\.(mp4|flv|mkv|3gp))/gim, '<video controls class="img-fluid" src="$1" />');
     return inputText;
 }
-
+var isStillScrolling = false;
 function scrollToEndOfChat() {
-    $("#chatLog").animate({
-        scrollTop: $('#chatLog')[0].scrollHeight
-    }, 1000);
+    if (!isStillScrolling) {
+        isStillScrolling = true;
+        $("#chatLog").animate({
+            scrollTop: $('#chatLog')[0].scrollHeight
+        }, 1000, "swing", function () {
+            isStillScrolling = false;
+        });
+    }
 }

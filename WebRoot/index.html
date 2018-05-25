@@ -51,10 +51,7 @@
     <div class="row fadeIn">
         <div id="playerArea" onmousemove="showControls()" class="col-lg-9">
             <div id="playerContainer">
-                <video id="player" src="" autoplay muted>
-
-                    <source type="video/mp4"> Your browser does not support the video tag.
-                </video>
+                <video id="player" autoplay muted></video>
                 <div id="videoLoadingCover">
                     <div class="centerHorz" style="height: 100%;">
                         <div class="centerVert">
@@ -75,6 +72,11 @@
                 </div>
                 <div id="videoOverlay">
                     <input id="videoUrl" type="text" placeholder="Login to add a video" disabled>
+                    <select id="searchMethodSelector">
+                        <option class="fab fa-youtube" style="color:#ff0000;">
+                        </option>
+                        <option>Direct Url</option>
+                    </select>
                     <div id="playListBar0" class="playListBar">
                         <img class="videoUserPhoto">
                         <span class="playlistTitle">
@@ -208,17 +210,22 @@
                 $("#chat").height("100%")
                 $("#chat").height($("#chat").innerHeight() - $("#nav").innerHeight())
             }
-        }
-        window.onresize = function () {
-            resizeChat();
             scrollToEndOfChat();
         }
-        $("#player").resize(function () {
+        var resizeTimeout
+        window.onresize = function () {
+            clearTimeout(resizeTimeout);
             resizeChat();
+        }
+        $("#player").resize(function () {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function () {
+                resizeChat();
+            }, 100)
         });
         window.onload = function () {
             resizeChat();
-            $("#pageLoadingCover").fadeOut(400);
+            $("#pageLoadingCover").fadeOut(1000);
             setTimeout(function () {
                 $("#videoOverlay").fadeOut(400);
             }, 6000)

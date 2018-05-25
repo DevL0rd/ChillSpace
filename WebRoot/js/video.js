@@ -204,6 +204,7 @@ socket.on("searchYoutube", function (results) {
             var videoUrl = "https://www.youtube.com/watch?v=" + results[i].id.videoId;
             var elem = $("#searchResult0").clone().appendTo("#searchResults");
             elem.attr('class', "searchResult bounceLeft");
+            elem.attr('id', "");
             elem.attr('videoUrl', videoUrl);
             elem.click(function () {
                 postVideoUrl(this.getAttribute('videoUrl'));
@@ -213,6 +214,7 @@ socket.on("searchYoutube", function (results) {
             $(elem).show(400);
         }
     }
+    $("#searchResults").fadeIn(400);
     refreshAnimatedElements();
 });
 
@@ -224,6 +226,7 @@ function hideSearch() {
     $("#searchResults").html("");
     $("#videoUrl").val("");
     $("#playlist").fadeIn(400);
+    $("#searchResults").hide();
 }
 var cachedPlaylist = []
 socket.on('updatePlaylist', function (playlist) {
@@ -263,7 +266,7 @@ function showControls() {
     $("#videoOverlay").fadeIn(400);
     hideControlsTimeout = setTimeout(function () {
         $("#videoOverlay").fadeOut(400);
-    }, 8000)
+    }, 6000)
 }
 
 $('#toggleFullscreen').on('click', function () {

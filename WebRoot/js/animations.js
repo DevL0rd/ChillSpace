@@ -58,7 +58,7 @@ function refreshAnimatedElements() {
 				viewChanged = true;
 				(!window.requestAnimationFrame) ? setTimeout(updateElements, 250) : window.requestAnimationFrame(updateElements);
 			}
-		});
+		}, { passive: true });
 	}
 
 }
@@ -83,31 +83,45 @@ function showElement(el) {
 	}
 }
 function hideElements() {
+	var currentParent
+	var parentBounds
 	animatedElements.forEach(function (el) {
 		var bounds = el.getBoundingClientRect();
-		if (bounds.top > window.innerHeight || bounds.bottom < 0) {
+		if (el.parentElement != currentParent) {
+			currentParent = el.parentElement;
+			parentBounds = el.parentElement.getBoundingClientRect();
+		}
+		if (bounds.top > parentBounds.bottom || bounds.bottom < parentBounds.top) {
 			hideElement(el);
 		}
 	});
 }
 hideElements();
 var viewChanged = false;
-
 window.addEventListener("resize", function (event) {
 	if (!viewChanged) {
 		viewChanged = true;
 		(!window.requestAnimationFrame) ? setTimeout(updateElements, 250) : window.requestAnimationFrame(updateElements);
 	}
-});
+}, { passive: true });
+
 function updateElements() {
-	var showedTestBounds = false;
+	var currentParent
+	var parentBounds
 	animatedElements.forEach(function (el) {
-		var bounds = el.getBoundingClientRect();
-		var parentBounds = el.parentElement.getBoundingClientRect();
-		if (el.classList.contains("is-hidden") && bounds.top <= parentBounds.bottom - offset && bounds.bottom >= parentBounds.top + offset) {
-			showElement(el);
-		} else if (bounds.top > parentBounds.bottom || bounds.bottom < parentBounds.top) {
-			hideElement(el);
+		try {
+			var bounds = el.getBoundingClientRect();
+			if (el.parentElement != currentParent) {
+				currentParent = el.parentElement;
+				parentBounds = el.parentElement.getBoundingClientRect();
+			}
+			if (el.classList.contains("is-hidden") && bounds.top <= parentBounds.bottom - offset && bounds.bottom >= parentBounds.top + offset) {
+				showElement(el);
+			} else if (bounds.top > parentBounds.bottom || bounds.bottom < parentBounds.top) {
+				hideElement(el);
+			}
+		} catch (err) {
+
 		}
 	});
 	viewChanged = false;

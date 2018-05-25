@@ -81,7 +81,6 @@ $("#login_email").on("change paste keyup", function () {
             socket.emit("getProfilePicture", $("#login_email").val())
         }, 500);
     }
-    console.log("lookie!")
 });
 socket.on("getProfilePicture", function (imgSrc) {
     $("#loginImg").attr('src', imgSrc);
