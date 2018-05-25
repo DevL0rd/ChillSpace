@@ -1,5 +1,5 @@
+add tutorial
 add emotes
-add chat commands
 muting a user
 fix is typing box
 add ability to update profile picture (https://codepen.io/dsalvagni/pen/BLapab)
@@ -8,4 +8,3 @@ add change password
 add delete account
 add reset password
 suggestion box
-add tutorial
