@@ -16,7 +16,7 @@ socket.on('newMessage', function (data) {
 });
 var floatElems = [];
 function showMessage(data) {
-    if (lastMessageFrom == data.username) {
+    if (data.username != "Server" && lastMessageFrom == data.username) {
         $(lastMessageElement).find('.chatMessage').append("<br>" + linkify(data.msg));
     } else {
         var elem = $("#chatBox0").clone().appendTo("#chatLog");
