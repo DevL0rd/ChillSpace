@@ -68,11 +68,6 @@ function init(plugins, settings, events, io, log, commands) {
                                 io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                             }
                             log(socket.username + " added '" + title + "'to the queue.");
-                            io.emit("newMessage", {
-                                username: "Server",
-                                msg: socket.username + " added '" + title + "'to the queue.",
-                                profilePicture: socket.profilePicture
-                            })
                             io.emit("updatePlaylist", playlist)
 
                             DB.save(playlistDir, playlist)
@@ -94,11 +89,6 @@ function init(plugins, settings, events, io, log, commands) {
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
                         log(socket.username + " added a youtube video to the queue.");
-                        io.emit("newMessage", {
-                            username: "Server",
-                            msg: socket.username + " added a youtube video to the queue.",
-                            profilePicture: socket.profilePicture
-                        })
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -118,11 +108,6 @@ function init(plugins, settings, events, io, log, commands) {
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
                         log(socket.username + " added a video to the queue.");
-                        io.emit("newMessage", {
-                            username: "Server",
-                            msg: socket.username + " added a video to the queue.",
-                            profilePicture: socket.profilePicture
-                        })
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -142,19 +127,12 @@ function init(plugins, settings, events, io, log, commands) {
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
                         log(socket.username + " added a unknown source to the queue.");
-                        io.emit("newMessage", {
-                            username: "Server",
-                            msg: socket.username + " added a unknown source to the queue."
-                        })
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
                     }
                 } else {
-                    socket.emit("newMessage", {
-                        username: "Server",
-                        msg: "You have already added 3 videos. Please wait to add more."
-                    })
+                    plugins["Chat"].sendServerPm(socket, "You have already added 3 videos. Please wait to add more.");
                 }
             }
         })
@@ -173,10 +151,7 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("videoFailed", function () {
 
             if (socket.host) {
-                io.emit("newMessage", {
-                    username: "Server",
-                    msg: "Video could not be played, source inaccessible."
-                })
+                plugins["Chat"].sendServerBroadcast("Video could not be played, source inaccessible.");
                 currentVideoSource = null
                 if (playlist.length > 0) {
                     currentVideoSource = playlist.shift()
@@ -260,12 +235,6 @@ function init(plugins, settings, events, io, log, commands) {
 
                 if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
                     io.emit('setVideoTime', timeSeconds)
-                } else {
-                    socket.emit("newMessage", {
-                        username: "Server",
-                        msg: "You do not have permission to use video controls.",
-                        profilePicture: socket.profilePicture
-                    })
                 }
             }
         })
@@ -278,20 +247,10 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on('playVideo', function () {
 
             if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
-                log(socket.email + " played the video.")
+                log(socket.email + " un-paused the video.")
                 io.emit("playVideo")
                 videoIsStopped = false;
-                io.emit("newMessage", {
-                    username: "Server",
-                    msg: socket.username + " un-paused the video.",
-                    profilePicture: socket.profilePicture
-                })
-            } else {
-                socket.emit("newMessage", {
-                    username: "Server",
-                    msg: "You do not have permission to use video controls.",
-                    profilePicture: socket.profilePicture
-                })
+                plugins["Chat"].sendServerBroadcast(socket.username + " un-paused the video.");
             }
         })
         socket.on('pauseVideo', function () {
@@ -299,29 +258,17 @@ function init(plugins, settings, events, io, log, commands) {
                 log(socket.email + " paused the video.")
                 io.emit("pauseVideo")
                 videoIsStopped = true;
-                io.emit("newMessage", {
-                    username: "Server",
-                    msg: socket.username + " paused the video.",
-                    profilePicture: socket.profilePicture
-                });
-            } else {
-                socket.emit("newMessage", {
-                    username: "Server",
-                    msg: "You do not have permission to use video controls.",
-                    profilePicture: socket.profilePicture
-                });
+                plugins["Chat"].sendServerBroadcast(socket.username + " paused the video.");
             }
         });
     });
 }
-
 setInterval(function () {
     if (host != null && currentVideoSource) {
         host.emit("getVideoTime")
         syncEveryone = true;
     }
 }, 1000)
-
 function getYoutubeMp4Url(url, onGetUrl) {
     youTubeParser.getURL(url, {
         quality: 'high',

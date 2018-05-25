@@ -620,7 +620,7 @@ body {
     display: inline;
     width: 24px;
     height: 24px;
-    background: white;
+    background: transparent;
     border-radius: 50%;
     overflow: hidden;
 }
@@ -636,7 +636,9 @@ body {
     word-wrap: break-word;
     font-size: 14px;
 }
-
+.serverMessage{
+    background: rgba(149, 66, 244, 0.8);
+}
 .messageImage {
     width: 300px;
     margin-left: 10px;

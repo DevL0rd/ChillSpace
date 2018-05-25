@@ -1,31 +1,19 @@
 var systemMessageTimeout
 var messageSound = new Audio('audio/message.mp3');
-var systemMessageSound = new Audio('audio/messageSystem.mp3');
 var typingSound = new Audio('audio/typing.mp3');
 messageSound.volume = 1
-systemMessageSound.volume = 1
 typingSound.volume = 1
 var lastMessageFrom = ""
 var lastMessageElement
 socket.on('newMessage', function (data) {
-    if (data.username == "Server") {
-        $("#systemMessageBox").fadeIn(400);
-        $("#systemMessage").html(linkify(data.msg))
-        clearTimeout(systemMessageTimeout)
-        systemMessageTimeout = setTimeout(function () {
-            $("#systemMessageBox").hide(400);
-        }, 5000)
-        systemMessageSound.play();
-    } else {
-        messageSound.play();
-        showMessage(data)
-        if ($("#chatFloatArea").is(":visible")) {
-            floatMessage(data);
-        }
-        refreshAnimatedElements();
-        scrollToEndOfChat();
+    messageSound.play();
+    showMessage(data)
+    if ($("#chatFloatArea").is(":visible")) {
+        floatMessage(data);
     }
-})
+    refreshAnimatedElements();
+    scrollToEndOfChat();
+});
 var floatElems = [];
 function showMessage(data) {
     if (lastMessageFrom == data.username) {
@@ -35,7 +23,11 @@ function showMessage(data) {
         $(elem).find('.chatUsername').text(data.username);
         $(elem).find('.chatMessage').html(linkify(data.msg));
         $(elem).attr("id", "");
-        $(elem).attr("class", "chatBox bounceLeft");
+        if (data.username == "Server") {
+            $(elem).attr("class", "chatBox bounceLeft serverMessage");
+        } else {
+            $(elem).attr("class", "chatBox bounceLeft");
+        }
         $(elem).find('.chatBoxPhoto').attr('src', data.profilePicture);
         var badgeGenHtml = "";
         for (i in data.badges) {
@@ -44,7 +36,6 @@ function showMessage(data) {
             badgeGenHtml += "<img src='" + badgeUrl + "'>"
         }
         $(elem).find('.badges').html(badgeGenHtml);
-
         $(elem).show(400);
         lastMessageFrom = data.username
         lastMessageElement = elem
@@ -55,10 +46,20 @@ function floatMessage(data) {
     $(floatElem).find('.chatUsername').text(data.username);
     $(floatElem).find('.chatMessage').html(linkify(data.msg));
     $(floatElem).attr("id", "");
-    $(floatElem).attr("class", "chatBox");
+    if (data.username == "Server") {
+        $(elem).attr("class", "chatBox serverMessage");
+    } else {
+        $(elem).attr("class", "chatBox");
+    }
     $(floatElem).find('.chatBoxPhoto').attr('src', data.profilePicture);
+    var badgeGenHtml = "";
+    for (i in data.badges) {
+        var badge = data.badges[i];
+        var badgeUrl = "img/badges/" + badge + ".png"
+        badgeGenHtml += "<img src='" + badgeUrl + "'>"
+    }
+    $(elem).find('.badges').html(badgeGenHtml);
     $(floatElem).show(400);
-
     var fElemTimeout = setTimeout(function () {
         $(floatElem).slideUp(1000, function () {
             this.remove();

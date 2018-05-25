@@ -49,10 +49,6 @@ function init(plugins, settings, events, io, log, commands) {
         }
         if (!isLoggedInElsewhere && socket.email != "") {
             io.emit("userLoggedOff", socket.email)
-            io.emit("newMessage", {
-                username: "Server",
-                msg: "'" + socket.username + "' has logged out."
-            })
         }
         socket.email = "";
     })
@@ -82,10 +78,6 @@ function init(plugins, settings, events, io, log, commands) {
                 socket.emit("forcelogout");
                 log("'" + socket.email + "' has logged out.", false, "Accounts");
                 socket.email = "";
-                io.emit("newMessage", {
-                    username: "Server",
-                    msg: "'" + socket.username + "' has logged out."
-                });
             }
         });
 
@@ -127,10 +119,6 @@ function init(plugins, settings, events, io, log, commands) {
                                 }
                                 if (!isLoggedInElsewhere) {
                                     log("'" + socket.email + "' has logged in.", false, "Accounts");
-                                    io.emit("newMessage", {
-                                        username: "Server",
-                                        msg: "'" + socket.username + "' has logged in."
-                                    })
                                 }
                             } else {
                                 log("'" + data.email + "' Login attempt failed, invalid password.", true, "Accounts");
@@ -185,10 +173,6 @@ function init(plugins, settings, events, io, log, commands) {
                                 }
                                 if (!isLoggedInElsewhere) {
                                     log("'" + data.email + "' has auto-logged in.", false, "Accounts");
-                                    io.emit("newMessage", {
-                                        username: "Server",
-                                        msg: "'" + socket.username + "' has logged in."
-                                    })
                                 }
                             } else {
                                 log("Login attempt failed, key and ip combination do not match. '" + data.email + "'", true, "Accounts");
@@ -281,6 +265,40 @@ function userExists(username) {
         }
     }
 }
+function addPermission(email, permission) {
+    if (!Accounts[email].permissions.includes(permission)) {
+        Accounts[email].permissions.push(permission);
+    }
+    DB.save(accountDBPath, Accounts)
+}
+function addGroup(email, group) {
+    if (!Accounts[email].permissionGroups.includes(group)) {
+        Accounts[email].permissionGroups.push(group);
+    }
+    DB.save(accountDBPath, Accounts)
+}
+function removePermission(email, permission) {
+    if (Accounts[email].permissions.includes(permission)) {
+        var index = Accounts[email].permissionGroups.indexOf(group);
+        if (index > -1) {
+            Accounts[email].permissionGroups.splice(index, 1);
+        }
+    }
+    DB.save(accountDBPath, Accounts)
+}
+function removeGroup(email, group) {
+    if (Accounts[email].permissionGroups.includes(group)) {
+        var index = Accounts[email].permissionGroups.indexOf(group);
+        if (index > -1) {
+            Accounts[email].permissionGroups.splice(index, 1);
+        }
+    }
+    DB.save(accountDBPath, Accounts)
+}
 exports.init = init;
 exports.getPermissions = getPermissions;
 exports.hasPermission = hasPermission;
+exports.addGroup = addGroup;
+exports.addPermission = addPermission;
+exports.removePermission = removePermission;
+exports.removeGroup = removeGroup;
