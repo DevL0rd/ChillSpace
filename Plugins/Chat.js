@@ -24,7 +24,7 @@ function init(plugins, settings, events, io, log, commands) {
                         var fullMessage = msg.slice(1);
                         var args = fullMessage.split(" ");
                         var fullMessage = fullMessage.substr(fullMessage.indexOf(" ") + 1);
-                        var command = args.shift();
+                        var command = args.shift().toLowerCase();
                         handleCommand(command, args, fullMessage, socket);
                     } else {
                         sendMessage(socket, msg);
@@ -122,8 +122,9 @@ var commands = {
                     } else {
                         isFirstLoop = false;
                     }
-                    response += "Usage: " + commands[command].usage + "<br>";
-                    response += "Help: " + commands[command].help;
+                    response += command + ":<br>"
+                    response += "   " + commands[command].usage + "<br>";
+                    response += "   " + commands[command].help;
                 }
             }
             sendServerPm(socket, response);
