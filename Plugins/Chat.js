@@ -16,9 +16,6 @@ function init(plugins, settings, events, io, log, commands) {
                 if (!socket.messageTimeout) {
                     socket.messageTimeout = 0;
                 }
-
-
-
                 var nowMS = new Date().getTime();
                 if (nowMS > socket.messageTimeout) {
                     socket.messageTimeout = nowMS + 1000;

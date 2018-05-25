@@ -32,10 +32,6 @@ if (fs.existsSync(permissionGroupsPath)) {
 
 
 function init(plugins, settings, events, io, log, commands) {
-    commands.test = function (message, messageLowercase, arguments) {
-        log("Test", false, "Test");
-    }
-
     events.on("disconnect", function (socket) {
         socket.isLoggedIn = false;
         var sockets = io.sockets.sockets;
