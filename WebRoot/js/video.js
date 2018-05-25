@@ -206,6 +206,7 @@ function searchForVideo(searchStr, searchMethod) {
 socket.on("searchYoutube", function (results) {
     for (i in results) {
         if (results[i].id.kind == "youtube#video") {
+            console.log(result)
             var result = results[i].snippet;
             var videoUrl = "https://www.youtube.com/watch?v=" + results[i].id.videoId;
             var elem = $("#searchResult0").clone().appendTo("#searchResults");
@@ -217,6 +218,8 @@ socket.on("searchYoutube", function (results) {
             });
             $(elem).find('.videoTitle').text(result.title);
             $(elem).find('.videoThumbnail').attr('src', result.thumbnails.default.url);
+            $(elem).find('.videoSource').text(result.channelTitle);
+
             $(elem).show(400);
         }
     }
