@@ -6,7 +6,10 @@ var DB = require('../Devlord_modules/DB.js');
 var chatLog = [];
 var serverIo;
 var serverPlugins;
+var serverCommands;
+
 function init(plugins, settings, events, io, log, commands) {
+    serverCommands = commands;
     serverIo = io
     serverPlugins = plugins;
     events.on("connection", function (socket) {
@@ -46,6 +49,7 @@ function init(plugins, settings, events, io, log, commands) {
         })
     })
 }
+
 function getBadges(email) {
     var perms = serverPlugins["Accounts"].getPermissions(email);
     var badges = [];
@@ -57,6 +61,7 @@ function getBadges(email) {
     }
     return badges;
 }
+
 function sendMessage(socket, msg) {
     var msgObj = {
         username: socket.username,
@@ -70,6 +75,7 @@ function sendMessage(socket, msg) {
         chatLog.shift();
     }
 }
+
 function sendPm(socket, toSocket, msg) {
     var msgObj = {
         username: socket.username,
@@ -80,6 +86,7 @@ function sendPm(socket, toSocket, msg) {
     };
     toSocket.emit("newMessage", msgObj)
 }
+
 function sendServerPm(socket, msg, timeout = 0) {
     var msgObj = {
         username: "Server",
@@ -91,6 +98,7 @@ function sendServerPm(socket, msg, timeout = 0) {
     };
     socket.emit("newMessage", msgObj)
 }
+
 function sendServerBroadcast(msg, timeout = 0) {
     var msgObj = {
         username: "Server",
@@ -107,7 +115,7 @@ function sendServerBroadcast(msg, timeout = 0) {
         }
     }
 }
-var commands = {
+var chatCommands = {
     help: {
         usage: "!help",
         help: "Displays this command list.",
@@ -115,16 +123,15 @@ var commands = {
         do: function (args, fullMessage, socket) {
             var response = "";
             var isFirstLoop = true;
-            for (command in commands) {
-                if (!commands[command].requiredPermission || serverPlugins["Accounts"].hasPermission(socket.email, commands[command].requiredPermission)) {
+            for (command in chatCommands) {
+                if (!chatCommands[command].requiredPermission || serverPlugins["Accounts"].hasPermission(socket.email, chatCommands[command].requiredPermission)) {
                     if (!isFirstLoop) {
                         response += "<br><br>";
                     } else {
                         isFirstLoop = false;
                     }
-                    response += command + ":<br>"
-                    response += "   " + commands[command].usage + "<br>";
-                    response += "   " + commands[command].help;
+                    response += chatCommands[command].usage + "<br>";
+                    response += "   " + chatCommands[command].help;
                 }
             }
             sendServerPm(socket, response);
@@ -137,20 +144,120 @@ var commands = {
         do: function (args, fullMessage, socket) {
             sendServerBroadcast(fullMessage);
         }
+    },
+    mod: {
+        usage: "!mod [user]",
+        help: "Make a user a moderator.",
+        requiredPermission: "command_mod",
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (!serverPlugins["Accounts"].hasPermissionGroup(email, "moderator")) {
+                    sendServerPm(socket, "User '" + username + "' was promoted to moderator!", 7000);
+                    serverPlugins["Accounts"].removeGroup(email, "admin")
+                    serverPlugins["Accounts"].addGroup(email, "moderator")
+                } else {
+                    sendServerPm(socket, "User '" + username + "' is already a moderator.");
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+
+        }
+    },
+    unmod: {
+        usage: "!unmod [user]",
+        help: "Remove moderator permissions from a user.",
+        requiredPermission: "command_mod",
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (serverPlugins["Accounts"].hasPermissionGroup(email, "moderator")) {
+                    sendServerPm(socket, "User '" + username + "' was demoted from moderator.", 7000);
+                    serverPlugins["Accounts"].removeGroup(email, "moderator")
+                } else {
+                    sendServerPm(socket, "User '" + username + "' is not a moderator.");
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+        }
+    },
+    admin: {
+        usage: "!admin [user]",
+        help: "Make a user a admin.",
+        requiredPermission: "command_admin",
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (!serverPlugins["Accounts"].hasPermissionGroup(email, "admin")) {
+                    sendServerPm(socket, "User '" + username + "' was promoted to admin!", 7000);
+                    serverPlugins["Accounts"].removeGroup(email, "moderator")
+                    serverPlugins["Accounts"].addGroup(email, "admin")
+                } else {
+                    sendServerPm(socket, "User '" + username + "' is already a admin.");
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+
+        }
+    },
+    unadmin: {
+        usage: "!unadmin [user]",
+        help: "Remove admin permissions from a user.",
+        requiredPermission: "command_admin",
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (serverPlugins["Accounts"].hasPermissionGroup(email, "admin")) {
+                    sendServerPm(socket, "User '" + username + "' was demoted from admin.", 7000);
+                    serverPlugins["Accounts"].removeGroup(email, "admin")
+                } else {
+                    sendServerPm(socket, "User '" + username + "' is not a admin.");
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+
+        }
     }
 };
+
 function handleCommand(command, args, fullMessage, socket) {
-    if (command && commands[command]) {
-        if (!commands[command].requiredPermission || serverPlugins["Accounts"].hasPermission(socket.email, commands[command].requiredPermission)) {
-            commands[command].do(args, fullMessage, socket);
+    if (command && chatCommands[command]) {
+        if (!chatCommands[command].requiredPermission || serverPlugins["Accounts"].hasPermission(socket.email, chatCommands[command].requiredPermission)) {
+            chatCommands[command].do(args, fullMessage, socket);
         } else {
             sendServerPm(socket, "You do not have permission to use this command.", 6000);
         }
+    } else {
+        sendServerPm(socket, "This command does not exist. Type '!help' for a list of commands.", 6000);
     }
 }
-module.exports.init = init;
-module.exports.sendServerBroadcast = sendServerBroadcast;
-module.exports.sendServerPm = sendServerPm;
-module.exports.sendPm = sendPm;
-module.exports.sendMessage = sendMessage;
-module.exports.commands = commands;
+exports.init = init;
+exports.sendServerBroadcast = sendServerBroadcast;
+exports.sendServerPm = sendServerPm;
+exports.sendPm = sendPm;
+exports.sendMessage = sendMessage;
+exports.chatCommands = chatCommands;

@@ -263,6 +263,10 @@ function hasPermission(email, permissionString) {
     return getPermissions(email).includes(permissionString);
 }
 
+function hasPermissionGroup(email, group) {
+    return Accounts[email].permissionGroups.includes(group);
+}
+
 function userExists(username) {
     var usernameExists = false;
     for (emailadd in Accounts) {
@@ -275,15 +279,21 @@ function userExists(username) {
 function addPermission(email, permission) {
     if (!Accounts[email].permissions.includes(permission)) {
         Accounts[email].permissions.push(permission);
+        delete permissionsCache[email];
+        DB.save(accountDBPath, Accounts)
+        return true;
     }
-    DB.save(accountDBPath, Accounts)
+    return false;
 }
 
 function addGroup(email, group) {
     if (!Accounts[email].permissionGroups.includes(group)) {
         Accounts[email].permissionGroups.push(group);
+        delete permissionsCache[email];
+        DB.save(accountDBPath, Accounts)
+        return true;
     }
-    DB.save(accountDBPath, Accounts)
+    return false;
 }
 
 function removePermission(email, permission) {
@@ -291,9 +301,12 @@ function removePermission(email, permission) {
         var index = Accounts[email].permissionGroups.indexOf(group);
         if (index > -1) {
             Accounts[email].permissionGroups.splice(index, 1);
+            delete permissionsCache[email];
+            DB.save(accountDBPath, Accounts)
+            return true;
         }
     }
-    DB.save(accountDBPath, Accounts)
+    return false;
 }
 
 function removeGroup(email, group) {
@@ -301,14 +314,26 @@ function removeGroup(email, group) {
         var index = Accounts[email].permissionGroups.indexOf(group);
         if (index > -1) {
             Accounts[email].permissionGroups.splice(index, 1);
+            delete permissionsCache[email];
+            DB.save(accountDBPath, Accounts)
+            return true;
         }
     }
-    DB.save(accountDBPath, Accounts)
+    return false;
+}
+
+function getUserEmail(username) {
+    for (email in Accounts) {
+        if (Accounts[email].username.toLowerCase() == username.toLowerCase()) return email;
+    }
+    return false;
 }
 exports.init = init;
 exports.getPermissions = getPermissions;
 exports.hasPermission = hasPermission;
+exports.hasPermissionGroup = hasPermissionGroup;
 exports.addGroup = addGroup;
 exports.addPermission = addPermission;
 exports.removePermission = removePermission;
 exports.removeGroup = removeGroup;
+exports.getUserEmail = getUserEmail;
