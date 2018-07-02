@@ -1,6 +1,5 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-
 var fs = require('fs');
 var DB = require('../Devlord_modules/DB.js');
 var YouTube = require('youtube-node');

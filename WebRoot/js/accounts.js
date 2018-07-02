@@ -1,6 +1,7 @@
 //*************************
 //Login system
-
+//Authour: Dustin Harris
+//GitHub: https://github.com/DevL0rd
 var isRegistering = false;
 $("#logoutLink").hide();
 socket.on('loginResponse', function (res) {

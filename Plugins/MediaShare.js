@@ -1,7 +1,5 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
-//Last Update: 3/17/2018
-//Version: 1.0.0
 var fs = require('fs');
 var youTubeParser = require('youtube-parser');
 var DB = require('../Devlord_modules/DB.js');

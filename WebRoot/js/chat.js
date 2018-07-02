@@ -1,3 +1,5 @@
+//Authour: Dustin Harris
+//GitHub: https://github.com/DevL0rd
 var systemMessageTimeout
 var messageSound = new Audio('audio/message.mp3');
 var typingSound = new Audio('audio/typing.mp3');

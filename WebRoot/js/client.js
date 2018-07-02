@@ -1,3 +1,5 @@
+//Authour: Dustin Harris
+//GitHub: https://github.com/DevL0rd
 Element.prototype.remove = function () {
     this.parentElement.removeChild(this);
 }

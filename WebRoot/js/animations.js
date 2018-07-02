@@ -1,4 +1,5 @@
-
+//Authour: Dustin Harris
+//GitHub: https://github.com/DevL0rd
 var offset = 0;
 //IE support
 if (!String.prototype.includes) {

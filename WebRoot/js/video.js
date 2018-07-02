@@ -1,3 +1,5 @@
+//Authour: Dustin Harris
+//GitHub: https://github.com/DevL0rd
 var player = document.getElementById('player');
 var isStopped = false;
 var noMediaVideoSrc = "https://www.videvo.net/videvo_files/converted/2016_01/preview/Blue_Particle_Motion_Background_1080.mov81869.webm";
