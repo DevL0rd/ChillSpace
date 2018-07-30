@@ -1,5 +1,5 @@
 node_modules/
 Logs/
-Plugins/Accounts/
+Plugins/Accounts/Accounts.json
 package-lock.json
 Plugins/YoutubeSearch/settings.json

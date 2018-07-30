@@ -1,0 +1,17 @@
+{
+	"admin": {
+		"permissions": [
+			"controlVideo",
+			"unlimitedVideos",
+			"badge_admin",
+			"command_server",
+			"command_admin",
+			"command_mod"
+		]
+	},
+	"moderator": {
+		"permissions": [
+			"badge_mod"
+		]
+	}
+}
