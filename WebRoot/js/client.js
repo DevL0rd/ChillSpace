@@ -16,7 +16,6 @@ if (!String.prototype.includes) {
         if (typeof start !== 'number') {
             start = 0;
         }
-
         if (start + search.length > this.length) {
             return false;
         } else {
@@ -38,7 +37,6 @@ if (!Array.prototype.includes) {
 }
 
 var socket = io();
-
 socket.on('forceRefresh', function () {
     window.location.reload();
 });
@@ -54,7 +52,6 @@ socket.on('connect', function () {
     } else {
         $("#loginLink").trigger("click");
     }
-
     setInterval(function () {
         startPingTime = Date.now();
         socket.emit('ping');

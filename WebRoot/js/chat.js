@@ -12,6 +12,7 @@ socket.on('newMessage', function (data) {
     showMessage(data);
     if ($("#chatFloatArea").is(":visible")) {
         floatMessage(data);
+        console.log("Test")
     }
     refreshAnimatedElements();
     scrollToEndOfChat();
@@ -82,9 +83,9 @@ function floatMessage(data) {
     $(floatElem).find('.chatMessage').html(linkify(data.msg));
     $(floatElem).attr("id", "");
     if (data.username == "Server") {
-        $(elem).attr("class", "chatBox serverMessage");
+        $(floatElem).attr("class", "chatBox serverMessage");
     } else {
-        $(elem).attr("class", "chatBox");
+        $(floatElem).attr("class", "chatBox");
     }
     $(floatElem).find('.chatBoxPhoto').attr('src', data.profilePicture);
     var badgeGenHtml = "";
@@ -93,7 +94,7 @@ function floatMessage(data) {
         var badgeUrl = "img/badges/" + badge + ".png"
         badgeGenHtml += "<img src='" + badgeUrl + "'>"
     }
-    $(elem).find('.badges').html(badgeGenHtml);
+    $(floatElem).find('.badges').html(badgeGenHtml);
     $(floatElem).show(400);
     var fElemTimeout = setTimeout(function () {
         $(floatElem).slideUp(1000, function () {
