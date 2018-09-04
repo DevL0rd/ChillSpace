@@ -7,8 +7,17 @@ var chatLog = [];
 var serverIo;
 var serverPlugins;
 var serverCommands;
+var userDataPath = __dirname + "/Chat/userData.json";
+var userData = {};
+if (fs.existsSync(userDataPath)) {
+    var userData = DB.load(userDataPath)
+} else {
+    DB.save(userDataPath, userData);
+}
 
 function init(plugins, settings, events, io, log, commands) {
+
+
     serverCommands = commands;
     serverIo = io
     serverPlugins = plugins;
@@ -69,7 +78,15 @@ function sendMessage(socket, msg) {
         profilePicture: socket.profilePicture,
         badges: getBadges(socket.email)
     };
-    serverIo.emit("newMessage", msgObj)
+    var sockets = serverIo.sockets.sockets;
+    for (var socketId in sockets) {
+        var socketTo = sockets[socketId];
+        if (userData[socketTo.email] && userData[socketTo.email].mutedUsers && userData[socketTo.email].mutedUsers[socket.email]) {
+
+        } else {
+            socketTo.emit("newMessage", msgObj);
+        }
+    }
     chatLog.push(msgObj);
     if (chatLog.length > 60) {
         chatLog.shift();
@@ -225,7 +242,7 @@ var chatCommands = {
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
                 console.log("Usage: " + this.usage);
-                return
+                return;
             }
             var username = args[0];
             var email = serverPlugins["Accounts"].getUserEmail(username);
@@ -240,6 +257,69 @@ var chatCommands = {
                 sendServerPm(socket, "User '" + username + "' does not exist.");
             }
 
+        }
+    },
+    mute: {
+        usage: "!mute [user]",
+        help: "Mute a user. A user can be unmuted using !unmute.",
+        requiredPermission: false,
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return;
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (!userData[socket.email]) userData[socket.email] = {};
+                if (!userData[socket.email].mutedUsers) userData[socket.email].mutedUsers = {};
+                if (!userData[socket.email].mutedUsers[email]) {
+                    userData[socket.email].mutedUsers[email] = true;
+                    DB.save(userDataPath, userData);
+                    sendServerPm(socket, "User '" + username + "' has been muted.", 6000);
+                } else {
+                    sendServerPm(socket, "User '" + username + "' has already been muted.", 6000);
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+            //continure here
+        }
+    },
+    unmute: {
+        usage: "!unmute [user]",
+        help: "unmute a user.",
+        requiredPermission: false,
+        do: function (args, fullMessage, socket) {
+            if (!args.length || args.length != 1) {
+                console.log("Usage: " + this.usage);
+                return;
+            }
+            var username = args[0];
+            var email = serverPlugins["Accounts"].getUserEmail(username);
+            if (email) {
+                if (!userData[socket.email]) userData[socket.email] = {};
+                if (!userData[socket.email].mutedUsers) userData[socket.email].mutedUsers = {};
+                if (userData[socket.email].mutedUsers[email]) {
+                    delete userData[socket.email].mutedUsers[email];
+                    DB.save(userDataPath, userData);
+                    sendServerPm(socket, "User '" + username + "' has been un-muted.", 6000);
+                } else {
+                    sendServerPm(socket, "User '" + username + "' is not muted.", 6000);
+                }
+            } else {
+                sendServerPm(socket, "User '" + username + "' does not exist.");
+            }
+            //continure here
+        }
+    },
+    ping: {
+        usage: "!ping",
+        help: "checks latency with server.",
+        requiredPermission: false,
+        do: function (args, fullMessage, socket) {
+            sendServerPm(socket, "Pong!", 1000);
+            //continure here
         }
     }
 };
