@@ -82,7 +82,7 @@ function sendMessage(socket, msg) {
     for (var socketId in sockets) {
         var socketTo = sockets[socketId];
         if (userData[socketTo.email] && userData[socketTo.email].mutedUsers && userData[socketTo.email].mutedUsers[socket.email]) {
-
+            //user is muted
         } else {
             socketTo.emit("newMessage", msgObj);
         }

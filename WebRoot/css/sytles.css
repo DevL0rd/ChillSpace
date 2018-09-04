@@ -1,5 +1,7 @@
 /* Authour: Dustin Harris */
+
 /* GitHub: https://github.com/DevL0rd */
+
 html {
     background: url(../img/bg.jpg);
     background-size: cover;
@@ -25,9 +27,9 @@ body {
     -moz-box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.75);
     box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.75); */
     background: rgba(0, 0, 0, 0.7);
-
 }
-.dropdown-menu{
+
+.dropdown-menu {
     background: rgba(50, 50, 50, 0.2);
     padding: 0px;
     border-bottom-right-radius: 8px;
@@ -36,7 +38,8 @@ body {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #00000030;
     max-height: 500px;
 }
-.dropdown-item{
+
+.dropdown-item {
     display: block;
     padding: 5px;
     clear: both;
@@ -48,7 +51,8 @@ body {
     border: 0;
     transition-duration: 0.4s;
 }
-.dropdown-item:hover{
+
+.dropdown-item:hover {
     color: white;
     background-color: rgba(26, 167, 80, 0.562);
     border: 0;
@@ -102,9 +106,11 @@ body {
 #loginGreeting h1 {
     font-size: 30px;
 }
+
 #loginGreeting span {
     font-size: 10px;
 }
+
 .closeLogin {
     position: absolute;
     top: 5px;
@@ -122,15 +128,19 @@ body {
     background-color: #ECF0F1;
     padding: 15px;
 }
+
 /* User list */
+
 .userBarTemplate {
     display: none;
 }
+
 .userBar {
     text-align: left;
     margin-top: 5px;
     overflow: hidden;
 }
+
 .userBarName {
     color: white;
 }
@@ -141,6 +151,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
 }
+
 /* player */
 
 #playerArea {
@@ -196,30 +207,33 @@ body {
     display: none;
 }
 
-#pageLoadingCover{
+#pageLoadingCover {
     position: absolute;
     top: 0px;
     left: 0px;
     width: 100%;
     height: 100%;
     text-align: center;
-    background: rgb(25,25,25);
-    background: -moz-linear-gradient(top, rgba(25,25,25,1) 1%, rgba(35,35,35,1) 31%, rgba(35,35,35,1) 70%, rgba(25,25,25,1) 100%);
-    background: -webkit-linear-gradient(top, rgba(25,25,25,1) 1%,rgba(35,35,35,1) 31%,rgba(35,35,35,1) 70%,rgba(25,25,25,1) 100%);
-    background: linear-gradient(to bottom, rgba(25,25,25,1) 1%,rgba(35,35,35,1) 31%,rgba(35,35,35,1) 70%,rgba(25,25,25,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#191919', endColorstr='#191919',GradientType=0 );
+    background: rgb(25, 25, 25);
+    background: -moz-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    background: -webkit-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    background: linear-gradient(to bottom, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#191919', endColorstr='#191919', GradientType=0);
     display: flex;
     justify-content: center;
 }
-.centerHorz{
+
+.centerHorz {
     display: flex;
     justify-content: center;
 }
-.centerVert{
+
+.centerVert {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .loadingGif {
     margin: 0 auto;
     width: 200px;
@@ -228,7 +242,7 @@ body {
 
 #videoTitleText {
     font-size: 16px;
-    color: rgba(255,255,255,.5);
+    color: rgba(255, 255, 255, .5);
 }
 
 #controls {
@@ -247,9 +261,11 @@ body {
     background: transparent;
     transition-duration: 0.4s;
 }
+
 #togglePlay:hover {
     color: rgba(26, 167, 80, 0.562);
 }
+
 #togglePlay:focus {
     outline: none;
 }
@@ -271,7 +287,6 @@ body {
     -webkit-transition: .2s;
     /* 0.2 seconds transition on hover */
     transition: opacity .2s;
-    
     display: none;
 }
 
@@ -328,9 +343,11 @@ body {
     background: transparent;
     transition-duration: 0.4s;
 }
+
 #volume:hover {
     color: rgba(26, 167, 80, 0.562);
 }
+
 #volume:focus {
     outline: none;
 }
@@ -343,9 +360,11 @@ body {
     float: right;
     transition-duration: 0.4s;
 }
+
 #toggleFullscreen:hover {
     color: rgba(26, 167, 80, 0.562);
 }
+
 #toggleFullscreen:focus {
     outline: none;
 }
@@ -443,7 +462,6 @@ body {
     padding-bottom: 15px;
     word-wrap: break-word;
     max-width: 395px;
-
     font-size: 16px;
 }
 
@@ -463,6 +481,7 @@ body {
     overflow-y: auto;
     padding: 5px;
 }
+
 .playListBar {
     position: relative;
     border-radius: 8px;
@@ -541,10 +560,10 @@ body {
 #videoUrl:focus {
     outline: none;
 }
+
 /* search */
 
-
-#searchResults{
+#searchResults {
     display: none;
     position: absolute;
     top: 50px;
@@ -555,6 +574,7 @@ body {
     overflow-y: auto;
     padding: 5px;
 }
+
 .searchResult {
     color: rgb(221, 221, 221);
     background: rgba(37, 37, 37, 0.5);
@@ -563,42 +583,50 @@ body {
     cursor: pointer;
     transition-duration: 0.4s;
 }
-#searchResult0{
-    display:none;
+
+#searchResult0 {
+    display: none;
 }
+
 .searchResult:hover {
     background: rgba(33, 168, 114, 0.8);
 }
-.videoThumbnail{
+
+.videoThumbnail {
     margin-right: 5px;
 }
-.videoTitle{
+
+.videoTitle {
     font-size: 15px;
     color: rgba(255, 255, 255, 0.8);
 }
-.videoSource{
+
+.videoSource {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
 }
-.videoData{
+
+.videoData {
     padding: 5px;
     text-align: right;
 }
-#searchMethodSelector{
+
+#searchMethodSelector {
     margin-top: 8px;
     padding: 8px;
     padding-right: 8px;
     width: 120px;
     border: none;
     border-radius: 8px;
-    background:rgba(32, 32, 32, 0.6);
+    background: rgba(32, 32, 32, 0.6);
     color: white;
 }
+
 /* chat */
 
 .chatHeader {
     color: white;
-    background: rgba(32, 32, 32, 0.6);
+    background: rgba(32, 32, 32, 0.1);
     font-size: 20px;
     padding: 6px;
     text-align: center;
@@ -618,16 +646,20 @@ body {
     /* IE6-9 */
 }
 
-
 .chatBox {
     display: none;
     color: white;
-    background: rgba(0, 0, 0, 0.1);
-    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
+    width: calc(100% - 15px);
+    margin: 5px;
+    border-radius: 5px;
 }
 
 .chatUserInfoHolder {
+    background: rgba(30, 30, 30, 0.3);
+    width: 100%;
     padding: 5px;
+    text-align: left;
 }
 
 .chatBoxPhoto {
@@ -650,9 +682,11 @@ body {
     word-wrap: break-word;
     font-size: 14px;
 }
-.serverMessage{
+
+.serverMessage {
     background: rgba(149, 66, 244, 0.8);
 }
+
 .messageImage {
     width: 300px;
     margin-left: 10px;
@@ -690,16 +724,18 @@ body {
     color: white;
     padding: 5px;
 }
-#chatFloatArea{
+
+#chatFloatArea {
     display: none;
     position: absolute;
     top: 0px;
     left: 0px;
-    bottom:0px;
-    right:0px;
+    bottom: 0px;
+    right: 0px;
     overflow: hidden;
     pointer-events: none;
 }
+
 /* scroll */
 
 .customScroll::-webkit-scrollbar {

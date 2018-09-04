@@ -17,7 +17,10 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119904084-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'UA-119904084-1');
@@ -127,13 +130,24 @@
 
         <div id="chat" class="col-lg-3">
             <div id="chatBox0" class="chatBox">
-                <div class="chatUserInfoHolder">
-                    <img class="chatBoxPhoto">
 
-                    <span class="badges"></span>
-                    <span class="chatUsername">
-                        Username here
-                    </span>
+                <div class="dropdown show">
+
+                    <a class="btn dropdown-toggle chatUserInfoHolder" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false">
+
+                        <img class="chatBoxPhoto">
+                        <span class="badges"></span>
+                        <span class="chatUsername">
+                            Username here
+                        </span>
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item viewProfileButton" href="#">View Profile</a>
+                        <a class="dropdown-item clearMessagesButton" href="#">Clear Messages</a>
+                        <a class="dropdown-item muteUserButton" href="#">Mute</a>
+                    </div>
                 </div>
                 <div class="chatMessage">
                     Test message
@@ -243,7 +257,6 @@
                 $("#videoOverlay").fadeOut(400);
             }, 6000)
         }
-
     </script>
 </body>
 

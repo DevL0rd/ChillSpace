@@ -9,7 +9,7 @@ var lastMessageFrom = ""
 var lastMessageElement
 socket.on('newMessage', function (data) {
     messageSound.play();
-    showMessage(data)
+    showMessage(data);
     if ($("#chatFloatArea").is(":visible")) {
         floatMessage(data);
     }
@@ -17,6 +17,19 @@ socket.on('newMessage', function (data) {
     scrollToEndOfChat();
 });
 var floatElems = [];
+
+function clearMessagesFromUser(uname) {
+    var messages = $("#chatLog").toArray();
+    for (i in messages) {
+        var message = messages[i];
+        console.log($(message).find('.chatUsername').text());
+        if ($(message).find('.chatUsername').text() == uname) {
+            $(message).parentNode.removeChild(elem);
+        }
+    }
+    console.log(messages);
+}
+
 function showMessage(data) {
     if (data.username != "Server" && lastMessageFrom == data.username) {
         $(lastMessageElement).find('.chatMessage').append("<br>" + linkify(data.msg));
@@ -25,6 +38,13 @@ function showMessage(data) {
         $(elem).find('.chatUsername').text(data.username);
         $(elem).find('.chatMessage').html(linkify(data.msg));
         $(elem).attr("id", "");
+        $(elem).find('.muteUserButton').click(function () {
+            socket.emit("sendMessage", "!mute " + data.username);
+            clearMessagesFromUser(data.username);
+        });
+        $(elem).find('.clearMessagesButton').click(function () {
+            clearMessagesFromUser(data.username);
+        });
         if (data.username == "Server") {
             $(elem).attr("class", "chatBox bounceLeft serverMessage");
             if (data.timeout) {
@@ -48,6 +68,7 @@ function showMessage(data) {
         lastMessageElement = elem
     }
 }
+
 function floatMessage(data) {
     var floatElem = $("#chatBox0").clone().appendTo("#chatFloatArea");
     $(floatElem).find('.chatUsername').text(data.username);
@@ -72,7 +93,10 @@ function floatMessage(data) {
             this.remove();
         });
     }, 4000);
-    floatElems.push({ elem: floatElem, timeout: fElemTimeout });
+    floatElems.push({
+        elem: floatElem,
+        timeout: fElemTimeout
+    });
     if (floatElems.length > 2) {
         var remElem = floatElems.shift();
         clearTimeout(remElem.timeout);
@@ -126,6 +150,7 @@ function linkify(inputText) {
     return inputText;
 }
 var isStillScrolling = false;
+
 function scrollToEndOfChat() {
     if (!isStillScrolling) {
         isStillScrolling = true;
