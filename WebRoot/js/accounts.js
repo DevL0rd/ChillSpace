@@ -86,6 +86,7 @@ $("#login_email").on("change paste keyup", function () {
 socket.on("getProfilePicture", function (imgSrc) {
     $("#loginImg").attr('src', imgSrc);
 });
+
 function register() {
     //verify registration info is valid
     if ($("#login_email").val().length < 6 || !$("#login_email").val().includes("@")) {
@@ -222,6 +223,7 @@ socket.on('userLoggedOff', function (email) {
 socket.on('updateUser', function (userData) {
     addToUserList(userData);
 })
+
 function addToUserList(userData) {
     if (localStorage.email != userData.email && onlineUsers[userData.email] == null) {
         var elem = $("#userBar0").clone().appendTo("#onlineUsers");

@@ -54,6 +54,11 @@ socket.on('connect', function () {
     } else {
         $("#loginLink").trigger("click");
     }
+
+    setInterval(function () {
+        startPingTime = Date.now();
+        socket.emit('ping');
+    }, 5000);
 });
 var permissions = [];
 socket.on("getPermissions", function (perms) {
@@ -67,9 +72,18 @@ socket.on("getPermissions", function (perms) {
     $("#videoUrl").attr('placeholder', "Search video name or input a url.");
     $("#chatBar").attr('placeholder', "Type here to chat");
 });
+
 function hasPermission(permString) {
     return permissions.includes(permString);
 }
 socket.on('disconnect', function () {
 
+});
+
+var startPingTime;
+var latency;
+
+socket.on('pong', function () {
+    latency = Date.now() - startPingTime;
+    console.log(latency);
 });

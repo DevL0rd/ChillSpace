@@ -16,8 +16,6 @@ if (fs.existsSync(userDataPath)) {
 }
 
 function init(plugins, settings, events, io, log, commands) {
-
-
     serverCommands = commands;
     serverIo = io
     serverPlugins = plugins;
@@ -53,10 +51,10 @@ function init(plugins, settings, events, io, log, commands) {
                 io.emit('isTyping', {
                     email: socket.email,
                     username: socket.username
-                })
+                });
             }
-        })
-    })
+        });
+    });
 }
 
 function getBadges(email) {

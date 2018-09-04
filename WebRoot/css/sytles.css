@@ -1,7 +1,5 @@
 /* Authour: Dustin Harris */
-
 /* GitHub: https://github.com/DevL0rd */
-
 html {
     background: url(../img/bg.jpg);
     background-size: cover;
@@ -130,7 +128,6 @@ body {
 }
 
 /* User list */
-
 .userBarTemplate {
     display: none;
 }
@@ -153,7 +150,6 @@ body {
 }
 
 /* player */
-
 #playerArea {
     position: relative;
     width: 100%;
@@ -166,7 +162,7 @@ body {
     /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
     /* IE6-9 */
     padding: 0px;
 }
@@ -198,7 +194,7 @@ body {
     /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
     /* IE6-9 */
 }
 
@@ -218,7 +214,7 @@ body {
     background: -moz-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
     background: -webkit-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
     background: linear-gradient(to bottom, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#191919', endColorstr='#191919', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#191919', endColorstr='#191919', GradientType=0);
     display: flex;
     justify-content: center;
 }
@@ -291,14 +287,12 @@ body {
 }
 
 /* Mouse-over effects */
-
 #videoTrack:hover {
     opacity: 1;
     /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use webkit (Chrome, Opera, Safari, Edge) and moz (Firefox) to override default look) */
-
 #videoTrack::-webkit-slider-thumb {
     -webkit-appearance: none;
     /* Override default look */
@@ -330,6 +324,7 @@ body {
     #playerArea {
         height: auto;
     }
+
     #player {
         height: auto;
     }
@@ -407,14 +402,12 @@ body {
 }
 
 /* Mouse-over effects */
-
 #volumeSlider:hover {
     opacity: 1;
     /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use webkit (Chrome, Opera, Safari, Edge) and moz (Firefox) to override default look) */
-
 #volumeSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     /* Override default look */
@@ -474,7 +467,6 @@ body {
 }
 
 /* playlist */
-
 #playlist {
     width: 100%;
     height: calc(100% - 85px);
@@ -562,7 +554,6 @@ body {
 }
 
 /* search */
-
 #searchResults {
     display: none;
     position: absolute;
@@ -623,7 +614,6 @@ body {
 }
 
 /* chat */
-
 .chatHeader {
     color: white;
     background: rgba(32, 32, 32, 0.1);
@@ -642,7 +632,7 @@ body {
     /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6000000', endColorstr='#a6000000', GradientType=0);
     /* IE6-9 */
 }
 
@@ -652,11 +642,12 @@ body {
     background: rgba(0, 0, 0, 0.2);
     width: calc(100% - 15px);
     margin: 5px;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 .chatUserInfoHolder {
     background: rgba(30, 30, 30, 0.3);
+    color: white;
     width: 100%;
     padding: 5px;
     text-align: left;
@@ -737,7 +728,6 @@ body {
 }
 
 /* scroll */
-
 .customScroll::-webkit-scrollbar {
     width: 12px;
     background-color: rgba(0, 0, 0, 0.8);
@@ -750,7 +740,6 @@ body {
 }
 
 /* bootstrap fix */
-
 .row {
     margin-right: 0px;
     margin-left: 0px;

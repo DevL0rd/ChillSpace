@@ -56,10 +56,6 @@ function init(plugins, settings, events, io, log, commands) {
     events.on("connection", function (socket) {
         socket.isLoggedIn = false;
         socket.email = "";
-        socket.on('ping', function (data) {
-            socket.emit('pong', {});
-        });
-
         socket.on("getPermissions", function () {
             if (socket.isLoggedIn) {
                 socket.emit("getPermissions", getPermissions(socket.email));

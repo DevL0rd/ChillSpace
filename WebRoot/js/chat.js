@@ -19,12 +19,12 @@ socket.on('newMessage', function (data) {
 var floatElems = [];
 
 function clearMessagesFromUser(uname) {
-    var messages = $("#chatLog").toArray();
+    var messages = $(".chatBox").toArray();
     for (i in messages) {
         var message = messages[i];
         console.log($(message).find('.chatUsername').text());
         if ($(message).find('.chatUsername').text() == uname) {
-            $(message).parentNode.removeChild(elem);
+            message.parentNode.removeChild(message);
         }
     }
     console.log(messages);
@@ -38,13 +38,20 @@ function showMessage(data) {
         $(elem).find('.chatUsername').text(data.username);
         $(elem).find('.chatMessage').html(linkify(data.msg));
         $(elem).attr("id", "");
-        $(elem).find('.muteUserButton').click(function () {
-            socket.emit("sendMessage", "!mute " + data.username);
-            clearMessagesFromUser(data.username);
-        });
-        $(elem).find('.clearMessagesButton').click(function () {
-            clearMessagesFromUser(data.username);
-        });
+        if (data.username == localStorage.username) {
+            //this is the current user, remove all unused buttons.
+            $(elem).find('.muteUserButton').remove();
+            $(elem).find('.clearMessagesButton').remove();
+        } else {
+            //this is some other user
+            $(elem).find('.muteUserButton').click(function () {
+                socket.emit("sendMessage", "!mute " + data.username);
+                clearMessagesFromUser(data.username);
+            });
+            $(elem).find('.clearMessagesButton').click(function () {
+                clearMessagesFromUser(data.username);
+            });
+        }
         if (data.username == "Server") {
             $(elem).attr("class", "chatBox bounceLeft serverMessage");
             if (data.timeout) {
@@ -118,6 +125,7 @@ $("#chatBar").keyup(function (event) {
         socket.emit("isTyping")
     }
 });
+
 var playedTypingSound = false;
 socket.on('isTyping', function (user) {
     if (user.email != localStorage.email) {

@@ -8,6 +8,13 @@ function init(plugins, settings, events, io, log, commands) {
             log("Forcing clients to refresh.")
             io.emit("forceRefresh")
         }
-    }
+    };
+
+    events.on("connection", function (socket) {
+        socket.on('ping', function () {
+            socket.emit('pong');
+        });
+    });
 }
+
 exports.init = init;
