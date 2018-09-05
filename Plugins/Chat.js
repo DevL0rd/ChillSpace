@@ -17,7 +17,7 @@ if (fs.existsSync(userDataPath)) {
 
 function init(plugins, settings, events, io, log, commands) {
     serverCommands = commands;
-    serverIo = io
+    serverIo = io;
     serverPlugins = plugins;
     events.on("connection", function (socket) {
         socket.emit("getChatLog", chatLog);
@@ -37,6 +37,7 @@ function init(plugins, settings, events, io, log, commands) {
                         var command = args.shift().toLowerCase();
                         handleCommand(command, args, fullMessage, socket);
                     } else {
+                        //check mentions and highlight them
                         sendMessage(socket, msg);
                     }
                 } else {
@@ -129,6 +130,11 @@ function sendServerBroadcast(msg, timeout = 0) {
             chatLog.shift();
         }
     }
+}
+//Find any username starting with an @symbol
+function getMentionsList(str) {
+    var pattern = /\B@[a-z0-9_-]+/gi;
+    return str.match(pattern);
 }
 var chatCommands = {
     help: {
@@ -269,14 +275,19 @@ var chatCommands = {
             var username = args[0];
             var email = serverPlugins["Accounts"].getUserEmail(username);
             if (email) {
-                if (!userData[socket.email]) userData[socket.email] = {};
-                if (!userData[socket.email].mutedUsers) userData[socket.email].mutedUsers = {};
-                if (!userData[socket.email].mutedUsers[email]) {
-                    userData[socket.email].mutedUsers[email] = true;
-                    DB.save(userDataPath, userData);
-                    sendServerPm(socket, "User '" + username + "' has been muted.", 6000);
+                if (email != socket.email) {
+                    if (!userData[socket.email]) userData[socket.email] = {};
+                    if (!userData[socket.email].mutedUsers) userData[socket.email].mutedUsers = {};
+                    if (!userData[socket.email].mutedUsers[email]) {
+                        userData[socket.email].mutedUsers[email] = true;
+                        DB.save(userDataPath, userData);
+                        sendServerPm(socket, "User '" + username + "' has been muted.", 6000);
+                    } else {
+                        sendServerPm(socket, "User '" + username + "' has already been muted.", 6000);
+                    }
+
                 } else {
-                    sendServerPm(socket, "User '" + username + "' has already been muted.", 6000);
+                    sendServerPm(socket, "You cannot mute yourself.");
                 }
             } else {
                 sendServerPm(socket, "User '" + username + "' does not exist.");

@@ -9,7 +9,6 @@ function init(plugins, settings, events, io, log, commands) {
             io.emit("forceRefresh")
         }
     };
-
     events.on("connection", function (socket) {
         socket.on('ping', function () {
             socket.emit('pong');

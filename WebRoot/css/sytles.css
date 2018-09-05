@@ -667,6 +667,13 @@ body {
     font-size: 12px;
 }
 
+.mentionPill {
+    padding: 4px;
+    background: rgba(0, 174, 255, 0.349);
+    border-radius: 5px;
+    font-weight: bold;
+}
+
 .chatMessage {
     width: 100%;
     padding: 5px 10px;

@@ -7,17 +7,39 @@ messageSound.volume = 1
 typingSound.volume = 1
 var lastMessageFrom = ""
 var lastMessageElement
-socket.on('newMessage', function (data) {
+socket.on('newMessage', function (msgData) {
     messageSound.play();
-    showMessage(data);
+    showMessage(msgData);
     if ($("#chatFloatArea").is(":visible")) {
-        floatMessage(data);
+        floatMessage(msgData);
         console.log("Test")
     }
     refreshAnimatedElements();
     scrollToEndOfChat();
 });
-var floatElems = [];
+
+function formatMessage(msg) {
+    msg = linkify(msg);
+    msg = formatMentions(msg);
+    return msg;
+}
+
+function formatMentions(msg) {
+    var mentions = getMentionsList(msg);
+    if (mentions) {
+        for (i in mentions) {
+            var mention = mentions[i];
+            var htmlMentionButton = "<span class='mentionPill'>" + mention + "</span>";
+            msg = msg.replace(mention, htmlMentionButton);
+        }
+    }
+    return msg;
+}
+//Find any username starting with an @symbol
+function getMentionsList(str) {
+    var pattern = /\B@[a-z0-9_-]+/gi;
+    return str.match(pattern);
+}
 
 function clearMessagesFromUser(uname) {
     var messages = $(".chatBox").toArray();
@@ -32,12 +54,14 @@ function clearMessagesFromUser(uname) {
 }
 
 function showMessage(data) {
+
+    data.msg = formatMessage(data.msg);
     if (data.username != "Server" && lastMessageFrom == data.username) {
-        $(lastMessageElement).find('.chatMessage').append("<br>" + linkify(data.msg));
+        $(lastMessageElement).find('.chatMessage').append("<br>" + data.msg);
     } else {
         var elem = $("#chatBox0").clone().appendTo("#chatLog");
         $(elem).find('.chatUsername').text(data.username);
-        $(elem).find('.chatMessage').html(linkify(data.msg));
+        $(elem).find('.chatMessage').html(data.msg);
         $(elem).attr("id", "");
         if (data.username == localStorage.username) {
             //this is the current user, remove all unused buttons.
@@ -77,10 +101,12 @@ function showMessage(data) {
     }
 }
 
+var floatElems = [];
+
 function floatMessage(data) {
     var floatElem = $("#chatBox0").clone().appendTo("#chatFloatArea");
     $(floatElem).find('.chatUsername').text(data.username);
-    $(floatElem).find('.chatMessage').html(linkify(data.msg));
+    $(floatElem).find('.chatMessage').html(data.msg);
     $(floatElem).attr("id", "");
     if (data.username == "Server") {
         $(floatElem).attr("class", "chatBox serverMessage");
