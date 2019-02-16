@@ -1,7 +1,7 @@
 {
 	"IP": "0.0.0.0",
 	"PORT": 80,
-	"timeout": 5000,
+	"timeout": 15000,
 	"maxHeadersCount": 20,
 	"maxPostSizeMB": 8,
 	"maxUrlLength": 2048,

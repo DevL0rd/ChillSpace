@@ -21,18 +21,19 @@ socket.on('loginResponse', function (res) {
         localStorage.username = res.username;
         $("#profilePic").attr('src', res.profilePicture);
         $("#loginImg").attr('src', res.profilePicture);
+        $("#profileImg").attr('src', res.profilePicture); //profile editor
         $("#profileIcon").hide();
         $("#profilePic").show();
         $("#loginLink").hide();
         $("#logoutLink").show();
         $("#loginInputs").hide(400);
-        $("#loginGreeting").html("<h1>Welcome back</h1>");
+        $("#loginGreeting").html("<h1>Welcome Back!</h1>");
         socket.emit("getPermissions");
         setTimeout(function () {
-            $(".closeLogin").trigger("click");
+            $("#closeLogin").trigger("click");
             setTimeout(function () {
                 $("#loginInputs").show();
-                $("#loginGreeting").html("<h1>Login pl0x</h1><span>Logging in enables you to share videos and to join in chat!</span>");
+                $("#loginGreeting").html(" <h1>Please Login</h1><span>Logging in enables you to share videos and to join in chat!</span>");
             }, 400);
         }, 3000);
     }
@@ -51,6 +52,14 @@ socket.on('registerResponse', function (res) {
     } else if (res == "usernameExists") {
         //email is already registered
         $("#loginOutput").html("This username is already in use.");
+        $("#loginOutput").css('color', 'red');
+        setTimeout(function () {
+            $("#loginOutput").html("");
+            $("#loginOutput").css('color', 'white');
+        }, 5000)
+    } else if (res == "invalidReferal") {
+        //email is already registered
+        $("#loginOutput").html("This is not a valid referal.");
         $("#loginOutput").css('color', 'red');
         setTimeout(function () {
             $("#loginOutput").html("");
@@ -85,9 +94,12 @@ $("#login_email").on("change paste keyup", function () {
 });
 socket.on("getProfilePicture", function (imgSrc) {
     $("#loginImg").attr('src', imgSrc);
+    $("#profileImg").attr('src', imgSrc);//profile editor
+
 });
 
 function register() {
+    var urlVars = getUrlVars();
     //verify registration info is valid
     if ($("#login_email").val().length < 6 || !$("#login_email").val().includes("@")) {
         $("#loginOutput").html("Invalid email address.");
@@ -126,7 +138,6 @@ function register() {
             $("#loginOutput").css('color', 'white');
         }, 5000)
     } else {
-
         //send registration info
         socket.emit("register", {
             email: $("#login_email").val(),
@@ -142,11 +153,11 @@ function logout() {
     localStorage.email = "";
     localStorage.username = "";
     socket.emit("logout");
-    $(".closeLogin").trigger("click");
     $("#loginLink").show();
     $("#logoutLink").hide();
     $("#profilePic").hide();
     $("#profileIcon").show();
+    $("#loginLink").trigger("click");
 }
 $("#login_email").keyup(function (event) {
     if (event.keyCode === 13) {
@@ -235,4 +246,46 @@ function addToUserList(userData) {
         };
         $(elem).find('.userBarPhoto').attr('src', userData.profilePicture)
     }
+}
+
+function submitProfilePicture() {
+    var file = document.querySelector('#profilePicInput[type="file"]').files[0];
+    getBase64(file, function (b64) {
+        socket.emit("changeProfilePicture", b64);
+    });
+}
+socket.on("changeProfilePicture", function (newPic) {
+    if (newPic) {
+        $("#profilePic").attr('src', newPic);
+        $("#loginImg").attr('src', newPic);
+        $("#profileImg").attr('src', newPic);
+        $("#profileOutput").css('color', 'green');
+        $("#profileOutput").html("Profile photo updated!");
+        setTimeout(function () {
+            $("#profileOutput").html("");
+            $("#profileOutput").css('color', 'white');
+            $("#closePE").trigger("click");
+        }, 3000);
+    } else {
+        $("#profileOutput").html("Invalid image.");
+        $("#profileOutput").css('color', 'red');
+        setTimeout(function () {
+            $("#profileOutput").html("");
+            $("#profileOutput").css('color', 'white');
+        }, 5000);
+    }
+});
+
+
+
+
+function getBase64(file, callb) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () {
+        callb(reader.result);
+    };
+    reader.onerror = function (error) {
+        console.log('Error: ', error);
+    };
 }

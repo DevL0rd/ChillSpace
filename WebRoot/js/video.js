@@ -52,7 +52,8 @@ player.onplaying = function () {
 
 socket.on('syncCheck', function (timeSeconds) {
     if (!isUsingSlider) {
-        if (Math.abs(player.currentTime - timeSeconds) >= 0.5) {
+        //experimental delay detection
+        if (Math.abs(player.currentTime - (timeSeconds + latency)) >= 0.5) {
 
             try {
                 player.currentTime = timeSeconds;

@@ -56,7 +56,7 @@ body {
     border: 0;
 }
 
-.loginModal {
+.modalPanel {
     position: relative;
     margin: 0 auto;
     margin-top: 100px;
@@ -75,7 +75,7 @@ body {
 }
 
 @media (max-width: 992px) {
-    .loginModal {
+    .modal {
         width: 100%;
     }
 }
@@ -109,7 +109,7 @@ body {
     font-size: 10px;
 }
 
-.closeLogin {
+.closeModal {
     position: absolute;
     top: 5px;
     right: 10px;

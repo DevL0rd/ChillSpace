@@ -58,6 +58,8 @@
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDrop">
                 <a id="loginLink" class="dropdown-item" href="#login" data-toggle="modal">Login</a>
                 <a id="logoutLink" class="dropdown-item" href="javascript:void(0)" onclick="javascript:logout();">Logout</a>
+                
+                <a id="profileLink" class="dropdown-item" href="#profileEditor" data-toggle="modal">Profile</a>
             </div>
 
         </span>
@@ -167,18 +169,57 @@
         </div>
 
     </div>
+    
+    <div id="profileEditor" class="modal fade text-center">
+        <div class="modal-dialog">
+            <div class="modal-content modalPanel">
+                <div class="login-user-img">
+                    <img id="profileImg" src="img/profilePics/noprofilepic.jpg">
+                </div>
+                <button id="closePE" type="button" class="close closeModal" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="profileOutput">
+
+                </div>
+                <div class="form-input">
+                    <input id="profilePicInput" type="file" class="btn" style="color: white;" name="file" accept="image/x-png,image/gif,image/jpeg">
+                    <button id="uploadPictureBtn" type="submit" class="btn btn-success" onclick="submitProfilePicture();">Update Profile Picture</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="referBox" class="modal fade text-center">
+        <div class="modal-dialog">
+            <div class="modal-content modalPanel">
+                <button id="closeRefer" type="button" class="close closeModal" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 style="color: white;">
+                    Here is your one time use referal link!
+                </h2>
+                <a id="enlistUrl">
+
+                </a>
+                <div class="form-input">
+                    <!-- <button id="login_button" type="submit" class="btn btn-success" onclick="loginButton()">Copy</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="login" class="modal fade text-center">
         <div class="modal-dialog">
-            <div class="modal-content loginModal">
+            <div class="modal-content modalPanel">
                 <div class="login-user-img">
                     <img id="loginImg" src="img/profilePics/noprofilepic.jpg">
                 </div>
-                <button type="button" class="close closeLogin" data-dismiss="modal">
+                <button id="closeLogin" type="button" class="close closeModal" data-dismiss="modal">
                     <i class="fas fa-times"></i>
                 </button>
                 <div id="loginGreeting">
-                    <h1>Login pl0x</h1>
-                    <span>Logging in enables you to share videos and to join in chat!</span>
+                    <h1>Please log in my lord.</h1>
+                    <span>Login and check on your wenches.</span>
                 </div>
                 <div id="loginOutput">
 
@@ -194,12 +235,10 @@
                         <input id="login_pswd" type="password" class="form-control" placeholder="Password">
                     </div>
                     <div class="form-group">
-                        <input id="login_passwordcheck" type="password" class="form-control" placeholder="Confirm Password"
-                            style="display:none;">
+                        <input id="login_passwordcheck" type="password" class="form-control" placeholder="Confirm Password" style="display:none;">
                     </div>
                     <button id="login_button" type="submit" class="btn btn-success" onclick="loginButton()">Login</button>
-                    <button id="register_button" type="submit" class="btn btn-success" onclick="showRegister()">Create
-                        An Account</button>
+                    <button id="register_button" type="submit" class="btn btn-success" onclick="showRegister()">Create An Account</button>
                     <a href="javascript:void(0)">Forgot Password?</a>
                 </div>
             </div>

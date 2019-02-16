@@ -42,21 +42,21 @@ socket.on('forceRefresh', function () {
 });
 socket.on('connect', function () {
     $("#chatLog").html("");
-    socket.emit("getVideo");
     socket.emit("updateUsers");
-    if (localStorage.persistentLoginKey != null && localStorage.persistentLoginKey != "") {
+    if (localStorage.persistentLoginKey) {
         socket.emit('autologin', {
             email: localStorage.email,
             persistentLoginKey: localStorage.persistentLoginKey
         });
-    } else {
-        $("#loginLink").trigger("click");
+
     }
+    $("#loginLink").trigger("click");
     setInterval(function () {
         startPingTime = Date.now();
         socket.emit('ping');
     }, 5000);
 });
+
 var permissions = [];
 socket.on("getPermissions", function (perms) {
     permissions = perms;
@@ -84,3 +84,47 @@ socket.on('pong', function () {
     latency = Date.now() - startPingTime;
     console.log(latency);
 });
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+//chrome notifications
+
+// request permission on page load
+document.addEventListener('DOMContentLoaded', function () {
+    if (!Notification) {
+        alert('Desktop notifications not available in your browser. Try Chromium.');
+        return;
+    }
+
+    if (Notification.permission !== "granted")
+        Notification.requestPermission();
+});
+
+function broserNotify(title, icon, msg) {
+    if (Notification) {
+
+        if (Notification.permission !== "granted")
+            Notification.requestPermission();
+        else {
+            var notification = new Notification(title, {
+                icon: icon,
+                body: msg,
+            });
+
+            notification.onclick = function () {
+                window.open("http://devl0rd.com/");
+            };
+
+        }
+
+    }
+}
+function round(num) {
+    return Math.round(num * 100) / 100;
+}

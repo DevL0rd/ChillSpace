@@ -9,6 +9,7 @@ var serverPlugins;
 var serverCommands;
 var userDataPath = __dirname + "/Chat/userData.json";
 var userData = {};
+
 if (fs.existsSync(userDataPath)) {
     var userData = DB.load(userDataPath)
 } else {
@@ -173,15 +174,15 @@ var chatCommands = {
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
                 console.log("Usage: " + this.usage);
-                return
+                return;
             }
             var username = args[0];
             var email = serverPlugins["Accounts"].getUserEmail(username);
             if (email) {
                 if (!serverPlugins["Accounts"].hasPermissionGroup(email, "moderator")) {
                     sendServerPm(socket, "User '" + username + "' was promoted to moderator!", 7000);
-                    serverPlugins["Accounts"].removeGroup(email, "admin")
-                    serverPlugins["Accounts"].addGroup(email, "moderator")
+                    serverPlugins["Accounts"].removeGroup(email, "admin");
+                    serverPlugins["Accounts"].addGroup(email, "moderator");
                 } else {
                     sendServerPm(socket, "User '" + username + "' is already a moderator.");
                 }

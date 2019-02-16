@@ -34,6 +34,10 @@ if (fs.existsSync(permissionGroupsPath)) {
     }
     DB.save(permissionGroupsPath, permissionGroups);
 }
+function reloadAccounts() {
+    Accounts = DB.load(accountDBPath);
+    exports.Accounts = Accounts;
+}
 
 function init(plugins, settings, events, io, log, commands) {
     function isLoggedInElsewhere(socket) {
@@ -45,6 +49,14 @@ function init(plugins, settings, events, io, log, commands) {
             }
         }
     }
+    commands.reloadaccounts = {
+        usage: "reloadaccounts",
+        help: "Reloads accounts from the data file.",
+        do: function () {
+            reloadAccounts();
+            log("Account data refreshed from data file.", false, "Accounts");
+        }
+    };
     events.on("disconnect", function (socket) {
         socket.isLoggedIn = false;
         if (!isLoggedInElsewhere(socket) && socket.email != "") {
@@ -71,6 +83,7 @@ function init(plugins, settings, events, io, log, commands) {
                 Accounts[socket.email].loginKeys = {};
                 socket.isLoggedIn = false;
                 DB.save(accountDBPath, Accounts);
+                exports.Accounts = Accounts;
                 io.emit("userLoggedOff", socket.email);
                 socket.emit("forcelogout");
                 log("'" + socket.email + "' has logged out.", false, "Accounts");
@@ -84,8 +97,9 @@ function init(plugins, settings, events, io, log, commands) {
                     if ((data.password && data.password.length > 3)) {
                         data.email = data.email.toLowerCase()
                         if (data.email in Accounts) {
-                            bcrypt.hash(data.password, 8, function (err, hash) {});
+                            bcrypt.hash(data.password, 8, function (err, hash) { });
                             bcrypt.compare(data.password, Accounts[data.email].password, function (err, passMatches) {
+
                                 if (err) return;
                                 if (passMatches) {
                                     socket.isLoggedIn = true;
@@ -100,7 +114,8 @@ function init(plugins, settings, events, io, log, commands) {
                                         ip: socket.request.connection.remoteAddress,
                                         timeout: Date.now() + persistentLoginTimeout
                                     }
-                                    DB.save(accountDBPath, Accounts)
+                                    exports.Accounts = Accounts;
+                                    DB.save(accountDBPath, Accounts);
                                     socket.emit("loginResponse", {
                                         persistentLoginKey: loginKey,
                                         username: socket.username,
@@ -164,6 +179,7 @@ function init(plugins, settings, events, io, log, commands) {
                                 log("Login attempt failed, key and ip combination do not match. '" + data.email + "'", true, "Accounts");
                             }
                             delete Accounts[data.email].loginKeys[data.persistentLoginKey];
+                            exports.Accounts = Accounts;
                             DB.save(accountDBPath, Accounts);
                         }
                     }
@@ -173,29 +189,30 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("register", function (data) {
             if (data) {
                 if (data.email && data.email.length > 6 && data.email.includes("@")) {
-                    data.email = data.email.toLowerCase()
+                    data.email = data.email.toLowerCase();
                     if (data.password && data.password.length > 3) {
                         if (data.username && data.username.length > 2 && !data.username.includes(" ") && !data.username.includes("   ")) {
                             if (!(data.email in Accounts)) {
                                 if (!userExists(data.username)) {
-                                    bcrypt.hash(data.password, 8, function (err, hash) {
-                                        Accounts[data.email] = {}
-                                        Accounts[data.email].username = data.username;
-                                        Accounts[data.email].password = hash;
-                                        Accounts[data.email].accountCreationTS = Date.now();
-                                        Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg"
-                                        Accounts[data.email].loginKeys = {}
-                                        Accounts[data.email].permissionGroups = [];
-                                        Accounts[data.email].permissions = [];
-                                        DB.save(accountDBPath, Accounts)
-                                        socket.emit("registerResponse", "registered")
-                                        log("Account '" + data.email + "' was registered.", false, "Accounts");
-                                    });
+                                        bcrypt.hash(data.password, 8, function (err, hash) {
+                                            Accounts[data.email] = {};
+                                            Accounts[data.email].username = data.username;
+                                            Accounts[data.email].password = hash;
+                                            Accounts[data.email].accountCreationTS = Date.now();
+                                            Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg";
+                                            Accounts[data.email].loginKeys = {};
+                                            Accounts[data.email].permissionGroups = [];
+                                            Accounts[data.email].permissions = [];
+                                            DB.save(accountDBPath, Accounts);
+                                            exports.Accounts = Accounts;
+                                            socket.emit("registerResponse", "registered");
+                                            log("Account '" + data.email + "' was registered.", false, "Accounts");
+                                        });
                                 } else {
-                                    socket.emit("registerResponse", "usernameExists")
+                                    socket.emit("registerResponse", "usernameExists");
                                 }
                             } else {
-                                socket.emit("registerResponse", "emailExists")
+                                socket.emit("registerResponse", "emailExists");
                             }
                         }
                     }
@@ -224,10 +241,56 @@ function init(plugins, settings, events, io, log, commands) {
                 }
 
             }
-        })
-    })
-}
+        });
 
+        socket.on("changeProfilePicture", function (imageData) {
+            var pMime = base64MimeType(imageData);
+            var imgExt = ""
+            if (pMime == "image/png") {
+                imgExt = ".png"
+                imageData = imageData.replace(/^data:image\/png;base64,/, "");
+            } else if (pMime == "image/jpeg") {
+                imgExt = ".jpg"
+                imageData = imageData.replace(/^data:image\/jpeg;base64,/, "");
+            } else if (pMime == "image/gif") {
+                imgExt = ".gif"
+                imageData = imageData.replace(/^data:image\/gif;base64,/, "");
+            } else {
+                socket.emit("changeProfilePicture");
+                return;
+            }
+            var newPhotoPath = "/img/profilePics/" + socket.username + imgExt
+            fs.writeFile(settings.webRoot + newPhotoPath, imageData, 'base64', function (err) {
+                if (err) {
+                    socket.emit("changeProfilePicture");
+                } else {
+                    socket.emit("changeProfilePicture", newPhotoPath);
+                    log("Profile picture updated for '" + socket.email + "'.", false, "Accounts");
+                    Accounts[socket.email].profilePicture = newPhotoPath;
+                    socket.profilePicture = newPhotoPath;
+                    DB.save(accountDBPath, Accounts);
+                    exports.Accounts = Accounts;
+                }
+            });
+
+        });
+    });
+}
+function base64MimeType(encoded) {
+    var result = null;
+
+    if (typeof encoded !== 'string') {
+        return result;
+    }
+
+    var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
+
+    if (mime && mime.length) {
+        result = mime[1];
+    }
+
+    return result;
+}
 function cleanExpiredKeys(socket) {
     for (lKey in Accounts[socket.email].loginKeys) {
         var key = Accounts[socket.email].loginKeys[lKey];
@@ -277,6 +340,7 @@ function addPermission(email, permission) {
         Accounts[email].permissions.push(permission);
         delete permissionsCache[email];
         DB.save(accountDBPath, Accounts)
+        exports.Accounts = Accounts;
         return true;
     }
     return false;
@@ -287,6 +351,7 @@ function addGroup(email, group) {
         Accounts[email].permissionGroups.push(group);
         delete permissionsCache[email];
         DB.save(accountDBPath, Accounts)
+        exports.Accounts = Accounts;
         return true;
     }
     return false;
@@ -299,6 +364,7 @@ function removePermission(email, permission) {
             Accounts[email].permissionGroups.splice(index, 1);
             delete permissionsCache[email];
             DB.save(accountDBPath, Accounts)
+            exports.Accounts = Accounts;
             return true;
         }
     }
@@ -312,6 +378,7 @@ function removeGroup(email, group) {
             Accounts[email].permissionGroups.splice(index, 1);
             delete permissionsCache[email];
             DB.save(accountDBPath, Accounts)
+            exports.Accounts = Accounts;
             return true;
         }
     }
@@ -324,6 +391,7 @@ function getUserEmail(username) {
     }
     return false;
 }
+
 exports.init = init;
 exports.getPermissions = getPermissions;
 exports.hasPermission = hasPermission;
@@ -333,3 +401,4 @@ exports.addPermission = addPermission;
 exports.removePermission = removePermission;
 exports.removeGroup = removeGroup;
 exports.getUserEmail = getUserEmail;
+exports.Accounts = Accounts
