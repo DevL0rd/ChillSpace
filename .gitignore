@@ -2,3 +2,4 @@ node_modules/
 package-lock.json
 Plugins/Accounts/Accounts.json
 Plugins/YoutubeSearch/settings.json
+Logs/
