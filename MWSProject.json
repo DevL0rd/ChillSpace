@@ -1,15 +1,17 @@
 {
+	"Name": "Chillspace",
+	"Author": "",
 	"IP": "0.0.0.0",
 	"PORT": 80,
-	"timeout": 15000,
+	"timeout": 5000,
 	"maxHeadersCount": 20,
 	"maxPostSizeMB": 8,
 	"maxUrlLength": 2048,
 	"directoryIndex": [
 		"index.html"
 	],
-	"webRoot": "../Chillspace/WebRoot",
-	"pluginsPath": "../Chillspace/Plugins",
+	"webRoot": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/WebRoot",
+	"pluginsPath": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/Plugins",
 	"throttling": {
 		"videoBitRateKB": 51000,
 		"audioBitRateKB": 230,
@@ -17,7 +19,6 @@
 	},
 	"defaultHeaders": {
 		"Cache-Control": "max-age=0",
-		"X-Frame-Options": "SAMEORIGIN",
 		"X-XSS-Protection": "1; mode=block",
 		"X-Content-Type-Options": "nosniff"
 	},
@@ -39,12 +40,14 @@
 	},
 	"logging": {
 		"enabled": true,
-		"directory": "../Chillspace/Logs",
+		"directory": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/Logs",
 		"consoleLoggingEnabled": false,
 		"errorLoggingEnabled": true,
 		"printConsole": true,
 		"printErrors": true,
-		"consoleNamespacePrintFilter": [],
+		"consoleNamespacePrintFilter": [
+			"HTTP"
+		],
 		"errorNamespacePrintFilter": []
 	}
 }

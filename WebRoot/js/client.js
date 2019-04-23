@@ -108,7 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function broserNotify(title, icon, msg) {
     if (Notification) {
-
         if (Notification.permission !== "granted")
             Notification.requestPermission();
         else {
@@ -116,13 +115,10 @@ function broserNotify(title, icon, msg) {
                 icon: icon,
                 body: msg,
             });
-
             notification.onclick = function () {
                 window.open("http://devl0rd.com/");
             };
-
         }
-
     }
 }
 function round(num) {

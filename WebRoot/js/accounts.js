@@ -27,6 +27,7 @@ socket.on('loginResponse', function (res) {
         $("#loginLink").hide();
         $("#logoutLink").show();
         $("#loginInputs").hide(400);
+        $("#profileLink").show();
         $("#loginGreeting").html("<h1>Welcome Back!</h1>");
         socket.emit("getPermissions");
         setTimeout(function () {
@@ -158,6 +159,7 @@ function logout() {
     $("#profilePic").hide();
     $("#profileIcon").show();
     $("#loginLink").trigger("click");
+    $("#profileLink").hide();
 }
 $("#login_email").keyup(function (event) {
     if (event.keyCode === 13) {

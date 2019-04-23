@@ -3,7 +3,7 @@
 
 var fs = require('fs');
 var DB = require('../Devlord_modules/DB.js');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 var persistentLoginTimeout = 864000000
 //Load DBS
 var accountDBPath = __dirname + "/Accounts/Accounts.json";
@@ -194,20 +194,20 @@ function init(plugins, settings, events, io, log, commands) {
                         if (data.username && data.username.length > 2 && !data.username.includes(" ") && !data.username.includes("   ")) {
                             if (!(data.email in Accounts)) {
                                 if (!userExists(data.username)) {
-                                        bcrypt.hash(data.password, 8, function (err, hash) {
-                                            Accounts[data.email] = {};
-                                            Accounts[data.email].username = data.username;
-                                            Accounts[data.email].password = hash;
-                                            Accounts[data.email].accountCreationTS = Date.now();
-                                            Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg";
-                                            Accounts[data.email].loginKeys = {};
-                                            Accounts[data.email].permissionGroups = [];
-                                            Accounts[data.email].permissions = [];
-                                            DB.save(accountDBPath, Accounts);
-                                            exports.Accounts = Accounts;
-                                            socket.emit("registerResponse", "registered");
-                                            log("Account '" + data.email + "' was registered.", false, "Accounts");
-                                        });
+                                    bcrypt.hash(data.password, 8, function (err, hash) {
+                                        Accounts[data.email] = {};
+                                        Accounts[data.email].username = data.username;
+                                        Accounts[data.email].password = hash;
+                                        Accounts[data.email].accountCreationTS = Date.now();
+                                        Accounts[data.email].profilePicture = "/img/profilePics/noprofilepic.jpg";
+                                        Accounts[data.email].loginKeys = {};
+                                        Accounts[data.email].permissionGroups = [];
+                                        Accounts[data.email].permissions = [];
+                                        DB.save(accountDBPath, Accounts);
+                                        exports.Accounts = Accounts;
+                                        socket.emit("registerResponse", "registered");
+                                        log("Account '" + data.email + "' was registered.", false, "Accounts");
+                                    });
                                 } else {
                                     socket.emit("registerResponse", "usernameExists");
                                 }
