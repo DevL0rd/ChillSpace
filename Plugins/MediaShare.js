@@ -199,51 +199,35 @@ function init(plugins, settings, events, io, log, commands) {
                 io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
             }
             if (currentVideoSource != null) {
-
                 socket.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
             }
 
             io.emit("updatePlaylist", playlist)
         })
-        socket.on("getVideoTime", function (timeSeconds) {
+        socket.on("syncVideo", function (timeSeconds) {
             if (socket.host && timeSeconds && !isNaN(timeSeconds)) {
-                if (syncEveryone) {
-                    var sockets = io.sockets.sockets;
-                    for (var socketId in sockets) {
-                        var socketIt = sockets[socketId];
-                        if (!socketIt.host) {
-                            socketIt.emit('syncCheck', timeSeconds)
-                        }
-                    }
-                    syncEveryone = false;
-                } else {
-                    for (i in videoSyncBuffer) {
-                        videoSyncBuffer[i].emit('setVideoTime', timeSeconds)
+                var sockets = io.sockets.sockets;
+                for (var socketId in sockets) {
+                    var socketIt = sockets[socketId];
+                    if (!socketIt.host) {
+                        socketIt.emit('syncVideo', timeSeconds)
                         if (videoIsStopped) {
-                            videoSyncBuffer[i].emit('pauseVideo')
+                            socketIt.emit('pauseVideo')
+                        } else {
+                            socketIt.emit('playVideo')
                         }
                     }
                 }
-                videoSyncBuffer = []
             }
         })
         socket.on('trackChanged', function (timeSeconds) {
             if (timeSeconds && !isNaN(timeSeconds)) {
-
-
                 if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
-                    io.emit('setVideoTime', timeSeconds)
+                    host.emit("setVideoTime", timeSeconds);
                 }
             }
         })
-        socket.on('syncVideo', function () {
-            if (!socket.host) {
-                videoSyncBuffer.push(socket)
-                host.emit("getVideoTime")
-            }
-        })
         socket.on('playVideo', function () {
-
             if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
                 log(socket.email + " un-paused the video.")
                 io.emit("playVideo")
@@ -264,9 +248,8 @@ function init(plugins, settings, events, io, log, commands) {
 setInterval(function () {
     if (host != null && currentVideoSource) {
         host.emit("getVideoTime")
-        syncEveryone = true;
     }
-}, 1000)
+}, 1000);
 function getYoutubeMp4Url(url, onGetUrl) {
     youTubeParser.getURL(url, {
         quality: 'high',

@@ -8,13 +8,10 @@ player.loop = true;
 socket.on('playVideo', function () {
     try {
         player.play();
-        if (!isMobile) {
-            player.muted = false;
-        }
+        isStopped = false;
     } catch (err) {
         socket.emit("videoFailed");
     }
-    isStopped = false;
 })
 socket.on('pauseVideo', function () {
     player.pause();
@@ -35,43 +32,35 @@ player.onwaiting = function () {
     $("#videoLoadingCover").fadeIn(400);
 };
 
-var antiSyncStutterTimeout;
-var alreadySynced = false;
 player.onplaying = function () {
     $("#togglePlay").html("<i class='fa fa-pause' aria-hidden='true'></i>");
-    if (!alreadySynced) {
-        socket.emit("syncVideo");
-        alreadySynced = true;
-        clearTimeout(antiSyncStutterTimeout);
-        antiSyncStutterTimeout = setTimeout(function () {
-            alreadySynced = false;
-        }, 2000);
-    }
     $("#videoLoadingCover").fadeOut(300);
 };
 
-socket.on('syncCheck', function (timeSeconds) {
+socket.on('syncVideo', function (timeSeconds) {
     if (!isUsingSlider) {
         //experimental delay detection
-        if (Math.abs(player.currentTime - (timeSeconds + latency)) >= 0.5) {
-
+        var maxTimeDif = 1; //seconds
+        var timeDif = player.currentTime - timeSeconds;
+        if (timeDif >= maxTimeDif || timeDif <= -maxTimeDif) {
             try {
                 player.currentTime = timeSeconds;
-                if (isStopped) {
-                    player.pause();
-                } else {
-                    player.play();
-                }
-                if (!isMobile) {
-                    player.muted = false;
-                }
             } catch (err) {
 
             }
         }
     }
 })
+socket.on("setVideoTime", function (time) {
+    if (!isUsingSlider) {
+        try {
+            player.currentTime = time;
+            socket.emit('syncVideo', time);
+        } catch (err) {
 
+        }
+    }
+})
 player.addEventListener('loadedmetadata', function () {
     $('#videoTrack').attr('max', player.duration);
 });
@@ -107,19 +96,7 @@ player.volume = 0.5;
 
 player.onloadeddata = loadedVideoData;
 function loadedVideoData() {
-    try {
-        if (isStopped) {
-            player.pause();
-        } else {
-            player.play();
-        }
-        if (!isMobile) {
-            player.muted = false;
-        }
-        socket.emit("syncVideo");
-    } catch (err) {
-        socket.emit("videoFailed");
-    }
+
 };
 var vidEndedTimeout
 player.addEventListener('ended', function () {
@@ -136,34 +113,14 @@ player.onerror = function () {
 };
 
 socket.on('getVideoTime', function () {
-    socket.emit('getVideoTime', player.currentTime);
+    socket.emit('syncVideo', player.currentTime);
 })
 
-socket.on('setVideoTime', function (timeSeconds) {
-    try {
-        if (!isUsingSlider) {
-            player.currentTime = timeSeconds;
-            if (isStopped) {
-                player.pause();
-            } else {
-                player.play();
-            }
-            if (!isMobile) {
-                player.muted = false;
-            }
-        }
-    } catch (err) {
-
-    }
-
-})
 
 socket.on('getVideo', function (data) {
     clearTimeout(vidEndedTimeout);
     $('#player').attr('src', data.videoData.src);
-    isStopped = data.isPaused;
-    $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
-    $('#videoTitleText').html(data.videoData.title)
+    $('#videoTitleText').html(data.videoData.title);
     player.loop = false;
 })
 
@@ -173,7 +130,6 @@ if (localStorage.volume != null) {
 }
 document.getElementById('player').onpause = function () {
     $("#togglePlay").html("<i class='fa fa-play' aria-hidden='true'></i>")
-    socket.emit("syncVideo");
 };
 var videoSearchTimeout
 $("#videoUrl").keyup(function (event) {

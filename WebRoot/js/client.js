@@ -55,6 +55,7 @@ socket.on('connect', function () {
         startPingTime = Date.now();
         socket.emit('ping');
     }, 5000);
+    socket.emit("getVideo");
 });
 
 var permissions = [];
