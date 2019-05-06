@@ -10,8 +10,8 @@
 	"directoryIndex": [
 		"index.html"
 	],
-	"webRoot": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/WebRoot",
-	"pluginsPath": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/Plugins",
+	"webRoot": "../ChillSpace/WebRoot",
+	"pluginsPath": "../ChillSpace/Plugins",
 	"throttling": {
 		"videoBitRateKB": 51000,
 		"audioBitRateKB": 230,
@@ -40,7 +40,7 @@
 	},
 	"logging": {
 		"enabled": true,
-		"directory": "C:/Users/dmhzm/Documents/Homebrew/ChillSpace/Logs",
+		"directory": "../ChillSpace/Logs",
 		"consoleLoggingEnabled": false,
 		"errorLoggingEnabled": true,
 		"printConsole": true,
