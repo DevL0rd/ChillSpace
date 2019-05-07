@@ -40,7 +40,7 @@ player.onplaying = function () {
 socket.on('syncVideo', function (timeSeconds) {
     if (!isUsingSlider) {
         //experimental delay detection
-        var maxTimeDif = 5; //seconds
+        var maxTimeDif = 1; //seconds
         var timeDif = player.currentTime - timeSeconds;
         if (timeDif >= maxTimeDif || timeDif <= -maxTimeDif) {
             try {

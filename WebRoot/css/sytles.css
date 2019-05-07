@@ -169,7 +169,7 @@ body {
 
 #player {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 56px);
     background: black;
 }
 
@@ -344,6 +344,23 @@ body {
 }
 
 #volume:focus {
+    outline: none;
+}
+
+#chatToggle {
+    float: right;
+    border: none;
+    color: rgba(149, 66, 244, 0.8);
+    font-size: 20px;
+    background: transparent;
+    transition-duration: 0.4s;
+}
+
+#chatToggle:hover {
+    color: rgba(26, 167, 80, 0.562);
+}
+
+#chatToggle:focus {
     outline: none;
 }
 
