@@ -270,8 +270,8 @@ body {
     -webkit-appearance: none;
     /* Override default CSS styles */
     appearance: none;
-    width: calc(100% - 105px);
-    height: 10px;
+    width: calc(100% - 135px);
+    height: 15px;
     border-radius: 5px;
     /* Specified height */
     background: #d3d3d3;
