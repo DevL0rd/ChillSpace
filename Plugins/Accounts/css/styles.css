@@ -1,0 +1,23 @@
+/* Authour: Dustin Harris */
+/* GitHub: https://github.com/DevL0rd */
+html {
+    background: transparent;
+    height: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
+}
+
+body {
+    background: transparent;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
+}
