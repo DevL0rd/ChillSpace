@@ -2,25 +2,25 @@
 //GitHub: https://github.com/DevL0rd
 
 var fs = require('fs');
-var DB = require('../Devlord_modules/DB.js');
+var DB = require('../../Devlord_modules/DB.js');
 var bcrypt = require('bcryptjs');
 var persistentLoginTimeout = 864000000
 //Load DBS
-var accountDBPath = __dirname + "/Accounts/Accounts.json";
+var accountDBPath = __dirname + "/Accounts.json";
 if (fs.existsSync(accountDBPath)) {
     var Accounts = DB.load(accountDBPath)
 } else {
     var Accounts = {}
     DB.save(accountDBPath, Accounts)
 }
-var accountSettingsPath = __dirname + "/Accounts/Account_Settings.json"
+var accountSettingsPath = __dirname + "/Account_Settings.json"
 if (fs.existsSync(accountSettingsPath)) {
     var Account_Settings = DB.load(accountSettingsPath)
 } else {
     var Account_Settings = {}
     DB.save(accountSettingsPath, Account_Settings)
 }
-var permissionGroupsPath = __dirname + "/Accounts/permissionGroups.json";
+var permissionGroupsPath = __dirname + "/permissionGroups.json";
 if (fs.existsSync(permissionGroupsPath)) {
     var permissionGroups = DB.load(permissionGroupsPath)
 } else {

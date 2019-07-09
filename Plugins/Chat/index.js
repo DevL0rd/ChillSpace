@@ -2,12 +2,12 @@
 //GitHub: https://github.com/DevL0rd
 
 var fs = require('fs');
-var DB = require('../Devlord_modules/DB.js');
+var DB = require('../../Devlord_modules/DB.js');
 var chatLog = [];
 var serverIo;
 var serverPlugins;
 var serverCommands;
-var userDataPath = __dirname + "/Chat/userData.json";
+var userDataPath = __dirname + "/userData.json";
 var userData = {};
 
 if (fs.existsSync(userDataPath)) {

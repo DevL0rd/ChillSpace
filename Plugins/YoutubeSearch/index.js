@@ -1,16 +1,16 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
 var fs = require('fs');
-var DB = require('../Devlord_modules/DB.js');
+var DB = require('../../Devlord_modules/DB.js');
 var YouTube = require('youtube-node');
 var youTube = new YouTube();
-if (fs.existsSync(__dirname + "/YoutubeSearch/settings.json")) {
-    var settings = DB.load(__dirname + "/YoutubeSearch/settings.json")
+if (fs.existsSync(__dirname + "/settings.json")) {
+    var settings = DB.load(__dirname + "/settings.json")
 } else {
     settings = {
         youtubeApiKey: ""
     }
-    DB.save(__dirname + "/YoutubeSearch/settings.json", settings)
+    DB.save(__dirname + "/settings.json", settings)
 }
 youTube.setKey(settings.youtubeApiKey);
 function init(plugins, settings, events, io, log, commands) {

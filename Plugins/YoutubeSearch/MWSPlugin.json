@@ -1,0 +1,6 @@
+{
+	"name": "Youtube Search",
+	"varName": "YoutubeSearch",
+	"author": "Dustin Harris",
+	"loadPriority": "3"
+}
