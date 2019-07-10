@@ -2,5 +2,6 @@
 	"name": "Youtube Search",
 	"varName": "YoutubeSearch",
 	"author": "Dustin Harris",
-	"loadPriority": "3"
+	"loadPriority": "3",
+	"enabled": true
 }

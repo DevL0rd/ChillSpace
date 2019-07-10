@@ -1,6 +1,9 @@
 {
-	"name": "Devlord Utils",
-	"varName": "DevlordBaseClient",
 	"author": "Dustin Harris",
-	"loadPriority": "-1"
+	"enabled": true,
+	"folder": "C:\\Github\\ChillSpace\\Plugins\\DevlordBaseClient",
+	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\DevlordBaseClient\\index.js",
+	"loadPriority": "-1",
+	"name": "Devlord Utils",
+	"varName": "DevlordBaseClient"
 }

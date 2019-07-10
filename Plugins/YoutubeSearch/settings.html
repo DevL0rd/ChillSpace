@@ -15,17 +15,18 @@
 </div>
 <script>
     var settingsPath = "";
+    var settings = {
+        youtubeApiKey: ""
+    }
     ipcRenderer.send("getSettings");
     ipcRenderer.on('getSettings', function (event, mwsSettings) {
         settingsPath = mwsSettings.pluginsPath + "/YoutubeSearch" + "/settings.json";
         if (fs.existsSync(settingsPath)) {
-            var settings = DB.load(settingsPath);
+            settings = DB.load(settingsPath);
             $("#youtubeApiKey").val(settings.youtubeApiKey);
             verifySettings();
         } else {
-            var settings = {
-                youtubeApiKey: ""
-            }
+            $("#youtubeApiKey").val(settings.youtubeApiKey);
             DB.save(settingsPath, settings);
         }
 

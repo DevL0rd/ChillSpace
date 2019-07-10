@@ -2,5 +2,6 @@
 	"name": "Accounts",
 	"varName": "Accounts",
 	"author": "Dustin Harris",
-	"loadPriority": "0"
+	"loadPriority": "0",
+	"enabled": true
 }

@@ -22,6 +22,9 @@
 
 <script>
     var settingsPath = "";
+    var settings = {
+        enableRefresh: true
+    }
     ipcRenderer.send("getSettings");
     ipcRenderer.on('getSettings', function (event, mwsSettings) {
         settingsPath = mwsSettings.pluginsPath + "/DevlordBaseClient" + "/settings.json";
@@ -30,9 +33,6 @@
             $("#refreshEnabled").prop("checked", settings.enableRefresh);
             verifySettings();
         } else {
-            var settings = {
-                enableRefresh: true
-            }
             $("#refreshEnabled").prop("checked", settings.enableRefresh);
             DB.save(settingsPath, settings);
         }

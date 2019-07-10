@@ -2,5 +2,6 @@
 	"name": "Enigma",
 	"varName": "Enigma",
 	"author": "Dustin Harris",
-	"loadPriority": "-1"
+	"loadPriority": "-1",
+	"enabled": false
 }
