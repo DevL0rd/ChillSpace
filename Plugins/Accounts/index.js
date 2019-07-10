@@ -13,12 +13,12 @@ if (fs.existsSync(accountDBPath)) {
     var Accounts = {}
     DB.save(accountDBPath, Accounts)
 }
-var accountSettingsPath = __dirname + "/Account_Settings.json"
+var accountSettingsPath = __dirname + "/settings.json"
 if (fs.existsSync(accountSettingsPath)) {
-    var Account_Settings = DB.load(accountSettingsPath)
+    var settings = DB.load(accountSettingsPath)
 } else {
-    var Account_Settings = {}
-    DB.save(accountSettingsPath, Account_Settings)
+    var settings = {}
+    DB.save(accountSettingsPath, settings)
 }
 var permissionGroupsPath = __dirname + "/permissionGroups.json";
 if (fs.existsSync(permissionGroupsPath)) {

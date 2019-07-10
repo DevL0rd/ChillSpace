@@ -135,6 +135,8 @@ var videoSearchTimeout
 $("#videoUrl").keyup(function (event) {
     clearTimeout(videoSearchTimeout);
     var searchMethod = $('#searchMethodSelector').find(":selected").text();
+    $("#playlist").hide();
+    $("#searchResults").fadeOut(100);
     if (event.keyCode === 13) {
         searchForVideo($("#videoUrl").val(), searchMethod);
     } else {
@@ -151,8 +153,6 @@ $("#playlist").scroll(showControls);
 function searchForVideo(searchStr, searchMethod) {
     if (searchStr) {
         $("#searchResults").html("");
-        $("#playlist").hide();
-        $("#searchResults").fadeIn(400);
         if (searchMethod == "Youtube") {
             socket.emit("searchYoutube", $("#videoUrl").val());
         } else {
@@ -165,6 +165,7 @@ function searchForVideo(searchStr, searchMethod) {
 socket.on("searchYoutube", function (results) {
     for (i in results) {
         if (results[i].id.kind == "youtube#video") {
+            console.log(results[i]);
             var result = results[i].snippet;
             var videoUrl = "https://www.youtube.com/watch?v=" + results[i].id.videoId;
             var elem = $("#searchResult0").clone().appendTo("#searchResults");
@@ -177,10 +178,9 @@ socket.on("searchYoutube", function (results) {
             $(elem).find('.videoTitle').text(result.title);
             $(elem).find('.videoThumbnail').attr('src', result.thumbnails.default.url);
             $(elem).find('.videoSource').text(result.channelTitle);
-
-            $(elem).show(400);
         }
     }
+    $("#searchResults").fadeIn(400);
     refreshAnimatedElements();
 });
 

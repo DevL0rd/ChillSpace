@@ -1,0 +1,57 @@
+<style>
+    .validInput {
+        border: 3px solid green;
+    }
+
+    .invalidInput {
+        border: 3px solid tomato;
+    }
+</style>
+<div class="input-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text">Enable !refresh</span>
+    </div>
+    <span class="input-group-append input-group-text">
+        <label class="switch">
+            <input id="refreshEnabled" type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </span>
+</div>
+
+
+<script>
+    var settingsPath = "";
+    ipcRenderer.send("getSettings");
+    ipcRenderer.on('getSettings', function (event, mwsSettings) {
+        settingsPath = mwsSettings.pluginsPath + "/DevlordBaseClient" + "/settings.json";
+        if (fs.existsSync(settingsPath)) {
+            var settings = DB.load(settingsPath);
+            $("#refreshEnabled").prop("checked", settings.enableRefresh);
+            verifySettings();
+        } else {
+            var settings = {
+                enableRefresh: true
+            }
+            $("#refreshEnabled").prop("checked", settings.enableRefresh);
+            DB.save(settingsPath, settings);
+        }
+
+    });
+    var saveSettingsTO
+    function saveSettingsTimeout() {
+        clearTimeout(saveSettingsTO);
+        saveSettingsTO = setTimeout(saveSettings, 500);
+    }
+    function saveSettings() {
+        verifySettings();
+        DB.save(settingsPath, settings);
+    }
+    function verifySettings() {
+
+    }
+    $("#refreshEnabled").on('change', function () {
+        settings.enableRefresh = $("#refreshEnabled").prop("checked");
+        saveSettings();
+    });
+</script>

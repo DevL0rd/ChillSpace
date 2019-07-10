@@ -96,6 +96,10 @@ body {
     height: 22px;
 }
 
+#profilePicInput{
+    margin-bottom: 8px;
+}
+
 #loginGreeting {
     margin: 10px 0px;
     color: #f0f0f0;
@@ -237,6 +241,7 @@ body {
 }
 
 #videoTitleText {
+    top: 5px;
     font-size: 16px;
     color: rgba(255, 255, 255, .5);
 }
@@ -586,10 +591,11 @@ body {
 .searchResult {
     color: rgb(221, 221, 221);
     background: rgba(37, 37, 37, 0.5);
-    border-bottom: 3px solid rgba(0, 0, 0, 0.3);
     padding: 5px;
+    margin-bottom: 5px;
     cursor: pointer;
     transition-duration: 0.4s;
+    border-radius: 8px;
 }
 
 #searchResult0 {
@@ -597,7 +603,7 @@ body {
 }
 
 .searchResult:hover {
-    background: rgba(33, 168, 114, 0.8);
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .videoThumbnail {
@@ -610,15 +616,23 @@ body {
 }
 
 .videoSource {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
+    background: rgba(16, 14, 158, 0.712);
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .videoData {
     padding: 5px;
-    text-align: right;
+    text-align: left;
 }
-
+.videoInfo {
+    position: relative;
+}
 #searchMethodSelector {
     margin-top: 8px;
     padding: 8px;

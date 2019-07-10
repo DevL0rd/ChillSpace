@@ -1,0 +1,53 @@
+<style>
+    .validInput {
+        border: 3px solid green;
+    }
+
+    .invalidInput {
+        border: 3px solid tomato;
+    }
+</style>
+<div id="youtubeApiKeyGroup" class="input-group">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="">Youtube Api Key</span>
+    </div>
+    <input id="youtubeApiKey" class="form-control" type=text placeholder="Youtube Api Key Here">
+</div>
+<script>
+    var settingsPath = "";
+    ipcRenderer.send("getSettings");
+    ipcRenderer.on('getSettings', function (event, mwsSettings) {
+        settingsPath = mwsSettings.pluginsPath + "/YoutubeSearch" + "/settings.json";
+        if (fs.existsSync(settingsPath)) {
+            var settings = DB.load(settingsPath);
+            $("#youtubeApiKey").val(settings.youtubeApiKey);
+            verifySettings();
+        } else {
+            var settings = {
+                youtubeApiKey: ""
+            }
+            DB.save(settingsPath, settings);
+        }
+
+    });
+    var saveSettingsTO
+    function saveSettingsTimeout() {
+        clearTimeout(saveSettingsTO);
+        saveSettingsTO = setTimeout(saveSettings, 500);
+    }
+    function saveSettings() {
+        verifySettings();
+        DB.save(settingsPath, settings);
+    }
+    function verifySettings() {
+        if (settings.youtubeApiKey.length < 25) {
+            $("#youtubeApiKeyGroup").attr("class", "input-group invalidInput");
+        } else {
+            $("#youtubeApiKeyGroup").attr("class", "input-group validInput");
+        }
+    }
+    $("#youtubeApiKey").on('keyup', function (e) {
+        settings.youtubeApiKey = $("#youtubeApiKey").val();
+        saveSettingsTimeout();
+    });
+</script>
