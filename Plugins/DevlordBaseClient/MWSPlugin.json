@@ -5,5 +5,25 @@
 	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\DevlordBaseClient\\index.js",
 	"loadPriority": "-1",
 	"name": "Devlord Utils",
+	"pluginElement": {
+		"0": {
+			"jQuery340026975567087028751": {
+				"display": ""
+			}
+		},
+		"length": 1,
+		"prevObject": {
+			"0": {
+				"jQuery340026975567087028751": {
+					"display": ""
+				}
+			},
+			"length": 1,
+			"prevObject": {
+				"0": {},
+				"length": 1
+			}
+		}
+	},
 	"varName": "DevlordBaseClient"
 }

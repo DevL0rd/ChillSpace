@@ -1,7 +1,9 @@
 {
-	"name": "Enigma",
-	"varName": "Enigma",
 	"author": "Dustin Harris",
+	"enabled": false,
+	"folder": "C:\\Github\\ChillSpace\\Plugins\\Enigma",
+	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\Enigma\\index.js",
 	"loadPriority": "-1",
-	"enabled": false
+	"name": "Enigma",
+	"varName": "Enigma"
 }

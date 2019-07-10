@@ -1,7 +1,29 @@
 {
+	"author": "Dustin Harris",
+	"enabled": true,
+	"folder": "C:\\Github\\ChillSpace\\Plugins\\YoutubeSearch",
+	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\YoutubeSearch\\index.js",
+	"loadPriority": "3",
 	"name": "Youtube Search",
 	"varName": "YoutubeSearch",
-	"author": "Dustin Harris",
-	"loadPriority": "3",
-	"enabled": true
+	"pluginElement": {
+		"0": {
+			"jQuery340032671197259134831": {
+				"display": ""
+			}
+		},
+		"length": 1,
+		"prevObject": {
+			"0": {
+				"jQuery340032671197259134831": {
+					"display": ""
+				}
+			},
+			"length": 1,
+			"prevObject": {
+				"0": {},
+				"length": 1
+			}
+		}
+	}
 }

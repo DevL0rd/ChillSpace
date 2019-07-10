@@ -1,7 +1,29 @@
 {
+	"author": "Dustin Harris",
+	"enabled": true,
+	"folder": "C:\\Github\\ChillSpace\\Plugins\\MediaShare",
+	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\MediaShare\\index.js",
+	"loadPriority": "2",
 	"name": "Media Share",
 	"varName": "MediaShare",
-	"author": "Dustin Harris",
-	"loadPriority": "2",
-	"enabled": true
+	"pluginElement": {
+		"0": {
+			"jQuery340052665197460517921": {
+				"display": ""
+			}
+		},
+		"length": 1,
+		"prevObject": {
+			"0": {
+				"jQuery340052665197460517921": {
+					"display": ""
+				}
+			},
+			"length": 1,
+			"prevObject": {
+				"0": {},
+				"length": 1
+			}
+		}
+	}
 }
