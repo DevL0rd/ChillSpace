@@ -1,7 +1,9 @@
 {
-	"name": "Accounts",
-	"varName": "Accounts",
 	"author": "Dustin Harris",
+	"enabled": true,
+	"folder": "C:\\Github\\ChillSpace\\Plugins\\Accounts",
+	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\Accounts\\index.js",
 	"loadPriority": "0",
-	"enabled": true
+	"name": "Accounts",
+	"varName": "Accounts"
 }
