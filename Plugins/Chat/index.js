@@ -8,18 +8,37 @@ var serverIo;
 var serverPlugins;
 var serverCommands;
 var userDataPath = __dirname + "/userData.json";
+var settingsPath = __dirname + "/settings.json";
 var userData = {};
-
+var settings = {
+    commandStates: {
+        help: { isEnabled: true },
+        server: { isEnabled: true },
+        mod: { isEnabled: true },
+        unmod: { isEnabled: true },
+        admin: { isEnabled: true },
+        unadmin: { isEnabled: true },
+        mute: { isEnabled: true },
+        unmute: { isEnabled: true },
+        ping: { isEnabled: true }
+    }
+};
 if (fs.existsSync(userDataPath)) {
-    var userData = DB.load(userDataPath)
+    userData = DB.load(userDataPath);
 } else {
     DB.save(userDataPath, userData);
 }
+if (fs.existsSync(settingsPath)) {
+    settings = DB.load(settingsPath);
+} else {
+    DB.save(settingsPath, settings);
+}
 
-function init(plugins, settings, events, io, log, commands) {
+function init(plugins, mwsSettings, events, io, mwsLog, commands) {
     serverCommands = commands;
     serverIo = io;
     serverPlugins = plugins;
+    log = mwsLog;
     events.on("connection", function (socket) {
         socket.emit("getChatLog", chatLog);
         socket.on('sendMessage', function (msg) {
@@ -58,7 +77,7 @@ function init(plugins, settings, events, io, log, commands) {
         });
     });
 }
-
+var log
 function getBadges(email) {
     var perms = serverPlugins["Accounts"].getPermissions(email);
     var badges = [];
@@ -137,11 +156,27 @@ function getMentionsList(str) {
     var pattern = /\B@[a-z0-9_-]+/gi;
     return str.match(pattern);
 }
+function setCommandEnabledState(command, state) {
+    if (chatCommands[command]) {
+        chatCommands[command].enabled = state;
+        if (state) {
+            log("Chat command '" + command + "' enabled.", false, "Chat");
+        } else {
+            log("Chat command '" + command + "' disabled.", false, "Chat");
+        }
+        if (!settings.commandStates[command]) {
+            settings.commandStates[command] = {};
+        }
+        settings.commandStates[command].isEnabled = state;
+        DB.save(settingsPath, settings);
+    }
+}
 var chatCommands = {
     help: {
         usage: "!help",
         help: "Displays this command list.",
         requiredPermission: false,
+        enabled: settings.commandStates.help.isEnabled,
         do: function (args, fullMessage, socket) {
             var response = "";
             var isFirstLoop = true;
@@ -173,7 +208,7 @@ var chatCommands = {
         requiredPermission: "command_mod",
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return;
             }
             var username = args[0];
@@ -198,7 +233,7 @@ var chatCommands = {
         requiredPermission: "command_mod",
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return
             }
             var username = args[0];
@@ -221,7 +256,7 @@ var chatCommands = {
         requiredPermission: "command_admin",
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return
             }
             var username = args[0];
@@ -246,7 +281,7 @@ var chatCommands = {
         requiredPermission: "command_admin",
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return;
             }
             var username = args[0];
@@ -270,7 +305,7 @@ var chatCommands = {
         requiredPermission: false,
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return;
             }
             var username = args[0];
@@ -302,7 +337,7 @@ var chatCommands = {
         requiredPermission: false,
         do: function (args, fullMessage, socket) {
             if (!args.length || args.length != 1) {
-                console.log("Usage: " + this.usage);
+                log("Usage: " + this.usage, false, "Chat");
                 return;
             }
             var username = args[0];
@@ -351,3 +386,4 @@ exports.sendServerPm = sendServerPm;
 exports.sendPm = sendPm;
 exports.sendMessage = sendMessage;
 exports.chatCommands = chatCommands;
+exports.setCommandEnabledState = setCommandEnabledState;

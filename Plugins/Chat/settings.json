@@ -1,0 +1,31 @@
+{
+	"commandStates": {
+		"help": {
+			"isEnabled": true
+		},
+		"server": {
+			"isEnabled": true
+		},
+		"mod": {
+			"isEnabled": true
+		},
+		"unmod": {
+			"isEnabled": true
+		},
+		"admin": {
+			"isEnabled": true
+		},
+		"unadmin": {
+			"isEnabled": true
+		},
+		"mute": {
+			"isEnabled": true
+		},
+		"unmute": {
+			"isEnabled": true
+		},
+		"ping": {
+			"isEnabled": true
+		}
+	}
+}

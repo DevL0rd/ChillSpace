@@ -5,17 +5,16 @@
 	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\Accounts\\index.js",
 	"loadPriority": "0",
 	"name": "Accounts",
-	"varName": "Accounts",
 	"pluginElement": {
 		"0": {
-			"jQuery3400164620343900420131": {
+			"jQuery340046837813239254581": {
 				"display": ""
 			}
 		},
 		"length": 1,
 		"prevObject": {
 			"0": {
-				"jQuery3400164620343900420131": {
+				"jQuery340046837813239254581": {
 					"display": ""
 				}
 			},
@@ -25,5 +24,6 @@
 				"length": 1
 			}
 		}
-	}
+	},
+	"varName": "Accounts"
 }

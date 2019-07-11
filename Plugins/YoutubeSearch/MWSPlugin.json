@@ -5,17 +5,16 @@
 	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\YoutubeSearch\\index.js",
 	"loadPriority": "3",
 	"name": "Youtube Search",
-	"varName": "YoutubeSearch",
 	"pluginElement": {
 		"0": {
-			"jQuery340032671197259134831": {
+			"jQuery340046837813239254581": {
 				"display": ""
 			}
 		},
 		"length": 1,
 		"prevObject": {
 			"0": {
-				"jQuery340032671197259134831": {
+				"jQuery340046837813239254581": {
 					"display": ""
 				}
 			},
@@ -25,5 +24,6 @@
 				"length": 1
 			}
 		}
-	}
+	},
+	"varName": "YoutubeSearch"
 }
