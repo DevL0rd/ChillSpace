@@ -65,7 +65,7 @@ function init(plugins, settings, events, io, log, commands) {
                                 videoIsStopped = false;
                                 io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                             }
-                            log(socket.username + " added '" + title + "'to the queue.");
+                            log(socket.username + " added '" + title + "' to the queue.", false, "MediaShare");
                             io.emit("updatePlaylist", playlist)
 
                             DB.save(playlistDir, playlist)
@@ -86,7 +86,7 @@ function init(plugins, settings, events, io, log, commands) {
                             videoIsStopped = false;
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
-                        log(socket.username + " added a youtube video to the queue.");
+                        log(socket.username + " added a youtube video to the queue.", false, "MediaShare");
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -105,7 +105,7 @@ function init(plugins, settings, events, io, log, commands) {
                             videoIsStopped = false;
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
-                        log(socket.username + " added a video to the queue.");
+                        log(socket.username + " added a video to the queue.", false, "MediaShare");
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -124,7 +124,7 @@ function init(plugins, settings, events, io, log, commands) {
                             videoIsStopped = false;
                             io.emit('getVideo', { videoData: currentVideoSource, isPaused: videoIsStopped })
                         }
-                        log(socket.username + " added a unknown source to the queue.");
+                        log(socket.username + " added a unknown source to the queue.", false, "MediaShare");
                         io.emit("updatePlaylist", playlist)
 
                         DB.save(playlistDir, playlist)
@@ -136,6 +136,7 @@ function init(plugins, settings, events, io, log, commands) {
         })
         socket.on("videoEnded", function () {
             if (socket.host) {
+                log("Video ended '" + currentVideoSource.title + "'.")
                 currentVideoSource = null;
                 if (playlist.length > 0) {
                     currentVideoSource = playlist.shift()
@@ -149,6 +150,7 @@ function init(plugins, settings, events, io, log, commands) {
         socket.on("videoFailed", function () {
 
             if (socket.host) {
+                log("Video could not be played, source inaccessible '" + currentVideoSource.title + "'.")
                 plugins["Chat"].sendServerBroadcast("Video could not be played, source inaccessible.", 6000);
                 currentVideoSource = null
                 if (playlist.length > 0) {
@@ -168,6 +170,8 @@ function init(plugins, settings, events, io, log, commands) {
                         if (!playlist[i].voters.includes(socket.username)) {
                             playlist[i].voters.push(socket.username)
                             playlist[i].vote++;
+                            log(socket.username + " voted on '" + playlist[i].title + "'.", false, "MediaShare")
+                            log("'" + playlist[i].title + "' has " + playlist[i].vote + " votes.", false, "MediaShare")
                             playlist.sort(dynamicSort("vote")).reverse();
                             io.emit("updatePlaylist", playlist)
                             DB.save(playlistDir, playlist)
@@ -175,10 +179,7 @@ function init(plugins, settings, events, io, log, commands) {
                         break;
                     }
                 }
-
             }
-
-
         })
 
         function dynamicSort(property) {
@@ -229,7 +230,7 @@ function init(plugins, settings, events, io, log, commands) {
         })
         socket.on('playVideo', function () {
             if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
-                log(socket.email + " un-paused the video.")
+                log(socket.email + " un-paused the video.", false, "MediaShare")
                 io.emit("playVideo")
                 videoIsStopped = false;
                 plugins["Chat"].sendServerBroadcast(socket.username + " un-paused the video.", 6000);
@@ -237,7 +238,7 @@ function init(plugins, settings, events, io, log, commands) {
         })
         socket.on('pauseVideo', function () {
             if (socket.isLoggedIn && plugins.Accounts.hasPermission(socket.email, "controlVideo")) {
-                log(socket.email + " paused the video.")
+                log(socket.email + " paused the video.", false, "MediaShare")
                 io.emit("pauseVideo")
                 videoIsStopped = true;
                 plugins["Chat"].sendServerBroadcast(socket.username + " paused the video.", 6000);

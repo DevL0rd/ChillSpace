@@ -5,7 +5,7 @@ function init(plugins, settings, events, io, log, commands) {
         usage: "refresh",
         help: "Forces all clients to refresh.",
         do: function () {
-            log("Forcing clients to refresh.")
+            log("Forcing clients to refresh.", false, "BaseUtils");
             io.emit("forceRefresh")
         }
     };
