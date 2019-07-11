@@ -45,7 +45,9 @@
 		"errorLoggingEnabled": true,
 		"printConsole": true,
 		"printErrors": true,
-		"consoleNamespacePrintFilter": [],
+		"consoleNamespacePrintFilter": [
+			"HTTP"
+		],
 		"errorNamespacePrintFilter": []
 	}
 }

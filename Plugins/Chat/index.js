@@ -33,12 +33,15 @@ if (fs.existsSync(settingsPath)) {
 } else {
     DB.save(settingsPath, settings);
 }
-
-function init(plugins, mwsSettings, events, io, mwsLog, commands) {
+var events = {};
+function init(plugins, mwsSettings, mwsEvents, io, mwsLog, commands) {
     serverCommands = commands;
     serverIo = io;
     serverPlugins = plugins;
     log = mwsLog;
+    events = mwsEvents;
+    events.addEvent("sendMessage");
+    events.addEvent("sendPm");
     events.on("connection", function (socket) {
         socket.emit("getChatLog", chatLog);
         socket.on('sendMessage', function (msg) {
@@ -110,6 +113,7 @@ function sendMessage(socket, msg) {
     if (chatLog.length > 60) {
         chatLog.shift();
     }
+    events.trigger("sendMessage", { msgObj: msgObj, socket: socket })
 }
 
 function sendPm(socket, toSocket, msg) {
@@ -121,6 +125,7 @@ function sendPm(socket, toSocket, msg) {
         isPM: true
     };
     toSocket.emit("newMessage", msgObj)
+    events.trigger("sendPm", { msgObj: msgObj, socket: socket, toSocket: toSocket })
 }
 
 function sendServerPm(socket, msg, timeout = 0) {
@@ -380,6 +385,12 @@ function handleCommand(command, args, fullMessage, socket) {
         sendServerPm(socket, "This command does not exist. Type '!help' for a list of commands.", 6000);
     }
 }
+
+function onSendMessage() {
+
+}
+
+var events
 exports.init = init;
 exports.sendServerBroadcast = sendServerBroadcast;
 exports.sendServerPm = sendServerPm;
@@ -387,3 +398,4 @@ exports.sendPm = sendPm;
 exports.sendMessage = sendMessage;
 exports.chatCommands = chatCommands;
 exports.setCommandEnabledState = setCommandEnabledState;
+exports.onSendMessage = onSendMessage;
