@@ -5,25 +5,5 @@
 	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\MediaShare\\index.js",
 	"loadPriority": "2",
 	"name": "Media Share",
-	"pluginElement": {
-		"0": {
-			"jQuery340046837813239254581": {
-				"display": ""
-			}
-		},
-		"length": 1,
-		"prevObject": {
-			"0": {
-				"jQuery340046837813239254581": {
-					"display": ""
-				}
-			},
-			"length": 1,
-			"prevObject": {
-				"0": {},
-				"length": 1
-			}
-		}
-	},
 	"varName": "MediaShare"
 }
