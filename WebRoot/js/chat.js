@@ -96,7 +96,6 @@ function showMessage(data) {
         }
         $(elem).find('.badges').html(badgeGenHtml);
         $(elem).show(400);
-        broserNotify("New Message", data.profilePicture, data.msg)
         lastMessageFrom = data.username
         lastMessageElement = elem
     }
