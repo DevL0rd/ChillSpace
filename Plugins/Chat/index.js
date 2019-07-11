@@ -51,7 +51,7 @@ function init(plugins, mwsSettings, mwsEvents, io, mwsLog, commands) {
                 }
                 var nowMS = new Date().getTime();
                 if (nowMS > socket.messageTimeout) {
-                    log(socket.email + ": " + msg)
+                    log("[" + socket.username + "]: " + msg, false, "Chat");
                     msg = msg.replace(/<[^>]+>/g, ''); // sanatize input, remove html tags.
                     if (msg.charAt(0) == "!") {
                         var fullMessage = msg.slice(1);
@@ -100,6 +100,7 @@ function sendMessage(socket, msg) {
         profilePicture: socket.profilePicture,
         badges: getBadges(socket.email)
     };
+    log("[" + socket.username + "]: " + msg, false, "Chat");
     var sockets = serverIo.sockets.sockets;
     for (var socketId in sockets) {
         var socketTo = sockets[socketId];
@@ -124,6 +125,7 @@ function sendPm(socket, toSocket, msg) {
         badges: getBadges(socket.email),
         isPM: true
     };
+    log("[" + socket.username + "] -> [" + toSocket.username + "]: " + msg, false, "Chat");
     toSocket.emit("newMessage", msgObj)
     events.trigger("sendPm", { msgObj: msgObj, socket: socket, toSocket: toSocket })
 }
@@ -137,6 +139,7 @@ function sendServerPm(socket, msg, timeout = 0) {
         timeout: timeout,
         isPM: true
     };
+    log("[Server] -> [" + socket.username + "]: " + msg, false, "Chat");
     socket.emit("newMessage", msgObj)
 }
 
@@ -155,6 +158,7 @@ function sendServerBroadcast(msg, timeout = 0) {
             chatLog.shift();
         }
     }
+    log("[Server]: " + msg, false, "Chat");
 }
 //Find any username starting with an @symbol
 function getMentionsList(str) {
