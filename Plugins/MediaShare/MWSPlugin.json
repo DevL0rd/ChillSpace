@@ -1,8 +1,6 @@
 {
 	"author": "Dustin Harris",
 	"enabled": true,
-	"folder": "C:\\Github\\ChillSpace\\Plugins\\MediaShare",
-	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\MediaShare\\index.js",
 	"loadPriority": "2",
 	"name": "Media Share",
 	"varName": "MediaShare"

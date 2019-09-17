@@ -28,4 +28,8 @@ function init(plugins, settings, events, io, log, commands) {
         });
     })
 }
+function uninit(events, io, log, commands) {
+    //Leave blank uninit so server thinks it can be unloaded
+}
 module.exports.init = init;
+exports.uninit = uninit;

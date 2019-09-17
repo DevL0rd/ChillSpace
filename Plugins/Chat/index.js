@@ -78,7 +78,7 @@ function init(plugins, mwsSettings, mwsEvents, io, mwsLog, commands) {
                 });
             }
         });
-    });
+    }, "Chat");
 }
 var log
 function getBadges(email) {
@@ -393,9 +393,17 @@ function handleCommand(command, args, fullMessage, socket) {
 function onSendMessage() {
 
 }
-
+function uninit(events, io, log, commands) {
+    //disconnect all sockets
+    var sockets = Object.values(io.of("/").connected);
+    for (var socketId in sockets) {
+        var socket = sockets[socketId];
+        socket.disconnect(true);
+    }
+}
 var events
 exports.init = init;
+exports.uninit = uninit;
 exports.sendServerBroadcast = sendServerBroadcast;
 exports.sendServerPm = sendServerPm;
 exports.sendPm = sendPm;

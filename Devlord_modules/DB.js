@@ -13,7 +13,7 @@ function save(path, obj) {
 	var contents = JSON.stringify(obj, null, "\t")
 	mkdirp(getDirName(path), function (err) {
 		if (err) throw err;
-		fs.writeFile(path, contents, function (err) {
+		fs.writeFileSync(path, contents, function (err) {
 			if (err) throw err;
 		});
 	});

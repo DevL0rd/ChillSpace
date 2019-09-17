@@ -7,7 +7,7 @@ function init(plugins, settings, events, io, log, commands) {
         if (response) {
             plugins.Chat.sendServerBroadcast(response);
         }
-    });
+    }, "Enigma");
 }
 function stringHas(text, stringArray) {
     for (i in stringArray) {
@@ -61,5 +61,9 @@ responses.push(function (message, messageContext) {
         }
     }
 });
+function uninit(events, io, log, commands) {
+    //Leave init function to let mws know it is reloadable
+}
 exports.init = init;
+exports.uninit = uninit;
 exports.responses = responses;

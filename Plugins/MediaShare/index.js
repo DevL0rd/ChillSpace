@@ -4,10 +4,8 @@ var fs = require('fs');
 var youTubeParser = require('youtube-parser');
 var DB = require('../../Devlord_modules/DB.js');
 //Load DBS
-var videoSyncBuffer = []
 var currentVideoSource
 var videoIsStopped = false;
-var syncEveryone = false;
 var host
 var playlistDir = __dirname + "/currentPlaylist.json";
 if (fs.existsSync(playlistDir)) {
@@ -38,7 +36,7 @@ function init(plugins, settings, events, io, log, commands) {
                 break;
             }
         }
-    });
+    }, "MediaShare");
     events.on("connection", function (socket) {
         if (io.clientcount == 1) {
             socket.host = true;
@@ -180,8 +178,7 @@ function init(plugins, settings, events, io, log, commands) {
                     }
                 }
             }
-        })
-
+        });
         function dynamicSort(property) {
             var sortOrder = 1;
             if (property[0] === "-") {
@@ -244,9 +241,9 @@ function init(plugins, settings, events, io, log, commands) {
                 plugins["Chat"].sendServerBroadcast(socket.username + " paused the video.", 6000);
             }
         });
-    });
+    }, "MediaShare");
 }
-setInterval(function () {
+var videoTimeInterval = setInterval(function () {
     if (host != null && currentVideoSource) {
         host.emit("getVideoTime")
     }
@@ -268,4 +265,14 @@ function getYoutubeMp4Url(url, onGetUrl) {
             }
         );
 }
+function uninit(events, io, log, commands) {
+    //disconnect all sockets
+    var sockets = Object.values(io.of("/").connected);
+    for (var socketId in sockets) {
+        var socket = sockets[socketId];
+        socket.disconnect(true);
+    }
+    clearInterval(videoTimeInterval);
+}
 module.exports.init = init;
+exports.uninit = uninit;
