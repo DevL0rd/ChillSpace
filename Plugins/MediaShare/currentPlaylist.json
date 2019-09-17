@@ -1,1 +1,11 @@
-[]
+[
+	{
+		"src": "https://r3---sn-qxo7rn7e.googlevideo.com/videoplayback?expire=1567745071&ei=z49xXZrFFI7GDMn-mpgJ&ip=73.78.80.162&id=o-ALdWSsXnsLGo61hBb6Ip_7SI8CPSEBYlnc2tOMBpmwr-&itag=22&source=youtube&requiressl=yes&mm=31&mn=sn-qxo7rn7e&ms=au&mv=m&mvi=2&pl=16&initcwndbps=2308750&mime=video%2Fmp4&ratebypass=yes&dur=432.494&lmt=1567524447667608&mt=1567723368&c=WEB&txp=5532432&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cmime%2Cratebypass%2Cdur%2Clmt&sig=ALgxI2wwRQIgHdpd-AOqCBCB6HVXmkEq25lRiob0pJI5yh6vAKLc0LUCIQCDkqE3gTZLEXZeoA715e-Hg6SZbnmbhHvG8iAm7DNLTA%3D%3D&lsparams=mm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AHylml4wRQIgWWK3oLQL-RThVZLipRGgMXuBH2IwKeaHBo0zD_-X5ewCIQCENAMDh-jaQYwUrkbERnvR-2m4AFwbJuyaA2tiUvKfzQ%3D%3D",
+		"vote": 1,
+		"voters": [
+			"test"
+		],
+		"profilePicture": "/img/profilePics/noprofilepic.jpg",
+		"username": "test"
+	}
+]

@@ -3,3 +3,4 @@ package-lock.json
 Plugins/Accounts/Accounts.json
 Plugins/YoutubeSearch/settings.json
 Logs/
+Plugins/MediaShare/currentPlaylist.json
