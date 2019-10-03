@@ -38,7 +38,7 @@ function reloadAccounts() {
     Accounts = DB.load(accountDBPath);
     exports.Accounts = Accounts;
 }
-function init(exports, settings, events, io, log, commands) {
+function init(exports, settings, events, io, log, commands, workerIo) {
     function isLoggedInElsewhere(socket) {
         var sockets = io.sockets.sockets;
         for (var socketId in sockets) {

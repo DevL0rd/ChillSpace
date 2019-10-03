@@ -1,8 +1,7 @@
 {
 	"author": "Dustin Harris",
 	"enabled": true,
-	"folder": "C:\\Github\\ChillSpace\\Plugins\\YoutubeSearch",
-	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\YoutubeSearch\\index.js",
+	"loadWhenInWorkerMode": false,
 	"loadPriority": "3",
 	"name": "Youtube Search",
 	"varName": "YoutubeSearch"

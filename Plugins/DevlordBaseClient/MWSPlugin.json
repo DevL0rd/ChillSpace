@@ -1,8 +1,7 @@
 {
 	"author": "Dustin Harris",
 	"enabled": true,
-	"folder": "C:\\Github\\ChillSpace\\Plugins\\DevlordBaseClient",
-	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\DevlordBaseClient\\index.js",
+	"loadWhenInWorkerMode": false,
 	"loadPriority": "-1",
 	"name": "Devlord Utils",
 	"varName": "DevlordBaseClient"

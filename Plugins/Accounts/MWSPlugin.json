@@ -1,8 +1,7 @@
 {
 	"author": "Dustin Harris",
 	"enabled": true,
-	"folder": "C:\\Github\\ChillSpace\\Plugins\\Accounts",
-	"fullPath": "C:\\Github\\ChillSpace\\Plugins\\Accounts\\index.js",
+	"loadWhenInWorkerMode": false,
 	"loadPriority": "0",
 	"name": "Accounts",
 	"varName": "Accounts"

@@ -13,7 +13,7 @@ if (fs.existsSync(__dirname + "/settings.json")) {
     DB.save(__dirname + "/settings.json", settings)
 }
 youTube.setKey(settings.youtubeApiKey);
-function init(plugins, settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands, workerIo) {
     events.on("connection", function (socket) {
         socket.on("searchYoutube", function (searchStr) {
             if (searchStr) {

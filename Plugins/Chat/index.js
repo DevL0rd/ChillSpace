@@ -34,7 +34,7 @@ if (fs.existsSync(settingsPath)) {
     DB.save(settingsPath, settings);
 }
 var events = {};
-function init(plugins, mwsSettings, mwsEvents, io, mwsLog, commands) {
+function init(plugins, mwsSettings, mwsEvents, io, mwsLog, commands, workerIo) {
     serverCommands = commands;
     serverIo = io;
     serverPlugins = plugins;
@@ -401,7 +401,6 @@ function uninit(events, io, log, commands) {
         socket.disconnect(true);
     }
 }
-var events
 exports.init = init;
 exports.uninit = uninit;
 exports.sendServerBroadcast = sendServerBroadcast;

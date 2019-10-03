@@ -24,7 +24,7 @@ function findWithAttrCount(array, attr, value) {
     return attrMatchCount;
 }
 
-function init(plugins, settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands, workerIo) {
     events.on("disconnect", function (socket) {
         socket.host = false;
         var sockets = io.sockets.sockets;

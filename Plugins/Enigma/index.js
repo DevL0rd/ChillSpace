@@ -1,7 +1,7 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
 var responses = [];
-function init(plugins, settings, events, io, log, commands) {
+function init(plugins, settings, events, io, log, commands, workerIo) {
     events.on("sendMessage", function (params) {
         var response = getBotResponse(params.msgObj.msg);
         if (response) {

@@ -1,6 +1,7 @@
 {
 	"author": "Dustin Harris",
 	"enabled": true,
+	"loadWhenInWorkerMode": false,
 	"loadPriority": "2",
 	"name": "Media Share",
 	"varName": "MediaShare"
