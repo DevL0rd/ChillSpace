@@ -13,9 +13,8 @@
 	"webRoot": "../Chillspace/WebRoot",
 	"pluginsPath": "../Chillspace/Plugins",
 	"upload": {
-		"enabled": true,
-		"limitMB": 0,
-		"path": "../Chillspace/Uploads"
+		"enabled": false,
+		"limitMB": 0
 	},
 	"throttling": {
 		"videoBitRateKB": 51000,
