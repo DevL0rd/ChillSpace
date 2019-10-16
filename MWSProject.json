@@ -4,15 +4,19 @@
 	"IP": "0.0.0.0",
 	"PORT": 80,
 	"timeout": 5000,
-	"workerPORT": 8080,
 	"maxHeadersCount": 20,
 	"maxPostSizeMB": 8,
 	"maxUrlLength": 2048,
 	"directoryIndex": [
 		"index.html"
 	],
-	"webRoot": "../ChillSpace/WebRoot",
-	"pluginsPath": "../ChillSpace/Plugins",
+	"webRoot": "../Chillspace/WebRoot",
+	"pluginsPath": "../Chillspace/Plugins",
+	"upload": {
+		"enabled": true,
+		"limitMB": 0,
+		"path": "../Chillspace/Uploads"
+	},
 	"throttling": {
 		"videoBitRateKB": 51000,
 		"audioBitRateKB": 230,
@@ -20,6 +24,7 @@
 	},
 	"defaultHeaders": {
 		"Cache-Control": "max-age=0",
+		"X-Frame-Options": "SAMEORIGIN",
 		"X-XSS-Protection": "1; mode=block",
 		"X-Content-Type-Options": "nosniff"
 	},
@@ -37,12 +42,11 @@
 		"blockedPaths": [],
 		"blockedFiles": [],
 		"blockedFileNames": [],
-		"blockedFileExtensions": [],
-		"workerPassword": "$2a$08$UVK4i1mzFFEc1eqWmV/mRO1IsQkkojpJrRkMpDm4hA7SGLFWcrdS2"
+		"blockedFileExtensions": []
 	},
 	"logging": {
 		"enabled": true,
-		"directory": "../ChillSpace/Logs",
+		"directory": "../Chillspace/Logs",
 		"consoleLoggingEnabled": false,
 		"errorLoggingEnabled": true,
 		"printConsole": true,
@@ -51,5 +55,12 @@
 			"HTTP"
 		],
 		"errorNamespacePrintFilter": []
-	}
+	},
+	"clustering": {
+		"workerPORT": 8080,
+		"enabled": false,
+		"clusteredFileSync": false,
+		"workerPassword": "$2a$08$8rf2nC2z.7g8/PSUg.mN4OO.gmBTF4zTfKNuUWBpZK5h4.ZZUpgkW"
+	},
+	"projectPath": "../Chillspace"
 }
