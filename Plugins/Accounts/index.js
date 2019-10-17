@@ -117,6 +117,7 @@ function init(exports, settings, events, io, log, commands, workerIo) {
                                     socket.emit("loginResponse", {
                                         persistentLoginKey: loginKey,
                                         username: socket.username,
+                                        email: socket.email,
                                         profilePicture: socket.profilePicture
                                     })
                                     io.emit("userLoggedOn", {
